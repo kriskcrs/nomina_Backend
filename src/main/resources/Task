@@ -1,0 +1,51 @@
+Task
+
+- Pantalla de Login
+	- Validación de credenciales -> Restricción de campos
+	- Conteo de reintentos
+	- Bloqueo por reintentos
+	- Validación de caducidad
+	- manejo de sesiones
+	- validación de primer login
+
+- Pantalla de primer login
+	- cambio de contraseña
+	- validación de caracteres (para nueva contraseña)
+	- ingreso de preguntas de seguridad
+
+- Pantalla de Reinicio de contraseña
+	- Preguntas de seguridad
+	- validación de caracteres (para nueva contraseña)
+
+- Bitacora
+	- Registro de acceso (Todo tipo de login)
+
+- Pantalla de bienvenida
+	- validación de roles
+		- validación de menus
+		- Validación de opciones
+	- home screen
+	- menu lateral
+
+- mtto de reglas de negocio y roles
+	- modificación de reglas -> Insert de EMPRESA con sus reglas default
+	- creación de roles
+	- creación de sucursales
+	- modificacion de sucursales
+
+- mtto de usuario
+	- Ingreso de campos
+	- Creación de usuario 
+		- Envio de credenciales por email
+	- Modificación de usuario
+	- asignación de roles
+
+- servidor images
+	- almacenamiento de fotografias
+	- visualización de fotografias
+
+
+Ricardo		7	mtto de usuario			4	Bitacora
+Diego		2	Primer Login			1	Login
+Pablo		8	ftp						5	Pantalla de Bienvenida
+Cristian	6	mtto de reglas y roles	3	Reinicio de Pass
