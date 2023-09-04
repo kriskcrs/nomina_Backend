@@ -10,19 +10,21 @@ import lombok.Setter;
 import java.util.Date;
 
 @Entity
-@Table(name = "sucursal")
+@Table(name = "usuario_pregunta")
 @Getter
 @Setter
-public class Branch {
+public class UserQuestions {
     @Id
-    @Column(name = "idsucursal")
-    private Long idBranch;
-    @Column(name = "nombre")
-    private String name;
-    @Column(name = "direccion")
-    private String address;
-    @Column(name="idempresa")
-    private Long idCompany;
+    @Column(name = "idpregunta")
+    private Long idQuestion;
+    @Column(name = "idusuario")
+    private String idUser;
+    @Column(name = "pregunta")
+    private String questions;
+    @Column(name = "respuesta")
+    private String respond;
+    @Column(name = "ordenpregunta")
+    private Integer orderQuestions;
     @Column(name = "fechacreacion")
     private Date creationDate;
     @Column(name = "usuariocreacion")
@@ -31,5 +33,4 @@ public class Branch {
     private Date modificationDate;
     @Column(name = "usuariomodificacion")
     private String userModification;
-
 }

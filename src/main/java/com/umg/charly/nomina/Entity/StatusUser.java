@@ -13,16 +13,13 @@ import java.util.Date;
 @Table(name = "sucursal")
 @Getter
 @Setter
-public class Branch {
+public class StatusUser {
+
     @Id
-    @Column(name = "idsucursal")
-    private Long idBranch;
+    @Column(name = "idstatusUsuario")
+    private Long idStatusUser;
     @Column(name = "nombre")
     private String name;
-    @Column(name = "direccion")
-    private String address;
-    @Column(name="idempresa")
-    private Long idCompany;
     @Column(name = "fechacreacion")
     private Date creationDate;
     @Column(name = "usuariocreacion")

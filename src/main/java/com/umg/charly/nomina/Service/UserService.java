@@ -2,7 +2,9 @@ package com.umg.charly.nomina.Service;
 
 
 import com.umg.charly.nomina.Entity.User;
+import com.umg.charly.nomina.Entity.UserRole;
 import com.umg.charly.nomina.Repository.UserRepository;
+import com.umg.charly.nomina.Repository.UserRoleRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
@@ -22,6 +24,9 @@ public class UserService {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    UserRoleRepository userRoleRepository;
+
     @GetMapping(path = "/user")
     private List<User> userList() {
         try{
@@ -32,5 +37,15 @@ public class UserService {
         }
     }
 
+
+    @GetMapping(path = "/userRole")
+    private List<UserRole> userRoleList() {
+        try{
+            return userRoleRepository.findAll();
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
 
 }

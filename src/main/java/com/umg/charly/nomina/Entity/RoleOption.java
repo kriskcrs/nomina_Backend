@@ -10,19 +10,15 @@ import lombok.Setter;
 import java.util.Date;
 
 @Entity
-@Table(name = "sucursal")
+@Table(name = "roleOption")
 @Getter
 @Setter
-public class Branch {
+public class RoleOption {
     @Id
-    @Column(name = "idsucursal")
-    private Long idBranch;
+    @Column(name = "idrole")
+    private Long idRole;
     @Column(name = "nombre")
     private String name;
-    @Column(name = "direccion")
-    private String address;
-    @Column(name="idempresa")
-    private Long idCompany;
     @Column(name = "fechacreacion")
     private Date creationDate;
     @Column(name = "usuariocreacion")

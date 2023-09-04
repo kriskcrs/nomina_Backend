@@ -1,5 +1,6 @@
 package com.umg.charly.nomina.Entity;
 
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -10,19 +11,15 @@ import lombok.Setter;
 import java.util.Date;
 
 @Entity
-@Table(name = "sucursal")
+@Table(name = "usuario_role")
 @Getter
 @Setter
-public class Branch {
+public class UserRole {
     @Id
-    @Column(name = "idsucursal")
-    private Long idBranch;
-    @Column(name = "nombre")
-    private String name;
-    @Column(name = "direccion")
-    private String address;
-    @Column(name="idempresa")
-    private Long idCompany;
+    @Column(name = "idusuario")
+    private String idUser;
+    @Column(name = "idrole")
+    private Long idRole;
     @Column(name = "fechacreacion")
     private Date creationDate;
     @Column(name = "usuariocreacion")
