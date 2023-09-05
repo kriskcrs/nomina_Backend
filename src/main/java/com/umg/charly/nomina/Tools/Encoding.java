@@ -1,4 +1,4 @@
-package com.umg.charly.nomina.Service;
+package com.umg.charly.nomina.Tools;
 
 public class Encoding {
     String miString = "";

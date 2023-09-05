@@ -7,6 +7,7 @@ import com.umg.charly.nomina.Entity.UserRole;
 import com.umg.charly.nomina.Repository.CompanyRepository;
 import com.umg.charly.nomina.Repository.UserRepository;
 import com.umg.charly.nomina.Repository.UserRoleRepository;
+import com.umg.charly.nomina.Tools.Encoding;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,7 +53,6 @@ public class UserService {
             User dataUser = userRepository.findByIdUser(user.getIdUser());
             if (dataUser != null) {
                 List<Company> dataCompany = companyRepository.findAll();
-                System.out.println(dataCompany.get(0).getPasswordlength());
                int plength = dataCompany.get(0).getPasswordlength();
                 if(user.getPassword().length() <= plength ){
                     String cript = new Encoding().crypt(user.getPassword());
