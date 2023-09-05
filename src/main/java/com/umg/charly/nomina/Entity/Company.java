@@ -17,8 +17,8 @@ import java.util.Date;
 public class Company {
 
     @Id
-    @Column(name = "idsucursal")
-    private Long idBranch;
+    @Column(name = "idempresa")
+    private Long idcompany;
     @Column(name = "nombre")
     private String name;
     @Column(name = "direccion")
@@ -35,7 +35,7 @@ public class Company {
     private Integer passwordAmountExpirationsDays;
     @Column(name = "passwordlargo")
     private Integer passwordlength;
-    @Column(name = "passwordcantidadintentosantesdebloquear")
+    @Column(name = "passwordintentosantesdebloquear")
     private Integer passwordAmountAttemptsBeforeBlocking;
     @Column(name = "passwordcantidadnumeros")
     private Integer passwordAmountNumber;

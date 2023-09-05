@@ -1,8 +1,10 @@
 package com.umg.charly.nomina.Service;
 
 
+import com.umg.charly.nomina.Entity.Company;
 import com.umg.charly.nomina.Entity.User;
 import com.umg.charly.nomina.Entity.UserRole;
+import com.umg.charly.nomina.Repository.CompanyRepository;
 import com.umg.charly.nomina.Repository.UserRepository;
 import com.umg.charly.nomina.Repository.UserRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,9 @@ public class UserService {
 
     @Autowired
     UserRoleRepository userRoleRepository;
+
+    @Autowired
+    CompanyRepository companyRepository;
 
     @GetMapping(path = "/user")
     private List<User> userList() {
@@ -43,16 +48,23 @@ public class UserService {
 
     @PostMapping(path = "/resetPassword")
     private String reset(@RequestBody User user) {
-
         if (user.getIdUser() != null) {
             User dataUser = userRepository.findByIdUser(user.getIdUser());
             if (dataUser != null) {
-                dataUser.setPassword(user.getPassword());
-                userRepository.save(dataUser);
-                return "Exitoso";
+                List<Company> dataCompany = companyRepository.findAll();
+                System.out.println(dataCompany.get(0).getPasswordlength());
+               int plength = dataCompany.get(0).getPasswordlength();
+                if(user.getPassword().length() <= plength ){
+                    String cript = new Encoding().crypt(user.getPassword());
+                    dataUser.setPassword(cript);
+                    userRepository.save(dataUser);
+                    return "Exitoso";
+                }
+                return "Contraseña demasiado larga";
             }
+            return "Cliente no existe";
         }
-        return "Error";
+        return "Parametros incorrectos";
     }
 
 
