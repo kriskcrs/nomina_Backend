@@ -5,16 +5,9 @@ import com.umg.charly.nomina.Entity.User;
 import com.umg.charly.nomina.Entity.UserRole;
 import com.umg.charly.nomina.Repository.UserRepository;
 import com.umg.charly.nomina.Repository.UserRoleRepository;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -29,9 +22,9 @@ public class UserService {
 
     @GetMapping(path = "/user")
     private List<User> userList() {
-        try{
+        try {
             return userRepository.findAll();
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
         }
@@ -40,12 +33,27 @@ public class UserService {
 
     @GetMapping(path = "/userRole")
     private List<UserRole> userRoleList() {
-        try{
+        try {
             return userRoleRepository.findAll();
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
         }
     }
+
+    @PostMapping(path = "/resetPassword")
+    private String reset(@RequestBody User user) {
+
+        if (user.getIdUser() != null) {
+            User dataUser = userRepository.findByIdUser(user.getIdUser());
+            if (dataUser != null) {
+                dataUser.setPassword(user.getPassword());
+                userRepository.save(dataUser);
+                return "Exitoso";
+            }
+        }
+        return "Error";
+    }
+
 
 }
