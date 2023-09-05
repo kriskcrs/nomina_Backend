@@ -2,7 +2,6 @@ package com.umg.charly.nomina.Service;
 
 
 import com.umg.charly.nomina.Entity.Company;
-import com.umg.charly.nomina.Entity.Option;
 import com.umg.charly.nomina.Entity.User;
 import com.umg.charly.nomina.Entity.UserRole;
 import com.umg.charly.nomina.Repository.CompanyRepository;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping("v1")
@@ -28,6 +26,12 @@ public class UserService {
 
     @Autowired
     CompanyRepository companyRepository;
+
+    //Message
+    String noCumple = "No cumple las condiciones";
+    String noCliente = "Cliente no existe";
+    String parametrosError = "Parametros incorrectos";
+
 
     @GetMapping(path = "/user")
     private List<User> userList() {
@@ -55,20 +59,17 @@ public class UserService {
         if (user.getIdUser() != null) {
             User dataUser = userRepository.findByIdUser(user.getIdUser());
             if (dataUser != null) {
-                List<Company> dataCompany = companyRepository.findAll();
-                int plength = dataCompany.get(0).getPasswordlength();
-                System.out.println(validateRules(user.getPassword()));
                 if (validateRules(user.getPassword())) {
                     String cript = new Encoding().crypt(user.getPassword());
                     dataUser.setPassword(cript);
                     userRepository.save(dataUser);
                     return "Exitoso";
                 }
-                return "No cumple las condiciones";
+                return noCumple;
             }
-            return "Cliente no existe";
+            return noCliente;
         }
-        return "Parametros incorrectos";
+        return parametrosError;
     }
 
 
