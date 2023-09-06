@@ -7,6 +7,7 @@ import com.umg.charly.nomina.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Optional;
 
 
 @RestController
@@ -28,6 +29,8 @@ public class BusinessRulesService {
     RoleOptionRepository roleOptionRepository;
     @Autowired
     ModuleRepository moduleRepository;
+    @Autowired
+    LocationRepository locationRepository;
 
 
     @GetMapping(path = "/bussinesRules")
@@ -68,6 +71,10 @@ public class BusinessRulesService {
     private List<Module> moduleList(){
         return moduleRepository.findAll();
     }
+    @GetMapping(path = "/location")
+    private List<Location> branchList(){
+        return locationRepository.findAll();
+    }
 
 
     @PostMapping(path = "/bussinesRulesModify")
@@ -104,4 +111,19 @@ public class BusinessRulesService {
     }
 
 
+    @PostMapping(path = "/createLocation")
+    private Location createBranch(@RequestBody Location location){
+        return locationRepository.save(location);
+    }
+
+    @PutMapping(path = "/modifyLocation/{id}")
+    private Location modifyBranch(@RequestBody Location location, @PathVariable long id){
+        if(id>0){
+            Optional<Location> dataBranch = locationRepository.findById(id);
+            if(dataBranch.isPresent()){
+              return   locationRepository.save(location);
+            }
+        }
+        return null;
+    }
 }

@@ -13,7 +13,7 @@ import java.util.Date;
 @Table(name = "sucursal")
 @Getter
 @Setter
-public class Branch {
+public class Location {
     @Id
     @Column(name = "idsucursal")
     private Long idBranch;
