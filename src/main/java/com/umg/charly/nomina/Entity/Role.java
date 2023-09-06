@@ -11,13 +11,13 @@ import lombok.Setter;
 import java.util.Date;
 
 @Entity
-@Table(name = "sucursal")
+@Table(name = "role")
 @Getter
 @Setter
 public class Role {
 
     @Id
-    @Column(name = "idRole")
+    @Column(name = "idrole")
     private Long idRole;
     @Column(name = "nombre")
     private String name;
