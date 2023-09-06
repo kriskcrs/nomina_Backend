@@ -29,26 +29,10 @@ public class BusinessRulesService {
     @Autowired
     ModuleRepository moduleRepository;
 
+
     @GetMapping(path = "/bussinesRules")
     private List<Company> rules(){
-      try {
           return companyRepository.findAll();
-      }catch (Exception e){
-          System.out.println(e.getMessage());
-          return null;
-      }
-    }
-
-    @PostMapping(path = "/bussinesRulesModify")
-    private String modify(@RequestBody Company company){
-        if(company.getIdcompany() != null){
-            if(company.getPasswordlength()>5){
-                companyRepository.save(company);
-                return "Se actualiza";
-            }
-            return "La contraseña minima debe ser mayor a 5 caracters";
-        }
-        return "No se puede actualizar";
     }
 
     @GetMapping(path = "/questionsUser/{user}")
@@ -84,5 +68,40 @@ public class BusinessRulesService {
     private List<Module> moduleList(){
         return moduleRepository.findAll();
     }
+
+
+    @PostMapping(path = "/bussinesRulesModify")
+    private String modify(@RequestBody Company company){
+        if(company.getIdcompany() != null){
+            if(company.getPasswordlength()>5){
+                companyRepository.save(company);
+                return "Se actualiza";
+            }
+            return "La contraseña minima debe ser mayor a 5 caracteres";
+        }
+        return "No se puede actualizar";
+    }
+
+
+    @PostMapping(path = "/createRol")
+    private Role createRole(@RequestBody Role role){
+        return roleRepository.save(role);
+    }
+
+    @PostMapping(path = "/createMenu")
+    private Menu createMenu(@RequestBody Menu menu){
+        return menuRepository.save(menu);
+    }
+
+    @PostMapping(path = "/createOption")
+    private Option createMenu(@RequestBody Option option){
+        return optionRepository.save(option);
+    }
+
+    @PostMapping(path = "/createModule")
+    private Module createMenu(@RequestBody Module module){
+        return moduleRepository.save(module);
+    }
+
 
 }

@@ -35,23 +35,13 @@ public class UserService {
 
     @GetMapping(path = "/user")
     private List<User> userList() {
-        try {
             return userRepository.findAll();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return null;
-        }
     }
 
 
     @GetMapping(path = "/userRole")
     private List<UserRole> userRoleList() {
-        try {
             return userRoleRepository.findAll();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return null;
-        }
     }
 
     @PostMapping(path = "/resetPassword")
@@ -61,7 +51,10 @@ public class UserService {
             if (dataUser != null) {
                 if (validateRules(user.getPassword())) {
                     String cript = new Encoding().crypt(user.getPassword());
+                    cript = new Encoding().crypt(cript);
                     dataUser.setPassword(cript);
+                    dataUser.setCurrentSession(null);
+                    dataUser.setAccessAttempts(0);
                     userRepository.save(dataUser);
                     return "Exitoso";
                 }
@@ -111,12 +104,16 @@ public class UserService {
                     if (numerosEncontrados >= numerosRequeridos) {
                         System.out.println("numeros -> OK "+numerosEncontrados);
                         if (simbolosEncontrados >= simbolosRequeridos) {
-                            System.out.println("simbolos -> OK "+simbolosEncontrados);
+                            System.out.println("simbolo -> OK "+simbolosEncontrados);
                             return true;
                         }
+                        System.out.println("simbolo -> Fail");
                     }
+                    System.out.println("numeros -> Fail");
                 }
+                System.out.println("minusculas -> Fail");
             }
+            System.out.println("mayusculas -> Fail");
         }
         return false;
     }
