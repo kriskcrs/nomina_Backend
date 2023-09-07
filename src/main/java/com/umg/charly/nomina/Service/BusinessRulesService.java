@@ -6,8 +6,8 @@ import com.umg.charly.nomina.Entity.Module;
 import com.umg.charly.nomina.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
-import java.util.Optional;
+
+import java.util.*;
 
 
 @RestController
@@ -40,9 +40,28 @@ public class BusinessRulesService {
 
     @GetMapping(path = "/questionsUser/{user}")
     private List<UserQuestions> userQuest(@PathVariable String user){
-        System.out.println(user);
-        if(!userQuestionsRepository.findByIdUser(user).isEmpty()){
-            return userQuestionsRepository.findByIdUser(user);
+        List<UserQuestions> userQuestions = userQuestionsRepository.findByIdUser(user);
+        List<Company> company = companyRepository.findAll();
+        int count = company.get(0).getPasswordAmountQuestionsValidate();
+        if (!userQuestions.isEmpty()) {
+            if (count <= 0) {
+                return Collections.emptyList();
+            } else if (count >= userQuestions.size()) {
+                return userQuestions;
+            } else {
+                Random random = new Random();
+                List<UserQuestions> randomQuestions = new ArrayList<>();
+                Set<Integer> selectedIndices = new HashSet<>();
+                while (randomQuestions.size() < count) {
+                    int index;
+                    do {
+                        index = random.nextInt(userQuestions.size());
+                    } while (selectedIndices.contains(index));
+                    selectedIndices.add(index);
+                    randomQuestions.add(userQuestions.get(index));
+                }
+                return randomQuestions;
+            }
         }
         return null;
     }
