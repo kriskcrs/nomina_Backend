@@ -66,6 +66,27 @@ public class BusinessRulesService {
         return null;
     }
 
+    @PostMapping(path = "/questionUser/validation")
+    private String validateQuestion(@RequestBody List<UserQuestions> userQuestions) {
+        List<Company> company = companyRepository.findAll();
+        int count = company.get(0).getPasswordAmountQuestionsValidate();
+        if (userQuestions != null && !userQuestions.isEmpty()) {
+            int OK = 0;
+            for (UserQuestions userQuestionData: userQuestions
+                 ) {
+                Optional<UserQuestions> userQuestion = userQuestionsRepository.findByIdUserAndAndQuestionsAndAndRespond(userQuestionData.getIdUser(),userQuestionData.getQuestions(),userQuestionData.getRespond());
+                if(userQuestion.isPresent()){
+                    OK++;
+                }
+            }
+            if(OK == count){
+                return "cumple";
+            }
+        }
+        return "no cumple";
+    }
+
+
     @GetMapping(path = "/role")
     private List<Role> roleList(){
         return roleRepository.findAll();
