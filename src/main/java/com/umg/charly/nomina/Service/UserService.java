@@ -8,11 +8,14 @@ import com.umg.charly.nomina.Repository.CompanyRepository;
 import com.umg.charly.nomina.Repository.UserRepository;
 import com.umg.charly.nomina.Repository.UserRoleRepository;
 import com.umg.charly.nomina.Tools.Encoding;
+import com.umg.charly.nomina.Tools.PasswordGenerator;
+import com.umg.charly.nomina.Tools.SendPassword;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+
 
 @RestController
 @RequestMapping("v1")
@@ -31,7 +34,6 @@ public class UserService {
     String noCumple = "No cumple las condiciones";
     String noCliente = "Cliente no existe";
     String parametrosError = "Parametros incorrectos";
-
 
     @GetMapping(path = "/user")
     private List<User> userList() {
@@ -118,5 +120,33 @@ public class UserService {
         return false;
     }
 
+    @PostMapping(path = "/createUser")
+    public String createUser(@RequestBody User user) {
+        try {
+            User existingUser = userRepository.findByIdUser(user.getIdUser());
+            if (existingUser != null) {
+                String errorMessage = "Error: El correo '" + user.getIdUser() + "' ya se encuentra registrado, prueba con otro.";
+                System.err.println(errorMessage);
+                return errorMessage;
+            }
+            String generatedPassword = PasswordGenerator.generatePassword(8, 2, 3, 3);
+            user.setPassword(generatedPassword);
+            // Va a encriptar la contraseña :D
+            Encoding encoder = new Encoding();
+            String encryptedPassword = encoder.crypt(generatedPassword);
+            user.setPassword(encryptedPassword);
+            SendPassword.sendPasswordByEmail(user.getEmail(), generatedPassword);
+            userRepository.save(user);
+            String Message = "Usuario creado exitosamente";
+            System.out.println(Message);
+            return Message;
+        } catch (Exception e) {
+            String errorMessage = "Error al crear el usuario: " + e.getMessage();
+            System.err.println(errorMessage);
+            e.printStackTrace();
+            return errorMessage;
+        }
+    }
 
 }
+

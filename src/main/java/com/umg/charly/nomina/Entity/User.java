@@ -7,16 +7,17 @@ import lombok.Setter;
 
 import java.util.Date;
 
-
 @Entity
 @Table(name = "usuario")
 @Getter
 @Setter
+
 public class User {
+
     @Id
+
     @Column(name = "idusuario")
     private String idUser;
-
     @Column(name = "nombre")
     private String name;
     @Column(name = "apellido")
