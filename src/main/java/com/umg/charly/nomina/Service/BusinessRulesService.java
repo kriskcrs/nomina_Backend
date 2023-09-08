@@ -86,11 +86,12 @@ public class BusinessRulesService {
                 }
             }
             if(OK == count){
-                message.put("mensaje","0");
+                message.put("codigo","0");
+                message.put("mensaje","exitoso");
                 return message;
             }
         }
-        message.put("mensaje","1");
+        message.put("mensaje","¡Sus datos no son correctos verifique!");
         return message;
     }
 
