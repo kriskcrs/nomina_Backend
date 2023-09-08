@@ -14,7 +14,7 @@ Task
 	- ingreso de preguntas de seguridad
 
 3 -CC- Pantalla de Reinicio de contraseña
-	- Preguntas de seguridad
+	- Preguntas de seguridad //ya
 	- validación de caracteres (para nueva contraseña) // ya valida caracteres
 
 4 -RC- Bitacora

@@ -4,6 +4,7 @@ package com.umg.charly.nomina.Service;
 import com.umg.charly.nomina.Entity.*;
 import com.umg.charly.nomina.Entity.Module;
 import com.umg.charly.nomina.Repository.*;
+import com.umg.charly.nomina.Tools.Encoding;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -67,25 +68,47 @@ public class BusinessRulesService {
     }
 
     @PostMapping(path = "/questionUser/validation")
-    private String validateQuestion(@RequestBody List<UserQuestions> userQuestions) {
+    private HashMap<String, String> validateQuestion(@RequestBody List<UserQuestions> userQuestions) {
         List<Company> company = companyRepository.findAll();
         int count = company.get(0).getPasswordAmountQuestionsValidate();
+        HashMap<String, String> message = new HashMap<>();
         if (userQuestions != null && !userQuestions.isEmpty()) {
             int OK = 0;
+            int tmp = 0;
             for (UserQuestions userQuestionData: userQuestions
                  ) {
+                System.out.println(userQuestions.get(tmp).getRespond());
+                userQuestionData.setRespond(new Encoding().crypt(userQuestionData.getRespond()));
                 Optional<UserQuestions> userQuestion = userQuestionsRepository.findByIdUserAndAndQuestionsAndAndRespond(userQuestionData.getIdUser(),userQuestionData.getQuestions(),userQuestionData.getRespond());
+                tmp++;
                 if(userQuestion.isPresent()){
                     OK++;
                 }
             }
             if(OK == count){
-                return "cumple";
+                message.put("mensaje","0");
+                return message;
             }
         }
-        return "no cumple";
+        message.put("mensaje","1");
+        return message;
     }
 
+    @PostMapping(path = "/questionsCreate")
+    private UserQuestions createQuestions(@RequestBody UserQuestions userQuestions){
+        if(userQuestions != null){
+            long id = userQuestionsRepository.findAll().size();
+            id++;
+            List<UserQuestions> questions = userQuestionsRepository.findByIdUser(userQuestions.getIdUser());
+            int temp = questions.size();
+            temp++;
+            userQuestions.setRespond(new Encoding().crypt(userQuestions.getRespond()));
+            userQuestions.setOrderQuestions(temp);
+            userQuestions.setIdQuestion(id);
+            return userQuestionsRepository.save(userQuestions);
+        }
+        return null;
+    }
 
     @GetMapping(path = "/role")
     private List<Role> roleList(){
@@ -166,4 +189,10 @@ public class BusinessRulesService {
         }
         return null;
     }
+
+    @GetMapping(path = "/encripta/{text}")
+    private String encrip(@PathVariable String text){
+        return new Encoding().crypt(text);
+    }
+
 }
