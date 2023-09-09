@@ -89,12 +89,12 @@ public class BusinessRulesService {
                 }
             }
             if(OK == count){
-                message.put("codigo","0");
-                message.put("mensaje","exitoso");
+                message.put("code","0");
+                message.put("message","exitoso");
                 return message;
             }
         }
-        message.put("mensaje","¡Sus datos no son correctos verifique!");
+        message.put("message","¡Sus datos no son correctos verifique!");
         return message;
     }
     @PostMapping(path = "/questionsCreate")

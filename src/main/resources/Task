@@ -29,10 +29,10 @@ Task
 
 6 -CC- mtto de reglas de negocio y roles
 	- modificación de reglas -> Insert de EMPRESA con sus reglas default //ya acepta y valida longitud minima
-	- creación de roles //ya
-	- creación de sucursales //ya
-	- modificacion de sucursales //ya
-	#- mtto de rutas -> Para saber ruta tiene cada modulo //ya
+	- creación de roles
+	- creación de sucursales
+	- modificacion de sucursales
+	#- mtto de rutas -> Para saber ruta tiene cada modulo
 
 7 -RC- mtto de usuario
 	- Ingreso de campos

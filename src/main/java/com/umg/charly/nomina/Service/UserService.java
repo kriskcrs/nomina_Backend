@@ -30,10 +30,11 @@ public class UserService {
     CompanyRepository companyRepository;
 
     //Message
-    String fails = "Does not meet conditions";
-    String errorClient = "Client does not exist";
-    String errorParameters = "Error in parameters";
-    String OK ="Successful";
+    String fails = "Su contraseña no cumple con las condiciones ";
+    String errorClient = "Cliente no existe";
+    String errorParameters = "Error en parametros";
+    String OK ="Exitoso";
+    int MaxCharterPassword = 25;
     HashMap<String, String>  response = new HashMap<>();
 
     @GetMapping(path = "/user")
@@ -50,7 +51,7 @@ public class UserService {
     @PostMapping(path = "/resetPassword")
     private HashMap<String, String> reset(@RequestBody User user) {
 
-        if (user.getIdUser() != null) {
+        if (user.getIdUser() != null && (user.getCurrentSession() == null || !user.getCurrentSession().equals(""))) {
             User dataUser = userRepository.findByIdUser(user.getIdUser());
             if (dataUser != null) {
                 if (validateRules(user.getPassword())) {
@@ -88,7 +89,7 @@ public class UserService {
             int numerosRequeridos = dataCompany.get().getPasswordAmountNumber();
             int simbolosRequeridos = dataCompany.get().getPasswordAmountSpecialCharacters();
             int longitudMinima = dataCompany.get().getPasswordlength();
-            int longitudMaxima = 25;
+            int longitudMaxima = MaxCharterPassword;
 
             if (dataPass.length() < longitudMinima || dataPass.length() > longitudMaxima) {
                 return false;
