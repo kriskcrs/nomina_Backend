@@ -106,7 +106,6 @@ public class ImagesServices {
 
             File oldFile = oldFilePath.toFile();
             File newFile = newFilePath.toFile();
-            DeletImage(file);
             if (oldFile.exists()) {
                 boolean renombrado = oldFile.renameTo(newFile);
                 if (renombrado) {
