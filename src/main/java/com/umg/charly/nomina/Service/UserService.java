@@ -11,6 +11,7 @@ import com.umg.charly.nomina.Tools.Encoding;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,10 +29,11 @@ public class UserService {
     CompanyRepository companyRepository;
 
     //Message
-    String noCumple = "No cumple las condiciones";
-    String noCliente = "Cliente no existe";
-    String parametrosError = "Parametros incorrectos";
-
+    String fails = "Does not meet conditions";
+    String errorClient = "Client does not exist";
+    String errorParameters = "Error in parameters";
+    String OK ="Successful";
+    HashMap<String, String>  response = new HashMap<>();
 
     @GetMapping(path = "/user")
     private List<User> userList() {
@@ -45,7 +47,8 @@ public class UserService {
     }
 
     @PostMapping(path = "/resetPassword")
-    private String reset(@RequestBody User user) {
+    private HashMap<String, String> reset(@RequestBody User user) {
+
         if (user.getIdUser() != null) {
             User dataUser = userRepository.findByIdUser(user.getIdUser());
             if (dataUser != null) {
@@ -56,13 +59,21 @@ public class UserService {
                     dataUser.setCurrentSession(null);
                     dataUser.setAccessAttempts(0);
                     userRepository.save(dataUser);
-                    return "Exitoso";
+                    response.put("code", "0");
+                    response.put("message", OK);
+                    return response;
                 }
-                return noCumple;
+                response.put("code", "1");
+                response.put("message", fails);
+                return response;
             }
-            return noCliente;
+            response.put("code", "1");
+            response.put("message", errorClient);
+            return response;
         }
-        return parametrosError;
+        response.put("code", "1");
+        response.put("message", errorParameters);
+        return response;
     }
 
 
