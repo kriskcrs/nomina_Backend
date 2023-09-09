@@ -29,6 +29,7 @@ public class AuthenticationService {
     String CurrentSession = "Usuario ya cuenta con una sesión activa";
     String StatusUser = "El usuario no se encuentra activo";
     String FirstLogin = "Primer login";
+    HashMap<String, String> response = new HashMap<>();
 
     @Autowired
     UserRepository userRepository;
@@ -37,7 +38,6 @@ public class AuthenticationService {
 
     @PostMapping(path = "/login")
     private HashMap<String, String> login(@RequestBody User user){
-        HashMap<String, String> response = new HashMap<>();
         //System.out.println(user.getIdUser() + user.getPassword());
 
         //encoding password
@@ -70,7 +70,7 @@ public class AuthenticationService {
                             return response;
                         }else{
                             //validate session
-                            if(userLogin.getCurrentSession().equals("") || userLogin.getCurrentSession() == null){
+                            if(userLogin.getCurrentSession() == null || userLogin.getCurrentSession().equals("")){
                                 //Login OK
                                 //SesionID, Access Attemps = 0
                                 userLogin.setCurrentSession(String.valueOf(new EncodingUUID().SessionManager()));
