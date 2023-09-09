@@ -11,6 +11,7 @@ import com.umg.charly.nomina.Tools.Encoding;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -53,11 +54,13 @@ public class UserService {
             User dataUser = userRepository.findByIdUser(user.getIdUser());
             if (dataUser != null) {
                 if (validateRules(user.getPassword())) {
-                    String cript = new Encoding().crypt(user.getPassword());
-                    cript = new Encoding().crypt(cript);
-                    dataUser.setPassword(cript);
+                    dataUser.setPassword( new Encoding().crypt(user.getPassword()));
                     dataUser.setCurrentSession(null);
                     dataUser.setAccessAttempts(0);
+                    dataUser.setRequiresChangingPassword(0);
+                    dataUser.setIdStatusUser(1L);
+                    dataUser.setLastPasswordChangeDate(new Date());
+                    dataUser.setLastDateOfEntry(new Date());
                     userRepository.save(dataUser);
                     response.put("code", "0");
                     response.put("message", OK);

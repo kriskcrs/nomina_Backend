@@ -70,7 +70,7 @@ public class AuthenticationService {
                             return response;
                         }else{
                             //validate session
-                            if(userLogin.getCurrentSession().equals("") || userLogin.getCurrentSession() == null){
+                            if(userLogin.getCurrentSession() == null || userLogin.getCurrentSession().equals("")){
                                 //Login OK
                                 //SesionID, Access Attemps = 0
                                 userLogin.setCurrentSession(String.valueOf(new EncodingUUID().SessionManager()));
