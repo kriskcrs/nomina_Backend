@@ -7,17 +7,18 @@ public class PasswordGenerator {
 
 
 
-    private static final String UPPERCASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    private static final String LOWERCASE = "abcdefghijklmnopqrstuvwxyz";
-    private static final String DIGITS = "0123456789";
+     String UPPERCASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+     String LOWERCASE = "abcdefghijklmnopqrstuvwxyz";
+     String DIGITS = "0123456789";
+     String message = "La suma de los requisitos no coincide con la longitud deseada.";
 
 
-    public static String generatePassword(int length, int uppercaseCount, int lowercaseCount, int digitCount) {
+    public  String generatePassword(int length, int uppercaseCount, int lowercaseCount, int digitCount) {
         SecureRandom random = new SecureRandom();
         StringBuilder password = new StringBuilder();
         int totalCharacters = uppercaseCount + lowercaseCount + digitCount;
         if (totalCharacters != length) {
-            throw new IllegalArgumentException("La suma de los requisitos no coincide con la longitud deseada.");
+            throw new IllegalArgumentException(message);
         }
         for (int i = 0; i < uppercaseCount; i++) {
             password.append(UPPERCASE.charAt(random.nextInt(UPPERCASE.length())));

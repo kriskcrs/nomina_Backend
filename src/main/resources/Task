@@ -16,6 +16,7 @@ Task
 3 -CC- Pantalla de Reinicio de contraseña
 	- Preguntas de seguridad //ya
 	- validación de caracteres (para nueva contraseña) // ya valida caracteres
+	- Configuracion de preguntas en primer login
 
 4 -RC- Bitacora
 	- Registro de acceso (Todo tipo de login)

@@ -38,8 +38,13 @@ public class UserService {
     String errorClient = "Cliente no existe";
     String errorParameters = "Error en parametros";
     String OK ="Exitoso";
+    String userOK ="Usuario creado exitosamente";
     int MaxCharterPassword = 25;
     HashMap<String, String>  response = new HashMap<>();
+    int uppercaseCount = 2;
+    int lengtPasswordTemp = 8;
+    int lowercaseCount = 3;
+    int digitCount = 3;
 
     @GetMapping(path = "/user")
     private List<User> userList() {
@@ -146,21 +151,15 @@ public class UserService {
                 System.err.println(errorMessage);
                 return errorMessage;
             }
-            String generatedPassword = PasswordGenerator.generatePassword(8, 2, 3, 3);
-            user.setPassword(generatedPassword);
             // Va a encriptar la contraseña :D
-            Encoding encoder = new Encoding();
-            String encryptedPassword = encoder.crypt(generatedPassword);
-            user.setPassword(encryptedPassword);
+            String generatedPassword = new PasswordGenerator().generatePassword(lengtPasswordTemp, uppercaseCount, lowercaseCount, digitCount);
+            user.setPassword(new Encoding().crypt (generatedPassword));
             SendPassword.sendPasswordByEmail(user.getEmail(), generatedPassword);
             userRepository.save(user);
-            String Message = "Usuario creado exitosamente";
-            System.out.println(Message);
-            return Message;
+            return userOK;
         } catch (Exception e) {
             String errorMessage = "Error al crear el usuario: " + e.getMessage();
             System.err.println(errorMessage);
-            e.printStackTrace();
             return errorMessage;
         }
     }
