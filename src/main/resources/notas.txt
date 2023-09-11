@@ -1,3 +1,0 @@
-preguntas para el ing.
-
-si la longitud del password es de 100 pero encriptando el valor no sabemos cuantos caracteres debe permitir que hacer en ese caso.

@@ -33,12 +33,16 @@ public class BusinessRulesService {
     @Autowired
     LocationRepository locationRepository;
 
+    //vars
+    String OK = "Se actualiza";
+    String error = "La contraseña minima debe ser mayor a 5 caracteres";
+    String fails = "No se puede actualizar";
+    HashMap<String, String> response = new HashMap<>();
 
     @GetMapping(path = "/bussinesRules")
     private List<Company> rules(){
           return companyRepository.findAll();
     }
-
     @GetMapping(path = "/questionsUser/{user}")
     private List<UserQuestions> userQuest(@PathVariable String user){
         List<UserQuestions> userQuestions = userQuestionsRepository.findByIdUser(user);
@@ -66,7 +70,6 @@ public class BusinessRulesService {
         }
         return null;
     }
-
     @PostMapping(path = "/questionUser/validation")
     private HashMap<String, String> validateQuestion(@RequestBody List<UserQuestions> userQuestions) {
         List<Company> company = companyRepository.findAll();
@@ -86,15 +89,14 @@ public class BusinessRulesService {
                 }
             }
             if(OK == count){
-                message.put("codigo","0");
-                message.put("mensaje","exitoso");
+                message.put("code","0");
+                message.put("message","exitoso");
                 return message;
             }
         }
-        message.put("mensaje","¡Sus datos no son correctos verifique!");
+        message.put("message","¡Sus datos no son correctos verifique!");
         return message;
     }
-
     @PostMapping(path = "/questionsCreate")
     private UserQuestions createQuestions(@RequestBody UserQuestions userQuestions){
         if(userQuestions != null){
@@ -110,27 +112,22 @@ public class BusinessRulesService {
         }
         return null;
     }
-
     @GetMapping(path = "/role")
     private List<Role> roleList(){
         return roleRepository.findAll();
     }
-
     @GetMapping(path = "/option")
     private List<Option> optionslist(){
         return optionRepository.findAll();
     }
-
     @GetMapping(path = "/menu")
     private List<Menu> menuList(){
         return menuRepository.findAll();
     }
-
     @GetMapping(path = "/roleOption")
     private List<RoleOption> roleOptionsList(){
         return roleOptionRepository.findAll();
     }
-
     @GetMapping(path = "/module")
     private List<Module> moduleList(){
         return moduleRepository.findAll();
@@ -139,47 +136,43 @@ public class BusinessRulesService {
     private List<Location> branchList(){
         return locationRepository.findAll();
     }
-
-
     @PostMapping(path = "/bussinesRulesModify")
-    private String modify(@RequestBody Company company){
+    private HashMap<String, String> modify(@RequestBody Company company){
         if(company.getIdcompany() != null){
             if(company.getPasswordlength()>5){
                 companyRepository.save(company);
-                return "Se actualiza";
+                response.put("code", "0");
+                response.put("message", OK);
+                return response ;
             }
-            return "La contraseña minima debe ser mayor a 5 caracteres";
+            response.put("code", "1");
+            response.put("message", error);
+            return response;
         }
-        return "No se puede actualizar";
+        response.put("code", "1");
+        response.put("message", fails);
+        return response;
     }
-
-
     @PostMapping(path = "/createRol")
     private Role createRole(@RequestBody Role role){
         return roleRepository.save(role);
     }
-
     @PostMapping(path = "/createMenu")
     private Menu createMenu(@RequestBody Menu menu){
         return menuRepository.save(menu);
     }
-
     @PostMapping(path = "/createOption")
     private Option createMenu(@RequestBody Option option){
         return optionRepository.save(option);
     }
-
     @PostMapping(path = "/createModule")
     private Module createMenu(@RequestBody Module module){
         return moduleRepository.save(module);
     }
-
-
     @PostMapping(path = "/createLocation")
     private Location createBranch(@RequestBody Location location){
         return locationRepository.save(location);
     }
-
     @PutMapping(path = "/modifyLocation/{id}")
     private Location modifyBranch(@RequestBody Location location, @PathVariable long id){
         if(id>0){

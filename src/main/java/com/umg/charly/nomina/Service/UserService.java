@@ -13,6 +13,8 @@ import com.umg.charly.nomina.Tools.SendPassword;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,9 +33,13 @@ public class UserService {
     CompanyRepository companyRepository;
 
     //Message
-    String noCumple = "No cumple las condiciones";
-    String noCliente = "Cliente no existe";
-    String parametrosError = "Parametros incorrectos";
+
+    String fails = "Su contraseña no cumple con las condiciones ";
+    String errorClient = "Cliente no existe";
+    String errorParameters = "Error en parametros";
+    String OK ="Exitoso";
+    int MaxCharterPassword = 25;
+    HashMap<String, String>  response = new HashMap<>();
 
     @GetMapping(path = "/user")
     private List<User> userList() {
@@ -47,24 +53,35 @@ public class UserService {
     }
 
     @PostMapping(path = "/resetPassword")
-    private String reset(@RequestBody User user) {
-        if (user.getIdUser() != null) {
+    private HashMap<String, String> reset(@RequestBody User user) {
+
+        if (user.getIdUser() != null && (user.getCurrentSession() == null || !user.getCurrentSession().equals(""))) {
             User dataUser = userRepository.findByIdUser(user.getIdUser());
             if (dataUser != null) {
                 if (validateRules(user.getPassword())) {
-                    String cript = new Encoding().crypt(user.getPassword());
-                    cript = new Encoding().crypt(cript);
-                    dataUser.setPassword(cript);
+                    dataUser.setPassword( new Encoding().crypt(user.getPassword()));
                     dataUser.setCurrentSession(null);
                     dataUser.setAccessAttempts(0);
+                    dataUser.setRequiresChangingPassword(0);
+                    dataUser.setIdStatusUser(1L);
+                    dataUser.setLastPasswordChangeDate(new Date());
+                    dataUser.setLastDateOfEntry(new Date());
                     userRepository.save(dataUser);
-                    return "Exitoso";
+                    response.put("code", "0");
+                    response.put("message", OK);
+                    return response;
                 }
-                return noCumple;
+                response.put("code", "1");
+                response.put("message", fails);
+                return response;
             }
-            return noCliente;
+            response.put("code", "1");
+            response.put("message", errorClient);
+            return response;
         }
-        return parametrosError;
+        response.put("code", "1");
+        response.put("message", errorParameters);
+        return response;
     }
 
 
@@ -76,7 +93,7 @@ public class UserService {
             int numerosRequeridos = dataCompany.get().getPasswordAmountNumber();
             int simbolosRequeridos = dataCompany.get().getPasswordAmountSpecialCharacters();
             int longitudMinima = dataCompany.get().getPasswordlength();
-            int longitudMaxima = 25;
+            int longitudMaxima = MaxCharterPassword;
 
             if (dataPass.length() < longitudMinima || dataPass.length() > longitudMaxima) {
                 return false;
