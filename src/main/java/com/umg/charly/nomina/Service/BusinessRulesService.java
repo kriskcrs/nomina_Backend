@@ -5,6 +5,7 @@ import com.umg.charly.nomina.Entity.*;
 import com.umg.charly.nomina.Entity.Module;
 import com.umg.charly.nomina.Repository.*;
 import com.umg.charly.nomina.Tools.Encoding;
+import com.umg.charly.nomina.Tools.KeepAlive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,12 +33,19 @@ public class BusinessRulesService {
     ModuleRepository moduleRepository;
     @Autowired
     LocationRepository locationRepository;
+    @Autowired
+    UserRepository userRepository;
 
     //vars
-    String OK = "Se actualiza";
+    String ok = "Se actualiza";
     String error = "La contraseña minima debe ser mayor a 5 caracteres";
     String fails = "No se puede actualizar";
+    String sessionOk ="sesion no activa";
+    String sessionFail ="sesion no activa";
+
     HashMap<String, String> response = new HashMap<>();
+
+
 
     @GetMapping(path = "/bussinesRules")
     private List<Company> rules(){
@@ -75,40 +83,54 @@ public class BusinessRulesService {
         List<Company> company = companyRepository.findAll();
         int count = company.get(0).getPasswordAmountQuestionsValidate();
         HashMap<String, String> message = new HashMap<>();
-        if (userQuestions != null && !userQuestions.isEmpty()) {
-            int OK = 0;
-            int tmp = 0;
-            for (UserQuestions userQuestionData: userQuestions
-                 ) {
-                System.out.println(userQuestions.get(tmp).getRespond());
-                userQuestionData.setRespond(new Encoding().crypt(userQuestionData.getRespond()));
-                Optional<UserQuestions> userQuestion = userQuestionsRepository.findByIdUserAndAndQuestionsAndAndRespond(userQuestionData.getIdUser(),userQuestionData.getQuestions(),userQuestionData.getRespond());
-                tmp++;
-                if(userQuestion.isPresent()){
-                    OK++;
+        User user = userRepository.findByIdUser(userQuestions.get(0).getIdUser());
+        if(new KeepAlive().validateSession(user.getCurrentSession())){
+            System.out.println("esta la sesion activa");
+            if (userQuestions != null && !userQuestions.isEmpty()) {
+                int OK = 0;
+                int tmp = 0;
+                for (UserQuestions userQuestionData: userQuestions
+                ) {
+                    System.out.println(userQuestions.get(tmp).getRespond());
+                    userQuestionData.setRespond(new Encoding().crypt(userQuestionData.getRespond()));
+                    Optional<UserQuestions> userQuestion = userQuestionsRepository.findByIdUserAndAndQuestionsAndAndRespond(userQuestionData.getIdUser(),userQuestionData.getQuestions(),userQuestionData.getRespond());
+                    tmp++;
+                    if(userQuestion.isPresent()){
+                        OK++;
+                    }
+                }
+                if(OK == count){
+                    message.put("code","0");
+                    message.put("message",sessionOk);
+                    return message;
                 }
             }
-            if(OK == count){
-                message.put("code","0");
-                message.put("message","exitoso");
-                return message;
-            }
+        }else{
+            System.out.println("sesion no activa");
+            message.put("code","1");
+            message.put("message",sessionFail);
+            return message;
         }
-        message.put("message","¡Sus datos no son correctos verifique!");
+        message.put("code","1");
+        message.put("message",fails);
         return message;
+
     }
     @PostMapping(path = "/questionsCreate")
     private UserQuestions createQuestions(@RequestBody UserQuestions userQuestions){
-        if(userQuestions != null){
-            long id = userQuestionsRepository.findAll().size();
-            id++;
-            List<UserQuestions> questions = userQuestionsRepository.findByIdUser(userQuestions.getIdUser());
-            int temp = questions.size();
-            temp++;
-            userQuestions.setRespond(new Encoding().crypt(userQuestions.getRespond()));
-            userQuestions.setOrderQuestions(temp);
-            userQuestions.setIdQuestion(id);
-            return userQuestionsRepository.save(userQuestions);
+        User user = userRepository.findByIdUser(userQuestions.getIdUser());
+        if(new KeepAlive().validateSession(user.getCurrentSession())){
+            if(userQuestions != null){
+                long id = userQuestionsRepository.findAll().size();
+                id++;
+                List<UserQuestions> questions = userQuestionsRepository.findByIdUser(userQuestions.getIdUser());
+                int temp = questions.size();
+                temp++;
+                userQuestions.setRespond(new Encoding().crypt(userQuestions.getRespond()));
+                userQuestions.setOrderQuestions(temp);
+                userQuestions.setIdQuestion(id);
+                return userQuestionsRepository.save(userQuestions);
+            }
         }
         return null;
     }
@@ -142,7 +164,7 @@ public class BusinessRulesService {
             if(company.getPasswordlength()>5){
                 companyRepository.save(company);
                 response.put("code", "0");
-                response.put("message", OK);
+                response.put("message", ok);
                 return response ;
             }
             response.put("code", "1");
@@ -183,7 +205,6 @@ public class BusinessRulesService {
         }
         return null;
     }
-
     @GetMapping(path = "/encripta/{text}")
     private String encrip(@PathVariable String text){
         return new Encoding().crypt(text);
