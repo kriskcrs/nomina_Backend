@@ -51,6 +51,10 @@ public class UserService {
             return userRepository.findAll();
     }
 
+    @GetMapping(path = "/user/{id}")
+    private User userFind(@PathVariable String id){
+        return userRepository.findByIdUser(id);
+    }
 
     @GetMapping(path = "/userRole")
     private List<UserRole> userRoleList() {
