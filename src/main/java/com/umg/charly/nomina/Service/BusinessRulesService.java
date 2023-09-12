@@ -51,6 +51,12 @@ public class BusinessRulesService {
     private List<Company> rules(){
           return companyRepository.findAll();
     }
+
+    @GetMapping(path = "/questionUserAll/{user}")
+    private List<UserQuestions> userQuestionsAll(@PathVariable String user){
+        return userQuestionsRepository.findByIdUser(user);
+    }
+
     @GetMapping(path = "/questionsUser/{user}")
     private List<UserQuestions> userQuest(@PathVariable String user){
         List<UserQuestions> userQuestions = userQuestionsRepository.findByIdUser(user);
@@ -129,6 +135,7 @@ public class BusinessRulesService {
                 userQuestions.setRespond(new Encoding().crypt(userQuestions.getRespond()));
                 userQuestions.setOrderQuestions(temp);
                 userQuestions.setIdQuestion(id);
+                userQuestions.setCreationDate(new Date());
                 return userQuestionsRepository.save(userQuestions);
             }
         }
