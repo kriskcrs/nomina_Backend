@@ -47,9 +47,9 @@ public class UserService {
     }
 
 
-    @GetMapping(path = "/userRole")
-    private List<UserRole> userRoleList() {
-            return userRoleRepository.findAll();
+    @GetMapping(path = "/userRole/{idUser}")
+    private UserRole userRoleList(@PathVariable String idUser) {
+            return userRoleRepository.findByIdUser(idUser);
     }
 
     @PostMapping(path = "/resetPassword")
