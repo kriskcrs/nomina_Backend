@@ -33,4 +33,5 @@ public class UserQuestions {
     private Date modificationDate;
     @Column(name = "usuariomodificacion")
     private String userModification;
+
 }

@@ -10,4 +10,6 @@ public interface UserQuestionsRepository extends JpaRepository<UserQuestions,Lon
     public List<UserQuestions> findByIdUser(String user);
 
     public Optional<UserQuestions> findByIdUserAndAndQuestionsAndAndRespond( String idUser, String Question, String Response);
+
+    public UserQuestions findByIdUserAndAndQuestions(String idUser,String Question);
 }
