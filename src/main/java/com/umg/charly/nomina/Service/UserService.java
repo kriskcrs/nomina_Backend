@@ -200,7 +200,7 @@ public class UserService {
         return response;
     }
 
-    private UserQuestions createQuestion(UserQuestions userQuestions){
+    private void createQuestion(UserQuestions userQuestions){
         long id = userQuestionsRepository.findAll().size();
         id++;
         List<UserQuestions> questions = userQuestionsRepository.findByIdUser(userQuestions.getIdUser());
@@ -210,7 +210,8 @@ public class UserService {
         userQuestions.setOrderQuestions(temp);
         userQuestions.setIdQuestion(id);
         userQuestions.setCreationDate(new Date());
-        return userQuestionsRepository.save(userQuestions);
+        userQuestionsRepository.save(userQuestions);
+
     }
 
     private boolean QuestionsValidate(UserQuestions userQuestions){
