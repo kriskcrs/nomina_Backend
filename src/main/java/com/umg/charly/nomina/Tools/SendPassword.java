@@ -10,7 +10,7 @@ public class SendPassword {
     private static final String USERNAME = "proyecto.nomina01@gmail.com";
     private static final String USER_PASSWORD = "mczfepnwfckpkwud";  // NO TOCAR, esta es una contraseña segura que se generó desde la configuración del correo, si la cambian; valines...
 
-    public static void sendPasswordByEmail(String userEmail, String password) throws MessagingException {
+    public static void sendPasswordByEmail(String idUser, String password) throws MessagingException {
         Properties properties = new Properties();
         properties.put("mail.smtp.host", HOST);
         properties.put("mail.smtp.auth", "true");
@@ -25,7 +25,7 @@ public class SendPassword {
         try {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(USERNAME));
-            message.setRecipient(Message.RecipientType.TO, new InternetAddress(userEmail));
+            message.setRecipient(Message.RecipientType.TO, new InternetAddress(idUser));
             message.setSubject("Contraseña de acceso al sistema");
             String emailContent = "Tu contraseña temporal es: " + password;
             message.setContent(emailContent, "text/html");
