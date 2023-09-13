@@ -236,7 +236,7 @@ public class UserService {
             // Va a encriptar la contraseña :D
             String generatedPassword = new PasswordGenerator().generatePassword(lengtPasswordTemp, uppercaseCount, lowercaseCount, digitCount);
             user.setPassword(new Encoding().crypt(generatedPassword));
-            SendPassword.sendPasswordByEmail(user.getEmail(), generatedPassword);
+            SendPassword.sendPasswordByEmail(user.getIdUser(), generatedPassword);
             userRepository.save(user);
             response.put("code", "0");
             response.put("message", OK);
