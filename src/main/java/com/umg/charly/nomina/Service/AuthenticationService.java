@@ -65,6 +65,7 @@ public class AuthenticationService {
                         if(userLogin.getRequiresChangingPassword() != 0){
                             response.put("code", "3");
                             response.put("message", RequiredChangePassword);
+                            response.put("user", userLogin.getIdUser());
                             return response;
                         }else{
                             //validate session

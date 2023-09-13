@@ -3,6 +3,7 @@ package com.umg.charly.nomina.Service;
 
 import com.umg.charly.nomina.Entity.Company;
 import com.umg.charly.nomina.Entity.User;
+import com.umg.charly.nomina.Entity.UserChangePassword;
 import com.umg.charly.nomina.Entity.UserRole;
 import com.umg.charly.nomina.Repository.CompanyRepository;
 import com.umg.charly.nomina.Repository.UserRepository;
@@ -91,6 +92,34 @@ public class UserService {
         response.put("code", "1");
         response.put("message", errorParameters);
         return response;
+    }
+
+    @PostMapping(path = "/changePassword")
+    private HashMap<String, String> changePassword(@RequestBody UserChangePassword userChangePassword){
+        User user = userRepository.findByIdUserAndPassword(userChangePassword.getIdUser(), new Encoding().crypt(userChangePassword.getPassword()));
+        if(user != null){
+            if(userChangePassword.getNewPassword().equals(userChangePassword.getConfirmNewPassword())){
+                user.setPassword(new Encoding().crypt(userChangePassword.getConfirmNewPassword()));
+                user.setLastDateOfEntry(new Date());
+                user.setLastPasswordChangeDate(new Date());
+                user.setRequiresChangingPassword(0);
+                user.setAccessAttempts(0);
+                user.setCurrentSession("");
+
+                response.put("code", "0");
+                response.put("message", "");
+                userRepository.save(user);
+                return response;
+            }else{
+                response.put("code", "1");
+                response.put("code", "Contraseñas no coinciden");
+                return  response;
+            }
+        }else{
+            response.put("code", "1");
+            response.put("message", "Usuario o contraseña incorrecta");
+            return response;
+        }
     }
 
 
