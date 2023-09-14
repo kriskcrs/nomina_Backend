@@ -5,6 +5,7 @@ import com.umg.charly.nomina.Entity.*;
 import com.umg.charly.nomina.Entity.Module;
 import com.umg.charly.nomina.Repository.*;
 import com.umg.charly.nomina.Tools.Encoding;
+import com.umg.charly.nomina.Tools.KeepAlive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,117 +33,56 @@ public class BusinessRulesService {
     ModuleRepository moduleRepository;
     @Autowired
     LocationRepository locationRepository;
+    @Autowired
+    UserRepository userRepository;
 
     //vars
-    String OK = "Se actualiza";
+    String ok = "Se actualiza";
     String error = "La contraseña minima debe ser mayor a 5 caracteres";
     String fails = "No se puede actualizar";
+
+
     HashMap<String, String> response = new HashMap<>();
 
-    @GetMapping(path = "/bussinesRules")
-    private List<Company> rules(){
-          return companyRepository.findAll();
-    }
-    @GetMapping(path = "/questionsUser/{user}")
-    private List<UserQuestions> userQuest(@PathVariable String user){
-        List<UserQuestions> userQuestions = userQuestionsRepository.findByIdUser(user);
-        List<Company> company = companyRepository.findAll();
-        int count = company.get(0).getPasswordAmountQuestionsValidate();
-        if (!userQuestions.isEmpty()) {
-            if (count <= 0) {
-                return Collections.emptyList();
-            } else if (count >= userQuestions.size()) {
-                return userQuestions;
-            } else {
-                Random random = new Random();
-                List<UserQuestions> randomQuestions = new ArrayList<>();
-                Set<Integer> selectedIndices = new HashSet<>();
-                while (randomQuestions.size() < count) {
-                    int index;
-                    do {
-                        index = random.nextInt(userQuestions.size());
-                    } while (selectedIndices.contains(index));
-                    selectedIndices.add(index);
-                    randomQuestions.add(userQuestions.get(index));
-                }
-                return randomQuestions;
-            }
-        }
-        return null;
-    }
-    @PostMapping(path = "/questionUser/validation")
-    private HashMap<String, String> validateQuestion(@RequestBody List<UserQuestions> userQuestions) {
-        List<Company> company = companyRepository.findAll();
-        int count = company.get(0).getPasswordAmountQuestionsValidate();
-        HashMap<String, String> message = new HashMap<>();
-        if (userQuestions != null && !userQuestions.isEmpty()) {
-            int OK = 0;
-            int tmp = 0;
-            for (UserQuestions userQuestionData: userQuestions
-                 ) {
-                System.out.println(userQuestions.get(tmp).getRespond());
-                userQuestionData.setRespond(new Encoding().crypt(userQuestionData.getRespond()));
-                Optional<UserQuestions> userQuestion = userQuestionsRepository.findByIdUserAndAndQuestionsAndAndRespond(userQuestionData.getIdUser(),userQuestionData.getQuestions(),userQuestionData.getRespond());
-                tmp++;
-                if(userQuestion.isPresent()){
-                    OK++;
-                }
-            }
-            if(OK == count){
-                message.put("code","0");
-                message.put("message","exitoso");
-                return message;
-            }
-        }
-        message.put("message","¡Sus datos no son correctos verifique!");
-        return message;
-    }
-    @PostMapping(path = "/questionsCreate")
-    private UserQuestions createQuestions(@RequestBody UserQuestions userQuestions){
-        if(userQuestions != null){
-            long id = userQuestionsRepository.findAll().size();
-            id++;
-            List<UserQuestions> questions = userQuestionsRepository.findByIdUser(userQuestions.getIdUser());
-            int temp = questions.size();
-            temp++;
-            userQuestions.setRespond(new Encoding().crypt(userQuestions.getRespond()));
-            userQuestions.setOrderQuestions(temp);
-            userQuestions.setIdQuestion(id);
-            return userQuestionsRepository.save(userQuestions);
-        }
-        return null;
-    }
+
+
     @GetMapping(path = "/role")
     private List<Role> roleList(){
         return roleRepository.findAll();
     }
+
     @GetMapping(path = "/option")
     private List<Option> optionslist(){
         return optionRepository.findAll();
     }
+
     @GetMapping(path = "/menu")
     private List<Menu> menuList(){
         return menuRepository.findAll();
     }
-    @GetMapping(path = "/roleOption")
-    private List<RoleOption> roleOptionsList(){
-        return roleOptionRepository.findAll();
+
+    @GetMapping(path = "/roleOption/{idRole}")
+    private RoleOption roleOptionsList(@PathVariable Long idRole){
+        return roleOptionRepository.findByIdRole(idRole);
     }
+
     @GetMapping(path = "/module")
     private List<Module> moduleList(){
         return moduleRepository.findAll();
     }
+
     @GetMapping(path = "/location")
     private List<Location> branchList(){
         return locationRepository.findAll();
     }
+
     @PostMapping(path = "/bussinesRulesModify")
     private HashMap<String, String> modify(@RequestBody Company company){
         if(company.getIdcompany() != null){
             if(company.getPasswordlength()>5){
                 companyRepository.save(company);
                 response.put("code", "0");
-                response.put("message", OK);
+                response.put("message", ok);
                 return response ;
             }
             response.put("code", "1");
@@ -153,26 +93,32 @@ public class BusinessRulesService {
         response.put("message", fails);
         return response;
     }
+
     @PostMapping(path = "/createRol")
     private Role createRole(@RequestBody Role role){
         return roleRepository.save(role);
     }
+
     @PostMapping(path = "/createMenu")
     private Menu createMenu(@RequestBody Menu menu){
         return menuRepository.save(menu);
     }
+
     @PostMapping(path = "/createOption")
     private Option createMenu(@RequestBody Option option){
         return optionRepository.save(option);
     }
+
     @PostMapping(path = "/createModule")
     private Module createMenu(@RequestBody Module module){
         return moduleRepository.save(module);
     }
+
     @PostMapping(path = "/createLocation")
     private Location createBranch(@RequestBody Location location){
         return locationRepository.save(location);
     }
+
     @PutMapping(path = "/modifyLocation/{id}")
     private Location modifyBranch(@RequestBody Location location, @PathVariable long id){
         if(id>0){
