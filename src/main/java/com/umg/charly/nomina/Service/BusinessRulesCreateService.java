@@ -33,6 +33,7 @@ public class BusinessRulesCreateService {
     @Autowired
     UserRepository userRepository;
 
+    //vars
     String ok = "Se actualiza";
     String error = "La contraseña minima debe ser mayor a 5 caracteres";
     String fails = "No se puede actualizar";
