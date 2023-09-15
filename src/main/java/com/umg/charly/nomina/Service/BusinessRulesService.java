@@ -5,7 +5,6 @@ import com.umg.charly.nomina.Entity.*;
 import com.umg.charly.nomina.Entity.Module;
 import com.umg.charly.nomina.Repository.*;
 import com.umg.charly.nomina.Tools.Encoding;
-import com.umg.charly.nomina.Tools.KeepAlive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,19 +37,19 @@ public class BusinessRulesService {
 
 
 
-    @GetMapping(path = "/role")
-    private List<Role> roleList(){
-        return roleRepository.findAll();
+    @GetMapping(path = "/role/{idRol}")
+    private Role roleList(@PathVariable Long idRol){
+        return roleRepository.findByIdRole(idRol);
     }
 
-    @GetMapping(path = "/option")
-    private List<Option> optionslist(){
-        return optionRepository.findAll();
+    @GetMapping(path = "/option/{idOption}")
+    private Optional<Option> OptionalId(@PathVariable int idOption){
+        return optionRepository.findById((long)idOption);
     }
 
-    @GetMapping(path = "/menu")
-    private List<Menu> menuList(){
-        return menuRepository.findAll();
+    @GetMapping(path = "/menu/{idMenu}")
+    private Menu menuList(@PathVariable Long idMenu){
+        return menuRepository.findByIdMenu(idMenu);
     }
 
     @GetMapping(path = "/roleOption/{idRole}")
@@ -58,9 +57,9 @@ public class BusinessRulesService {
         return roleOptionRepository.findByIdRole(idRole);
     }
 
-    @GetMapping(path = "/module")
-    private List<Module> moduleList(){
-        return moduleRepository.findAll();
+    @GetMapping(path = "/module/{idModule}")
+    private Module moduleList(@PathVariable Long idModule){
+        return moduleRepository.findByIdModule(idModule);
     }
 
     @GetMapping(path = "/location")
