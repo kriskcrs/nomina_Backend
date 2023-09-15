@@ -2,13 +2,16 @@ package com.umg.charly.nomina.Service;
 
 
 import com.umg.charly.nomina.Entity.Company;
+import com.umg.charly.nomina.Entity.Log;
 import com.umg.charly.nomina.Entity.User;
 import com.umg.charly.nomina.Repository.CompanyRepository;
 import com.umg.charly.nomina.Repository.UserRepository;
+import com.umg.charly.nomina.Repository.LogRepository;
 import com.umg.charly.nomina.Tools.Encoding;
 import com.umg.charly.nomina.Tools.EncodingUUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.util.Date;
 import java.util.HashMap;
@@ -31,8 +34,11 @@ public class AuthenticationService {
 
     @Autowired
     UserRepository userRepository;
+    LogRepository logRepository;
+
     @Autowired
     private CompanyRepository companyRepository;
+
 
     @PostMapping(path = "/login")
     private HashMap<String, String> login(@RequestBody User user){
@@ -49,7 +55,7 @@ public class AuthenticationService {
             User userLogin = userRepository.findByIdUserAndPassword(user.getIdUser(), user.getPassword());
 
             if(userLogin != null) {
-                //validate user inactive
+
                 if(userLogin.getIdStatusUser() != 1){
                     response.put("code", "1");
                     response.put("message", StatusUser);
@@ -80,6 +86,8 @@ public class AuthenticationService {
                                 response.put("message", "ok");
                                 response.put("session", userLogin.getCurrentSession());
                                 response.put("user", userLogin.getIdUser());
+
+                                //validate user inactive
                                 userRepository.save(userLogin);
                                 return response;
                             }else{
