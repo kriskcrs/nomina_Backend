@@ -101,6 +101,7 @@ public class UserService {
     private List<Company> rules() {
         return companyRepository.findAll();
     }
+
     @PostMapping(path = "/changePassword")
     private HashMap<String, String> changePassword(@RequestBody UserChangePassword userChangePassword){
         User user = userRepository.findByIdUserAndPassword(userChangePassword.getIdUser(), new Encoding().crypt(userChangePassword.getPassword()));
@@ -119,7 +120,7 @@ public class UserService {
                 return response;
             }else{
                 response.put("code", "1");
-                response.put("code", "Contraseñas no coinciden");
+                response.put("message", "Contraseñas no coinciden");
                 return  response;
             }
         }else{
