@@ -6,6 +6,7 @@ import com.umg.charly.nomina.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -42,7 +43,7 @@ public class BusinessRulesCreateService {
 
     @PostMapping(path = "/bussinesRulesModify")
     private HashMap<String, String> modify(@RequestBody Company company){
-        if(company.getIdcompany() != null){
+        if(company.getIdCompany() != null){
             if(company.getPasswordlength()>5){
                 companyRepository.save(company);
                 response.put("code", "0");
@@ -59,9 +60,48 @@ public class BusinessRulesCreateService {
     }
 
     @PostMapping(path = "/createRol")
-    private Role createRole(@RequestBody Role role){
-        return roleRepository.save(role);
+    private HashMap<String, String> createRole(@RequestBody Role role){
+        try{
+            long idRol = roleRepository.findAll().size();
+            idRol++;
+            role.setIdRole(idRol);
+            role.setCreationDate(new Date());
+            role.setModificationDate(null);
+            role.setUserModification(null);
+            roleRepository.save(role);
+            response.put("code","0");
+            response.put("message","Se agrego exitosamente");
+            return response;
+        }catch (Exception e){
+            System.out.println("Error creando roles" + e.getMessage() +" causa" +e.getCause());
+            response.put("code","1");
+            response.put("message","Error");
+            return response;
+        }
+
+
     }
+
+    @PutMapping(path = "/modifyRol")
+    private HashMap<String, String> modifyRole(@RequestBody Role role){
+        try{
+            role.setModificationDate(new Date());
+            roleRepository.save(role);
+            response.put("code","0");
+            response.put("message","Se actualizo exitosamente");
+            return response;
+        }catch (Exception e){
+            System.out.println("Error actualizando roles" + e.getMessage() +" causa" +e.getCause());
+            response.put("code","1");
+            response.put("message","Error");
+            return response;
+        }
+
+
+    }
+
+
+
 
     @PostMapping(path = "/createMenu")
     private Menu createMenu(@RequestBody Menu menu){
@@ -78,20 +118,43 @@ public class BusinessRulesCreateService {
         return moduleRepository.save(module);
     }
 
+
+
     @PostMapping(path = "/createLocation")
-    private Location createBranch(@RequestBody Location location){
-        return locationRepository.save(location);
+    private HashMap<String, String> createBranch(@RequestBody Location location){
+        try {
+            long count = locationRepository.findAll().size();
+            count++;
+            location.setIdBranch(count);
+            location.setCreationDate(new Date());
+            location.setModificationDate(null);
+            location.setUserModification(null);
+            locationRepository.save(location);
+            response.put("code","0");
+            response.put("message","Se agrego exitosamente");
+            return  response;
+        }catch (Exception e){
+            System.out.println("Error menssage "+e.getMessage() + " causa " +e.getCause());
+            response.put("code","1");
+            response.put("message","No se agrego");
+            return  response;
+        }
     }
 
     @PutMapping(path = "/modifyLocation/{id}")
-    private Location modifyBranch(@RequestBody Location location, @PathVariable long id){
+    private HashMap<String, String> modifyBranch(@RequestBody Location location, @PathVariable long id){
         if(id>0){
             Optional<Location> dataBranch = locationRepository.findById(id);
             if(dataBranch.isPresent()){
-                return   locationRepository.save(location);
+                locationRepository.save(location);
+                response.put("code","0");
+                response.put("message","Se actualizo exitosamente");
+                return  response;
             }
         }
-        return null;
+        response.put("code","1");
+        response.put("message","No se actualizo");
+        return  response;
     }
 
 

@@ -58,7 +58,12 @@ public class AuthenticationService {
                     //Valide new user -> first login
                     if(userLogin.getLastDateOfEntry() == null || userLogin.getLastDateOfEntry().equals("")){
                         response.put("code", "2");
+                        userLogin.setCurrentSession(String.valueOf(new EncodingUUID().SessionManager()));
+                        userRepository.save(userLogin);
+                        response.put("session", userLogin.getCurrentSession());
+                        response.put("user", userLogin.getIdUser());
                         response.put("message", FirstLogin);
+
                         return response;
                     }else{
                         //validate require change password
@@ -106,7 +111,7 @@ public class AuthenticationService {
 
     private void FailedLogin(User user){
         //check rule
-        Company company = companyRepository.findByIdcompany(1);
+        Company company = companyRepository.findByIdCompany(1);
         //System.out.println(company.getPasswordAmountAttemptsBeforeBlocking());
         //System.out.println(user.getAccessAttempts());
 

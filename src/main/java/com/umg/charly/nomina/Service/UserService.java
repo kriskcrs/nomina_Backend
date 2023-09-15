@@ -38,7 +38,6 @@ public class UserService {
     String errorClient = "Cliente no existe";
     String errorParameters = "Error en parametros";
     String OK = "Exitoso";
-    String userOK = "Usuario creado exitosamente";
     String sessionOk = "sesion no activa";
     String sessionFail = "sesion no activa";
     HashMap<String, String> response = new HashMap<>();
@@ -103,10 +102,10 @@ public class UserService {
     }
 
     @PostMapping(path = "/changePassword")
-    private HashMap<String, String> changePassword(@RequestBody UserChangePassword userChangePassword){
+    private HashMap<String, String> changePassword(@RequestBody UserChangePassword userChangePassword) {
         User user = userRepository.findByIdUserAndPassword(userChangePassword.getIdUser(), new Encoding().crypt(userChangePassword.getPassword()));
-        if(user != null){
-            if(userChangePassword.getNewPassword().equals(userChangePassword.getConfirmNewPassword())){
+        if (user != null) {
+            if (userChangePassword.getNewPassword().equals(userChangePassword.getConfirmNewPassword())) {
                 user.setPassword(new Encoding().crypt(userChangePassword.getConfirmNewPassword()));
                 user.setLastDateOfEntry(new Date());
                 user.setLastPasswordChangeDate(new Date());
@@ -118,12 +117,12 @@ public class UserService {
                 response.put("message", "");
                 userRepository.save(user);
                 return response;
-            }else{
+            } else {
                 response.put("code", "1");
                 response.put("message", "Contraseñas no coinciden");
-                return  response;
+                return response;
             }
-        }else{
+        } else {
             response.put("code", "1");
             response.put("message", "Usuario o contraseña incorrecta");
             return response;
@@ -131,15 +130,14 @@ public class UserService {
     }
 
 
-
     //Questions User
 
     @GetMapping(path = "/questionUserAll/{user}")
     private List<UserQuestions> userQuestionsAll(@PathVariable String user) {
 
-        if(userQuestionsRepository.findByIdUser(user).isEmpty()){
+        if (userQuestionsRepository.findByIdUser(user).isEmpty()) {
             return null;
-        }else{
+        } else {
             return userQuestionsRepository.findByIdUser(user);
         }
 
@@ -178,7 +176,6 @@ public class UserService {
     private HashMap<String, String> validateQuestion(@RequestBody List<UserQuestions> userQuestions) {
         List<Company> company = companyRepository.findAll();
         int count = company.get(0).getPasswordAmountQuestionsValidate();
-        HashMap<String, String> message = new HashMap<>();
         User user = userRepository.findByIdUser(userQuestions.get(0).getIdUser());
         if (new KeepAlive().validateSession(user.getCurrentSession())) {
             System.out.println("esta la sesion activa");
@@ -196,61 +193,45 @@ public class UserService {
                     }
                 }
                 if (OK == count) {
-                    message.put("code", "0");
-                    message.put("message", sessionOk);
-                    return message;
+                    response.put("code", "0");
+                    response.put("message", sessionOk);
+                    return response;
                 }
             }
         } else {
             System.out.println("sesion no activa");
-            message.put("code", "1");
-            message.put("message", sessionFail);
-            return message;
+            response.put("code", "1");
+            response.put("message", sessionFail);
+            return response;
         }
-        message.put("code", "1");
-        message.put("message", fails);
-        return message;
+        response.put("code", "1");
+        response.put("message", fails);
+        return response;
 
     }
 
 
     @PostMapping(path = "/questionsCreate")
-    private HashMap<String,String> createQuestions(@RequestBody UserQuestions userQuestions){
+    private HashMap<String, String> createQuestions(@RequestBody UserQuestions userQuestions) {
         User user = userRepository.findByIdUser(userQuestions.getIdUser());
-       if(new KeepAlive().validateSession(user.getCurrentSession()) && QuestionsValidate(userQuestions)){
-          createQuestion(userQuestions);
-           response.put("code", "0");
-           response.put("message", OK);
-           System.out.println(response);
-           return response;
+        if (new KeepAlive().validateSession(user.getCurrentSession())) {
+            if (QuestionsValidate(userQuestions)) {
+                createQuestion(userQuestions);
+                response.put("code", "0");
+                response.put("message", OK);
+                System.out.println(response);
+                return response;
+            }
+            response.put("code", "1");
+            response.put("message", "Pregunta ya existe");
+            System.out.println(response);
+            return response;
         }
         response.put("code", "1");
-        response.put("message", "Pregunta ya existe");
+        response.put("message", "Sesion no existe");
         System.out.println(response);
         return response;
-    }
 
-    private void createQuestion(UserQuestions userQuestions){
-        long id = userQuestionsRepository.findAll().size();
-        id++;
-        List<UserQuestions> questions = userQuestionsRepository.findByIdUser(userQuestions.getIdUser());
-        int temp = questions.size();
-        temp++;
-        userQuestions.setRespond(new Encoding().crypt(userQuestions.getRespond()));
-        userQuestions.setOrderQuestions(temp);
-        userQuestions.setIdQuestion(id);
-        userQuestions.setCreationDate(new Date());
-        userQuestionsRepository.save(userQuestions);
-
-    }
-
-    private boolean QuestionsValidate(UserQuestions userQuestions){
-            UserQuestions question = userQuestionsRepository.findByIdUserAndAndQuestions(userQuestions.getIdUser(),userQuestions.getQuestions());
-            if(question==null){
-                return true;
-            }else{
-                return false;
-            }
     }
 
     @PostMapping(path = "/createUser")
@@ -337,6 +318,29 @@ public class UserService {
             }
         }
         return false;
+    }
+
+    private void createQuestion(UserQuestions userQuestions) {
+        long id = userQuestionsRepository.findAll().size();
+        id++;
+        List<UserQuestions> questions = userQuestionsRepository.findByIdUser(userQuestions.getIdUser());
+        int temp = questions.size();
+        temp++;
+        userQuestions.setRespond(new Encoding().crypt(userQuestions.getRespond()));
+        userQuestions.setOrderQuestions(temp);
+        userQuestions.setIdQuestion(id);
+        userQuestions.setCreationDate(new Date());
+        userQuestionsRepository.save(userQuestions);
+
+    }
+
+    private boolean QuestionsValidate(UserQuestions userQuestions) {
+        UserQuestions question = userQuestionsRepository.findByIdUserAndAndQuestions(userQuestions.getIdUser(), userQuestions.getQuestions());
+        if (question == null) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }
