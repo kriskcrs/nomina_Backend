@@ -59,6 +59,10 @@ public class UserService {
         return userRepository.findByIdUser(id);
     }
 
+    @GetMapping(path = "/userRole/{idUser}")
+    private UserRole userRoleList(@PathVariable String idUser) {
+        return userRoleRepository.findByIdUser(idUser);
+    }
     @GetMapping(path = "/userRole")
     private List<UserRole> userRoleList() {
         return userRoleRepository.findAll();
@@ -247,7 +251,7 @@ public class UserService {
             // Va a encriptar la contraseña :D
             String generatedPassword = new PasswordGenerator().generatePassword(lengtPasswordTemp, uppercaseCount, lowercaseCount, digitCount);
             user.setPassword(new Encoding().crypt(generatedPassword));
-            SendPassword.sendPasswordByEmail(user.getEmail(), generatedPassword);
+            SendPassword.sendPasswordByEmail(user.getIdUser(), generatedPassword);
             userRepository.save(user);
             response.put("code", "0");
             response.put("message", OK);
