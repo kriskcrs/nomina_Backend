@@ -1,9 +1,6 @@
 package com.umg.charly.nomina.Entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,11 +11,9 @@ import java.util.Date;
 @Getter
 @Setter
 public class RoleOption {
-    @Id
-    @Column(name = "idrole")
-    private Long idRole;
-    @Column(name = "idopcion")
-    private Long idOption;
+    @EmbeddedId
+    private RoleOptionPK IdPK;
+
     @Column(name = "alta")
     private Integer up;
     @Column(name = "baja")
