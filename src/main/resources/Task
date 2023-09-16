@@ -8,6 +8,13 @@ Task
 	- manejo de sesiones
 	- validación de primer login
 
+	pendientes
+	- validar politicas de contraseña a ingresar en reset-password
+	- validar que la sesion se cumpla para cambiar el password
+	- hacer logout
+	- administracion de sesiones activas
+	- mtt asignacion de roles y opciones
+
 2 -DI- Pantalla de primer login
 	- cambio de contraseña
 	- validación de caracteres (para nueva contraseña)
@@ -18,13 +25,24 @@ Task
 	- validación de caracteres (para nueva contraseña) // ya valida caracteres
 	- Configuracion de preguntas en primer login
 
+	pendientes
+	-modificar usuario
+    -modificar estado de usuario
+    -mtt modulos
+    -mtt menu
+
+
+
 4 -RC- Bitacora
 	- Registro de acceso (Todo tipo de login)
 
+    pendiente
+    -mtt optiones
+
 5 -PR- Pantalla de bienvenida
 	- validación de roles
-		- validación de menus
-		- Validación de opciones
+	- validación de menus
+	- Validación de opciones
 	- home screen
 	- menu lateral
 
@@ -38,7 +56,7 @@ Task
 7 -RC- mtto de usuario
 	- Ingreso de campos
 	- Creación de usuario 
-		- Envio de credenciales por email
+	- Envio de credenciales por email
 	- Modificación de usuario
 	- asignación de roles
 
