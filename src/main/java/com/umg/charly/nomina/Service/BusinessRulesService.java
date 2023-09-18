@@ -78,6 +78,11 @@ public class BusinessRulesService {
         return moduleRepository.findByIdModule(idModule);
     }
 
+    @GetMapping(path = "/module")
+    private List<Module> moduleLists(){
+        return moduleRepository.findAll();
+    }
+
     @GetMapping(path = "/location")
     private List<Location> branchList(){
         return locationRepository.findAll();
