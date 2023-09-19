@@ -5,6 +5,7 @@ import com.umg.charly.nomina.Entity.*;
 import com.umg.charly.nomina.Entity.Module;
 import com.umg.charly.nomina.Repository.*;
 import com.umg.charly.nomina.Tools.Encoding;
+import org.hibernate.loader.ast.spi.MultiKeyLoadSizingStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,6 +43,11 @@ public class BusinessRulesService {
         return roleRepository.findByIdRole(idRol);
     }
 
+    @GetMapping(path = "/role")
+    private List<Role> roleList(){
+        return roleRepository.findAll();
+    }
+
     @GetMapping(path = "/option/{idOption}")
     private Optional<Option> OptionalId(@PathVariable int idOption){
         return optionRepository.findById((long)idOption);
@@ -57,14 +63,24 @@ public class BusinessRulesService {
         return menuRepository.findByIdMenu(idMenu);
     }
 
-    @GetMapping(path = "/roleOption/{idRole}")
-    private RoleOption roleOptionsList(@PathVariable Long idRole){
-        return roleOptionRepository.findByIdRole(idRole);
+
+
+    @GetMapping(path = "/roleOption")
+    private List<RoleOption> roleOptionsList(){
+        return roleOptionRepository.findAll();
     }
+
+
+
 
     @GetMapping(path = "/module/{idModule}")
     private Module moduleList(@PathVariable Long idModule){
         return moduleRepository.findByIdModule(idModule);
+    }
+
+    @GetMapping(path = "/module")
+    private List<Module> moduleLists(){
+        return moduleRepository.findAll();
     }
 
     @GetMapping(path = "/location")
