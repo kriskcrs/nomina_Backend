@@ -3,20 +3,25 @@ package com.umg.charly.nomina.Service;
 
 import com.umg.charly.nomina.Entity.Company;
 import com.umg.charly.nomina.Entity.Log;
+import com.umg.charly.nomina.Entity.TypeAccess;
 import com.umg.charly.nomina.Entity.User;
 import com.umg.charly.nomina.Repository.CompanyRepository;
+import com.umg.charly.nomina.Repository.TypeAccessRepository;
 import com.umg.charly.nomina.Repository.UserRepository;
 import com.umg.charly.nomina.Repository.LogRepository;
 import com.umg.charly.nomina.Tools.Encoding;
 import com.umg.charly.nomina.Tools.EncodingUUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.context.request.RequestAttributes;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.SimpleTimeZone;
+import java.util.Random;
 
 @RestController
 @CrossOrigin
@@ -34,14 +39,21 @@ public class AuthenticationService {
 
     @Autowired
     UserRepository userRepository;
-    LogRepository logRepository;
 
     @Autowired
-    private CompanyRepository companyRepository;
+     LogRepository logRepository;
+
+
+    @Autowired
+    TypeAccessRepository typeAccessRepository;
+
+    @Autowired
+     CompanyRepository companyRepository;
 
 
     @PostMapping(path = "/login")
     private HashMap<String, String> login(@RequestBody User user){
+
         //System.out.println(user.getIdUser() + user.getPassword());
 
         //encoding password
@@ -59,6 +71,7 @@ public class AuthenticationService {
                 if(userLogin.getIdStatusUser() != 1){
                     response.put("code", "1");
                     response.put("message", StatusUser);
+                    createtypeAccess(3,userLogin.getIdUser());
                     return response;
                 }else {
                     //Valide new user -> first login
@@ -92,6 +105,10 @@ public class AuthenticationService {
                                 response.put("message", "ok");
                                 response.put("session", userLogin.getCurrentSession());
                                 response.put("user", userLogin.getIdUser());
+                                createtypeAccess(1,userLogin.getIdUser());
+
+
+
 
                                 //validate user inactive
                                 userRepository.save(userLogin);
@@ -108,11 +125,13 @@ public class AuthenticationService {
                 FailedLogin(userExist);
                 response.put("code", "1");
                 response.put("message", FailedLogin);
+                createtypeAccess(2,userLogin.getIdUser());
                 return response;
             }
         }else{
             response.put("code", "1");
             response.put("message", FailedLogin);
+            createtypeAccess(4,user.getIdUser());
             return response;
         }
     }
@@ -131,4 +150,63 @@ public class AuthenticationService {
         userRepository.save(user);
     }
 
+
+    private String getUserAgent() {
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if (attributes != null) {
+            String userAgent = attributes.getRequest().getHeader("User-Agent");
+            return userAgent;
+        } else {
+            return "User-Agent not available";
+        }
+    }
+
+    private String getIpAddress() {
+        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+
+        if (requestAttributes instanceof ServletRequestAttributes) {
+            String ipAddress = ((ServletRequestAttributes) requestAttributes).getRequest().getRemoteAddr();
+            return ipAddress;
+        } else {
+            return "IP Address not available";
+        }
+    }
+
+
+    private void createtypeAccess(int status, String user){
+        String message = "";
+
+        switch (status ){
+            case 1: message = "Acceso Concedido";
+            break;
+            case 2: message = " Password incorrecto/Numero de intentos exedidos";
+            break;
+            case 3: message = "Usuario Inactivo";
+            break;
+            case 4: message = "Usuario ingresado no existe";
+            break;
+        }
+
+        //stored in log :D
+        int idLog = logRepository.findAll().size();
+        idLog++;
+        Log log = new Log();
+        log.setIdLog(idLog);
+        log.setIdUser(user);
+        log.setIdtypeAccess(1);
+        log.setDateAccess(new Date());
+        log.setHttpUserAgent(getUserAgent());
+        log.setIpAdress(getIpAddress());
+        log.setAction(message);
+        log.setOs(log.getOs());
+        log.setDivice(log.getDivice());
+        log.setBrowser(log.getBrowser());
+        log.setSesion(log.getSesion());
+        try {
+            logRepository.save(log);
+            System.out.println("Registro de inicio de sesión guardado con éxito.");
+        } catch (Exception e) {
+            System.err.println("Error al guardar en el registro: " + e.getMessage());
+        }
+    }
 }
