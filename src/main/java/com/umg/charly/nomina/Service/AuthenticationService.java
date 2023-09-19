@@ -41,7 +41,7 @@ public class AuthenticationService {
 
 
     @PostMapping(path = "/login")
-    private HashMap<String, String> login(@RequestBody User user){
+    private HashMap<String, String> login(@RequestBody User user) {
         //System.out.println(user.getIdUser() + user.getPassword());
 
         //encoding password
@@ -50,19 +50,19 @@ public class AuthenticationService {
 
         //Validate user exist
         User userExist = userRepository.findByIdUser(user.getIdUser());
-        if(userExist != null){
+        if (userExist != null) {
             //validate user and password
             User userLogin = userRepository.findByIdUserAndPassword(user.getIdUser(), user.getPassword());
 
-            if(userLogin != null) {
+            if (userLogin != null) {
 
-                if(userLogin.getIdStatusUser() != 1){
+                if (userLogin.getIdStatusUser() != 1) {
                     response.put("code", "1");
                     response.put("message", StatusUser);
                     return response;
-                }else {
+                } else {
                     //Valide new user -> first login
-                    if(userLogin.getLastDateOfEntry() == null || userLogin.getLastDateOfEntry().equals("")){
+                    if (userLogin.getLastDateOfEntry() == null || userLogin.getLastDateOfEntry().equals("")) {
                         response.put("code", "2");
                         userLogin.setCurrentSession(String.valueOf(new EncodingUUID().SessionManager()));
                         userRepository.save(userLogin);
@@ -71,16 +71,16 @@ public class AuthenticationService {
                         response.put("message", FirstLogin);
 
                         return response;
-                    }else{
+                    } else {
                         //validate require change password
-                        if(userLogin.getRequiresChangingPassword() != 0){
+                        if (userLogin.getRequiresChangingPassword() != 0) {
                             response.put("code", "3");
                             response.put("message", RequiredChangePassword);
                             response.put("user", userLogin.getIdUser());
                             return response;
-                        }else{
+                        } else {
                             //validate session
-                            if(userLogin.getCurrentSession() == null || userLogin.getCurrentSession().equals("")){
+                            if (userLogin.getCurrentSession() == null || userLogin.getCurrentSession().equals("")) {
                                 //Login OK
                                 //SesionID, Access Attemps = 0
                                 userLogin.setCurrentSession(String.valueOf(new EncodingUUID().SessionManager()));
@@ -88,7 +88,7 @@ public class AuthenticationService {
                                 userLogin.setLastDateOfEntry(new Date());
 
                                 //response
-                                response.put("code","0");
+                                response.put("code", "0");
                                 response.put("message", "ok");
                                 response.put("session", userLogin.getCurrentSession());
                                 response.put("user", userLogin.getIdUser());
@@ -96,7 +96,7 @@ public class AuthenticationService {
                                 //validate user inactive
                                 userRepository.save(userLogin);
                                 return response;
-                            }else{
+                            } else {
                                 response.put("code", "1");
                                 response.put("message", CurrentSession);
                                 return response;
@@ -104,31 +104,53 @@ public class AuthenticationService {
                         }
                     }
                 }
-            }else{
+            } else {
                 FailedLogin(userExist);
                 response.put("code", "1");
                 response.put("message", FailedLogin);
                 return response;
             }
-        }else{
+        } else {
             response.put("code", "1");
             response.put("message", FailedLogin);
             return response;
         }
     }
 
-    private void FailedLogin(User user){
+    private void FailedLogin(User user) {
         //check rule
         Company company = companyRepository.findByIdCompany(1);
         //System.out.println(company.getPasswordAmountAttemptsBeforeBlocking());
         //System.out.println(user.getAccessAttempts());
 
         user.setAccessAttempts(user.getAccessAttempts() + 1);
-        if(user.getAccessAttempts() >= company.getPasswordAmountAttemptsBeforeBlocking()){
+        if (user.getAccessAttempts() >= company.getPasswordAmountAttemptsBeforeBlocking()) {
             user.setIdStatusUser(Long.valueOf(2));
         }
 
         userRepository.save(user);
     }
 
+
+    @GetMapping(path = "/revoke/{session}")
+    private HashMap<String, String> logout(@PathVariable String session) {
+        if (session != null) {
+            User user = userRepository.findByCurrentSession(session);
+            if (user != null) {
+                user.setCurrentSession("");
+                userRepository.save(user);
+                response.put("code", "0");
+                response.put("message", "exitoso");
+                return response;
+            } else {
+                System.out.println("no esta");
+                response.put("code", "1");
+                response.put("message", "session no valida");
+                return response;
+            }
+        }
+        response.put("code", "1");
+        response.put("message", "session no valida");
+        return response;
+    }
 }
