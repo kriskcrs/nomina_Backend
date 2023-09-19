@@ -58,7 +58,7 @@ public class AuthenticationService {
 
         //encoding password
         user.setPassword(new Encoding().crypt(user.getPassword()));
-        //System.out.println(user.getPassword());
+        System.out.println(user.getPassword());
 
         //Validate user exist
         User userExist = userRepository.findByIdUser(user.getIdUser());
