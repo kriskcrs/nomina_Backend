@@ -43,8 +43,9 @@ public class BusinessRulesCreateService {
 
     @PostMapping(path = "/bussinesRulesModify")
     private HashMap<String, String> modify(@RequestBody Company company){
-        if(company.getIdCompany() != null){
+        if(company.getIdCompany() != null ){
             if(company.getPasswordlength()>5){
+                company.setModificationDate(new Date());
                 companyRepository.save(company);
                 response.put("code", "0");
                 response.put("message", ok);
@@ -58,6 +59,25 @@ public class BusinessRulesCreateService {
         response.put("message", fails);
         return response;
     }
+
+
+
+    @PostMapping(path = "/createMenu")
+    private Menu createMenu(@RequestBody Menu menu){
+        return menuRepository.save(menu);
+    }
+
+    @PostMapping(path = "/createOption")
+    private Option createMenu(@RequestBody Option option){
+        return optionRepository.save(option);
+    }
+
+    @PostMapping(path = "/createModule")
+    private com.umg.charly.nomina.Entity.Module createMenu(@RequestBody Module module){
+        return moduleRepository.save(module);
+    }
+
+
 
     @PostMapping(path = "/createRol")
     private HashMap<String, String> createRole(@RequestBody Role role){
@@ -101,25 +121,6 @@ public class BusinessRulesCreateService {
     }
 
 
-
-
-    @PostMapping(path = "/createMenu")
-    private Menu createMenu(@RequestBody Menu menu){
-        return menuRepository.save(menu);
-    }
-
-    @PostMapping(path = "/createOption")
-    private Option createMenu(@RequestBody Option option){
-        return optionRepository.save(option);
-    }
-
-    @PostMapping(path = "/createModule")
-    private com.umg.charly.nomina.Entity.Module createMenu(@RequestBody Module module){
-        return moduleRepository.save(module);
-    }
-
-
-
     @PostMapping(path = "/createLocation")
     private HashMap<String, String> createBranch(@RequestBody Location location){
         try {
@@ -141,11 +142,15 @@ public class BusinessRulesCreateService {
         }
     }
 
-    @PutMapping(path = "/modifyLocation/{id}")
-    private HashMap<String, String> modifyBranch(@RequestBody Location location, @PathVariable long id){
-        if(id>0){
-            Optional<Location> dataBranch = locationRepository.findById(id);
+    @PutMapping(path = "/modifyLocation")
+    private HashMap<String, String> modifyBranch(@RequestBody Location location){
+        System.out.println(location.getIdBranch());
+        if(location.getIdBranch()>0){
+
+            Optional<Location> dataBranch = locationRepository.findById(location.getIdBranch());
             if(dataBranch.isPresent()){
+                location.setIdBranch(dataBranch.get().getIdBranch());
+                location.setModificationDate(new Date());
                 locationRepository.save(location);
                 response.put("code","0");
                 response.put("message","Se actualizo exitosamente");

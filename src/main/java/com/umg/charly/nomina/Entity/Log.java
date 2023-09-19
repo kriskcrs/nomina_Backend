@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import jakarta.persistence.Entity;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.Data;
 import java.util.Date;
 
 @Entity
@@ -16,27 +15,27 @@ import java.util.Date;
 
 public class Log {
     @Id
-    @Column(name = "IdBitacoraAcceso")
-    private String idLog;
-    @Column(name = "IdUsuario")
+    @Column(name = "idbitacoraacceso")
+    private int idLog;
+    @Column(name = "idusuario")
     private String idUser;
-    @Column(name = "IdTipoAcceso")
-    private String idtypeAccess;
-    @Column(name = "FechaAcceso")
+    @Column(name = "idtipoacceso")
+    private int idtypeAccess;
+    @Column(name = "fechaacceso")
     private Date dateAccess;
-    @Column(name = "HttpUserAgent")
+    @Column(name = "httpuseragent")
     private String httpUserAgent;
-    @Column(name = "DireccionIp")
+    @Column(name = "direccionip")
     private String ipAdress;
-    @Column(name = "Accion")
+    @Column(name = "accion")
     private String action;
-    @Column(name = "SistemaOperativo")
+    @Column(name = "sistemaoperativo")
     private String os;
-    @Column(name = "Dispositivo")
+    @Column(name = "dispositivo")
     private String divice;
-    @Column(name = "Browser")
+    @Column(name = "browser")
     private String browser;
-    @Column(name = "Sesion")
+    @Column(name = "sesion")
     private String sesion;
 
 }
