@@ -1,6 +1,5 @@
 package com.umg.charly.nomina.Service;
 
-import com.umg.charly.nomina.Entity.FullRol;
 import com.umg.charly.nomina.Entity.Option;
 import com.umg.charly.nomina.Entity.RoleOption;
 import com.umg.charly.nomina.Entity.UserRole;
