@@ -46,6 +46,10 @@ public class SearchOptionsUserService {
         List<Option> optionUserList = new ArrayList<>();
         List<Menu> menuUserList = new ArrayList<>();
         List<Module> moduleUserList = new ArrayList<>();
+        List<Long> menusAlreadyAdded = new ArrayList<>();
+        menusAlreadyAdded.add(Long.valueOf("0"));
+        List<Long> modulesAlreadyAdded = new ArrayList<>();
+        modulesAlreadyAdded.add(Long.valueOf("0"));
 
         boolean fistMenu = true;
         boolean firstModule = true;
@@ -67,8 +71,15 @@ public class SearchOptionsUserService {
                                 }else{
                                     //filtro para no sobre escribri el mismo menu varias veces segun las opciones del usuario
                                     for(Menu menuAdded : menuUserList){
-                                        if(menuAdded.getIdMenu() != option.getIdMenu()){
+                                        boolean idMenuAlreadyExist = false;
+                                        for(Long id : menusAlreadyAdded){
+                                            if(id == option.getIdMenu()){
+                                                idMenuAlreadyExist = true;
+                                            }
+                                        }
+                                        if(menuAdded.getIdMenu() != option.getIdMenu() && !idMenuAlreadyExist){
                                             menuUserList.add(menu);
+                                            menusAlreadyAdded.add(menu.getIdMenu());
                                             break;
                                         }
                                     }
@@ -81,8 +92,15 @@ public class SearchOptionsUserService {
                                         }else{
                                             //filtro para no sobre escribri el mismo modulo varias veces segun los menu del usuario
                                             for(Module moduleAdded : moduleUserList){
-                                                if(moduleAdded.getIdModule() != menu.getIdModulo()){
+                                                boolean idModuleAlreadyExist = false;
+                                                for(Long id : modulesAlreadyAdded){
+                                                    if(id == menu.getIdModulo()){
+                                                        idModuleAlreadyExist = true;
+                                                    }
+                                                }
+                                                if(moduleAdded.getIdModule() != menu.getIdModulo() && !idModuleAlreadyExist){
                                                     moduleUserList.add(module);
+                                                    modulesAlreadyAdded.add(module.getIdModule());
                                                     break;
                                                 }
                                             }
