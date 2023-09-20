@@ -205,7 +205,7 @@ public class AuthenticationService {
         Log log = new Log();
         log.setIdLog(idLog);
         log.setIdUser(user);
-        log.setIdtypeAccess(1);
+        log.setIdtypeAccess(status);
         log.setDateAccess(new Date());
         log.setHttpUserAgent(getUserAgent());
         log.setIpAdress(getIpAddress());
