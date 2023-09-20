@@ -7,25 +7,39 @@ Task
 	- Validación de caducidad
 	- manejo de sesiones
 	- validación de primer login
+    - validar politicas de contraseña a ingresar en reset-password
+    - validar que la sesion se cumpla para cambiar el password
+    - validación de roles
+    - validación de menus
+    - Validación de opciones
+    - home screen
+    - menu lateral
+  2 -DI- Pantalla de primer login
+  	- cambio de contraseña
+  	- validación de caracteres (para nueva contraseña)
+  	- ingreso de preguntas de seguridad
 
-	pendientes
-	- validar politicas de contraseña a ingresar en reset-password
-	- validar que la sesion se cumpla para cambiar el password
-	- hacer logout
-	- administracion de sesiones activas
-	- mtt asignacion de roles y opciones
+	#Pendientes DI
+	- modificacion de estado usuarios
 
-2 -DI- Pantalla de primer login
-	- cambio de contraseña
-	- validación de caracteres (para nueva contraseña)
-	- ingreso de preguntas de seguridad
+
 
 3 -CC- Pantalla de Reinicio de contraseña
 	- Preguntas de seguridad //ya
 	- validación de caracteres (para nueva contraseña) // ya valida caracteres
 	- Configuracion de preguntas en primer login
+    - hacer logout
+6 -CC- mtto de reglas de negocio y roles
+	- modificación de reglas -> Insert de EMPRESA con sus reglas default //ya acepta y valida longitud minima
+	- creación de roles
+	- creación de sucursales
+	- modificacion de sucursales
+	#- mtto de rutas -> Para saber ruta tiene cada modulo
 
-	pendientes
+	#Pendientes CC
+	- mtt optiones
+	- mtt asignacion de roles y opciones
+	- administracion de sesiones activas
 	-modificar usuario
     -modificar estado de usuario
     -mtt modulos
@@ -36,30 +50,23 @@ Task
 4 -RC- Bitacora
 	- Registro de acceso (Todo tipo de login)
 
-    pendiente
-    -mtt optiones
-
-5 -PR- Pantalla de bienvenida
-	- validación de roles
-	- validación de menus
-	- Validación de opciones
-	- home screen
-	- menu lateral
-
-6 -CC- mtto de reglas de negocio y roles
-	- modificación de reglas -> Insert de EMPRESA con sus reglas default //ya acepta y valida longitud minima
-	- creación de roles
-	- creación de sucursales
-	- modificacion de sucursales
-	#- mtto de rutas -> Para saber ruta tiene cada modulo
-
 7 -RC- mtto de usuario
 	- Ingreso de campos
-	- Creación de usuario 
+	- Creación de usuario
 	- Envio de credenciales por email
-	- Modificación de usuario
-	- asignación de roles
+
+    #Pendiente RC
+    - asignación de roles usuario
+
+
+
+
+###5 -PR- Pantalla de bienvenida
 
 8 -PR- servidor images
 	- almacenamiento de fotografias
 	- visualización de fotografias
+	- mtto modulos
+
+	#Pendientes
+	- mtto usuario

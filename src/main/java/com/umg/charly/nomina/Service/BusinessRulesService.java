@@ -56,9 +56,15 @@ public class BusinessRulesService {
         return optionRepository.findById((long)idOption);
     }
     @GetMapping(path = "/option")
-    private List<Option> OptionalId(){
+    private List<Option> optionList(){
         return optionRepository.findAll();
     }
+
+    @GetMapping(path = "/menu")
+    private List<Menu> menuList(){
+        return menuRepository.findAll();
+    }
+
 
 
     @GetMapping(path = "/menu/{idMenu}")

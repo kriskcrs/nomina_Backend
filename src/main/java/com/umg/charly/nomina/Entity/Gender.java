@@ -15,8 +15,8 @@ import java.util.Date;
 @Setter
 public class Gender {
     @Id
-    @Column(name = "idsucursal")
-    private Long idBranch;
+    @Column(name = "idgenero")
+    private Long idGender;
     @Column(name = "nombre")
     private String name;
     @Column(name = "fechacreacion")
