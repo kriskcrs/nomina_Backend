@@ -93,6 +93,9 @@ public class AuthenticationService {
                             response.put("code", "3");
                             response.put("message", RequiredChangePassword);
                             response.put("user", userLogin.getIdUser());
+                            //creando session
+                            userLogin.setCurrentSession(String.valueOf(new EncodingUUID().SessionManager()));
+                            userRepository.save(userLogin);
                             return response;
                         } else {
                             //validate session
@@ -126,7 +129,7 @@ public class AuthenticationService {
                 FailedLogin(userExist);
                 response.put("code", "1");
                 response.put("message", FailedLogin);
-                createtypeAccess(2, userLogin.getIdUser());
+                createtypeAccess(2, user.getIdUser());
                 return response;
             }
         } else {
