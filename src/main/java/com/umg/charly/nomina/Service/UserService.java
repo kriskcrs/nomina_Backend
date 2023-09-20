@@ -2,6 +2,7 @@ package com.umg.charly.nomina.Service;
 
 
 import com.umg.charly.nomina.Entity.Company;
+import com.umg.charly.nomina.Entity.Module;
 import com.umg.charly.nomina.Entity.User;
 import com.umg.charly.nomina.Entity.UserQuestions;
 import com.umg.charly.nomina.Entity.UserChangePassword;
@@ -256,6 +257,30 @@ public class UserService {
             response.put("message", errorMessage);
             return response;
         }
+    }
+
+    @PutMapping(path = "/modifyUser/{idUser}")
+    private HashMap<String, String> modifyUser(@RequestBody User user, @PathVariable String idUser){
+        if(idUser!=null){
+            Optional<User> dataUser = Optional.ofNullable(userRepository.findByIdUser(idUser));
+            if(dataUser.isPresent()){
+                dataUser.get().setName(user.getName());
+                dataUser.get().setLastName(user.getLastName());
+                dataUser.get().setIdStatusUser(user.getIdStatusUser());
+                dataUser.get().setEmail(user.getEmail());
+                dataUser.get().setMobilePhone(user.getMobilePhone());
+                dataUser.get().setIdBranch(user.getIdBranch());
+                dataUser.get().setModificationDate(new Date());
+                dataUser.get().setUserModification(user.getUserModification());
+                userRepository.save(dataUser.get());
+                response.put("code","0");
+                response.put("message","Se actualizo exitosamente");
+                return  response;
+            }
+        }
+        response.put("code","1");
+        response.put("message","No se actualizo");
+        return  response;
     }
 
     //validaciones de reglas
