@@ -17,11 +17,14 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.context.request.RequestAttributes;
 
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.SimpleTimeZone;
 import java.util.Random;
+
+
 
 @RestController
 @CrossOrigin
@@ -135,6 +138,8 @@ public class AuthenticationService {
 
     }
 
+
+
     private void FailedLogin(User user) {
         //check rule
         Company company = companyRepository.findByIdCompany(1);
@@ -151,9 +156,11 @@ public class AuthenticationService {
 
 
     private String getUserAgent() {
-        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        if (attributes != null) {
-            String userAgent = attributes.getRequest().getHeader("User-Agent");
+        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+
+        if (requestAttributes instanceof ServletRequestAttributes) {
+            HttpServletRequest request = ((ServletRequestAttributes) requestAttributes).getRequest();
+            String userAgent = request.getHeader("User-Agent");
             return userAgent;
         } else {
             return "User-Agent not available";
@@ -189,6 +196,8 @@ public class AuthenticationService {
                 message = "Usuario ingresado no existe";
                 break;
         }
+        String userAgent = getUserAgent();
+        String ipAddress = getIpAddress();
 
         //stored in log :D
         int idLog = logRepository.findAll().size();
@@ -201,15 +210,62 @@ public class AuthenticationService {
         log.setHttpUserAgent(getUserAgent());
         log.setIpAdress(getIpAddress());
         log.setAction(message);
-        log.setOs(log.getOs());
-        log.setDivice(log.getDivice());
-        log.setBrowser(log.getBrowser());
+
+        String os = parseOsFromUserAgent(userAgent);
+        String device = parseDeviceFromUserAgent(userAgent);
+        String browser = parseBrowserFromUserAgent(userAgent);
+
+        log.setOs(os);
+        log.setDivice(device);
+        log.setBrowser(browser);
+
         log.setSesion(log.getSesion());
         try {
             logRepository.save(log);
             System.out.println("Registro de inicio de sesión guardado con éxito.");
         } catch (Exception e) {
             System.err.println("Error al guardar en el registro: " + e.getMessage());
+        }
+    }
+
+    private String parseOsFromUserAgent(String userAgent) {
+        if (userAgent.contains("Windows")) {
+            return "Windows";
+        } else if (userAgent.contains("Linux")) {
+            return "Linux";
+        } else if (userAgent.contains("Mac")) {
+            return "Mac";
+        } else {
+            return "Desconocido";
+        }
+    }
+
+
+    private String parseDeviceFromUserAgent(String userAgent) {
+        if (userAgent.contains("Mobile")) {
+            return "Dispositivo móvil";
+        } else if (userAgent.contains("Tablet")) {
+            return "Tableta";
+        } else if (userAgent.contains("Windows")) {
+            return "PC con Windows";
+        } else if (userAgent.contains("Macintosh")) {
+            return "Mac";
+        } else {
+            return "Desconocido";
+        }
+    }
+
+    private String parseBrowserFromUserAgent(String userAgent) {
+        if (userAgent.contains("Chrome")) {
+            return "Google Chrome";
+        } else if (userAgent.contains("Firefox")) {
+            return "Mozilla Firefox";
+        } else if (userAgent.contains("Safari")) {
+            return "Safari";
+        } else if (userAgent.contains("Edge")) {
+            return "Microsoft Edge";
+        } else {
+            return "Desconocido";
         }
     }
 
