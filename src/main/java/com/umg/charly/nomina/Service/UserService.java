@@ -39,7 +39,7 @@ public class UserService {
     String errorParameters = "Error en parametros";
     String OK = "Exitoso";
     String sessionOk = "sesion no activa";
-    String sessionFail = "sesion no activa";
+    String responseFail = "Respuestas no validas";
     HashMap<String, String> response = new HashMap<>();
     int MaxCharterPassword = 25;
     int uppercaseCount = 2;
@@ -180,10 +180,7 @@ public class UserService {
     private HashMap<String, String> validateQuestion(@RequestBody List<UserQuestions> userQuestions) {
         List<Company> company = companyRepository.findAll();
         int count = company.get(0).getPasswordAmountQuestionsValidate();
-        User user = userRepository.findByIdUser(userQuestions.get(0).getIdUser());
-        if (new KeepAlive().validateSession(user.getCurrentSession())) {
-            System.out.println("esta la sesion activa");
-            if (userQuestions != null && !userQuestions.isEmpty()) {
+            if (!userQuestions.isEmpty()) {
                 int OK = 0;
                 int tmp = 0;
                 for (UserQuestions userQuestionData : userQuestions
@@ -202,14 +199,8 @@ public class UserService {
                     return response;
                 }
             }
-        } else {
-            System.out.println("sesion no activa");
-            response.put("code", "1");
-            response.put("message", sessionFail);
-            return response;
-        }
         response.put("code", "1");
-        response.put("message", fails);
+        response.put("message", responseFail);
         return response;
 
     }
