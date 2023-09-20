@@ -90,51 +90,7 @@ public class BusinessRulesService {
         return moduleRepository.findAll();
     }
 
-    @PutMapping(path = "/modifyModule/{idModule}")
-    private HashMap<String, String> modifyModule(@RequestBody Module module, @PathVariable long idModule){
-        if(idModule>0){
-            Optional<Module> dataBranch = moduleRepository.findById(idModule);
-            if(dataBranch.isPresent()){
-                dataBranch.get().setName(module.getName());
-                dataBranch.get().setModificationDate(new Date());
-                dataBranch.get().setUserModification(module.getUserModification());
-                moduleRepository.save(dataBranch.get());
-                response.put("code","0");
-                response.put("message","Se actualizo exitosamente");
-                return  response;
-            }
-        }
-        response.put("code","1");
-        response.put("message","No se actualizo");
-        return  response;
-    }
 
-    @PostMapping(path = "/createModulo")
-    private HashMap<String, String> createModulo(@RequestBody Module module){
-        try{
-            long idModulo = moduleRepository.findAll().size();
-            idModulo++;
-            int idOrdenMenu = moduleRepository.findAll().size();
-            idOrdenMenu++;
-            module.setIdModule(idModulo);
-            module.setOrderMenu(idOrdenMenu);
-            module.setName(module.getName());
-            module.setCreationDate(new Date());
-            module.setModificationDate(null);
-            module.setUserModification(null);
-            moduleRepository.save(module);
-            response.put("code","0");
-            response.put("message","Se agrego exitosamente");
-            return response;
-        }catch (Exception e){
-            System.out.println("Error creando roles" + e.getMessage() +" causa" +e.getCause());
-            response.put("code","1");
-            response.put("message","Error");
-            return response;
-        }
-
-
-    }
     @GetMapping(path = "/location")
     private List<Location> branchList(){
         return locationRepository.findAll();

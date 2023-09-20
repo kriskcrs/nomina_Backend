@@ -45,17 +45,14 @@ public class FullRolService {
             HashMap <String, HashMap> ListOption = new HashMap<>();
             int x = 0;
             for(x=0;x<roleOptions.size();x++){
-
                 if(roleOptions.get(x).getIdPK().getIdRole().equals(usuarioRol.getIdRole())){
                     LisRol.put("idOption "+ x, String.valueOf(roleOptions.get(x).getIdPK().getIdOption()));
-
                 }
             }
             System.out.println(LisRol);
             for(int y=0;y<LisRol.size();y++){
                 String id="idOption "+y;
                 System.out.println(LisRol.get("idOption "+y));
-
                 ListOption.put(id,option(Long.valueOf(LisRol.get("idOption "+y))));
             }
             System.out.println(ListOption);

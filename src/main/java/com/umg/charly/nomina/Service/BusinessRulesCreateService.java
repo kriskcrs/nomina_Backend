@@ -41,7 +41,7 @@ public class BusinessRulesCreateService {
     HashMap<String, String> response = new HashMap<>();
 
 
-    @PostMapping(path = "/bussinesRulesModify")
+    @PostMapping(path = "/updateCompany")
     private HashMap<String, String> modify(@RequestBody Company company){
         if(company.getIdCompany() != null ){
             if(company.getPasswordlength()>5){
@@ -68,16 +68,50 @@ public class BusinessRulesCreateService {
     }
 
     @PostMapping(path = "/createOption")
-    private Option createMenu(@RequestBody Option option){
-        return optionRepository.save(option);
+    private HashMap<String, String> createMenu(@RequestBody Option option){
+        try{
+            long idOption = optionRepository.findAll().size();
+            idOption++;
+            option.setIdOption(idOption);
+            option.setCreationDate(new Date());
+            optionRepository.save(option);
+            response.put("code","0");
+            response.put("message","Se agrego exitosamente");
+            return response;
+        }catch (Exception e){
+            System.out.println("Error creando opciones" + e.getMessage() +" causa" +e.getCause());
+            response.put("code","1");
+            response.put("message","Error");
+            return response;
+        }
     }
 
-    @PostMapping(path = "/createModule")
-    private com.umg.charly.nomina.Entity.Module createMenu(@RequestBody Module module){
-        return moduleRepository.save(module);
+
+    @PostMapping(path = "/createModulo")
+    private HashMap<String, String> createModulo(@RequestBody Module module){
+        try{
+            long idModulo = moduleRepository.findAll().size();
+            idModulo++;
+            module.setIdModule(idModulo);
+            module.setOrderMenu((int) idModulo);
+            module.setName(module.getName());
+            module.setCreationDate(new Date());
+            moduleRepository.save(module);
+            response.put("code","0");
+            response.put("message","Se agrego exitosamente");
+            return response;
+        }catch (Exception e){
+            System.out.println("Error creando roles" + e.getMessage() +" causa" +e.getCause());
+            response.put("code","1");
+            response.put("message","Error");
+            return response;
+        }
     }
 
-
+    @PutMapping(path = "/modifyOption")
+    private HashMap<String , String> modifyOption(@RequestBody Option option){
+        return response;
+    }
 
     @PostMapping(path = "/createRol")
     private HashMap<String, String> createRole(@RequestBody Role role){
@@ -144,9 +178,7 @@ public class BusinessRulesCreateService {
 
     @PutMapping(path = "/modifyLocation")
     private HashMap<String, String> modifyBranch(@RequestBody Location location){
-        System.out.println(location.getIdBranch());
         if(location.getIdBranch()>0){
-
             Optional<Location> dataBranch = locationRepository.findById(location.getIdBranch());
             if(dataBranch.isPresent()){
                 location.setIdBranch(dataBranch.get().getIdBranch());
@@ -161,6 +193,27 @@ public class BusinessRulesCreateService {
         response.put("message","No se actualizo");
         return  response;
     }
+
+
+    @PutMapping(path = "/modifyModule/{idModule}")
+    private HashMap<String, String> modifyModule(@RequestBody Module module, @PathVariable long idModule){
+        if(idModule>0){
+            Optional<Module> dataBranch = moduleRepository.findById(idModule);
+            if(dataBranch.isPresent()){
+                dataBranch.get().setName(module.getName());
+                dataBranch.get().setModificationDate(new Date());
+                dataBranch.get().setUserModification(module.getUserModification());
+                moduleRepository.save(dataBranch.get());
+                response.put("code","0");
+                response.put("message","Se actualizo exitosamente");
+                return  response;
+            }
+        }
+        response.put("code","1");
+        response.put("message","No se actualizo");
+        return  response;
+    }
+
 
 
 

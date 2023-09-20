@@ -40,10 +40,8 @@ Task
 	- mtt optiones
 	- mtt asignacion de roles y opciones
 	- administracion de sesiones activas
-	-modificar usuario
-    -modificar estado de usuario
-    -mtt modulos
-    -mtt menu
+    - modificar estado de usuario
+
 
 
 
@@ -70,3 +68,4 @@ Task
 
 	#Pendientes
 	- mtto usuario
+	- mtt menu
