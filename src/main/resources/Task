@@ -20,8 +20,7 @@ Task
   	- ingreso de preguntas de seguridad
 
 	#Pendientes DI
-	- modificacion de estado usuarios
-
+	- mtt asignacion de roles y opciones
 
 
 3 -CC- Pantalla de Reinicio de contraseña
@@ -39,7 +38,7 @@ Task
 
 	#Pendientes CC
     - modificar estado de usuario
-	- mtt asignacion de roles y opciones
+
 	- administracion de sesiones activas
 
 

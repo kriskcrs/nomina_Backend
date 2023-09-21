@@ -35,6 +35,8 @@ public class CreateModifyService {
     UserRepository userRepository;
     @Autowired
     StatusUserRepository statusUserRepository;
+    @Autowired
+    GenderRepository genderRepository;
 
 
     //vars
@@ -111,7 +113,7 @@ public class CreateModifyService {
 
     }
 
-
+//pablo este lo tenes que cambiar para que retorne un hashmap y valide
     @PostMapping(path = "/createMenu")
     private Menu createMenu(@RequestBody Menu menu) {
         return menuRepository.save(menu);
@@ -273,5 +275,39 @@ public class CreateModifyService {
         return response;
     }
 
+
+    @PostMapping(path = "/createGender")
+    private HashMap<String, String> createGender(@RequestBody Gender gender){
+        try {
+            long count = genderRepository.findAll().size();
+            count++;
+            gender.setIdGender(count);
+            gender.setCreationDate(new Date());
+            genderRepository.save(gender);
+            response.put("code", "0");
+            response.put("message", "Se agrego exitosamente");
+            return response;
+        } catch (Exception e) {
+            System.out.println("Error menssage " + e.getMessage() + " causa " + e.getCause());
+            response.put("code", "1");
+            response.put("message", "No se agrego");
+            return response;
+        }
+
+    }
+
+    @PutMapping(path = "/modifyGender")
+    private HashMap<String, String> modifyGender(@RequestBody Gender gender){
+        if (gender.getIdGender() != null) {
+            gender.setModificationDate(new Date());
+            genderRepository.save(gender);
+            response.put("code", "0");
+            response.put("message", ok);
+            return response;
+        }
+        response.put("code", "1");
+        response.put("message", fails);
+        return response;
+    }
 
 }
