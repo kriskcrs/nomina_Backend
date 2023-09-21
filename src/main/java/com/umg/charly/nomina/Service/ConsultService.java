@@ -37,8 +37,15 @@ public class ConsultService {
     @Autowired
     StatusUserRepository statusUserRepository;
     @Autowired
-    private GenderRepository genderRepository;
+    GenderRepository genderRepository;
 
+    @Autowired
+    UserRoleRepository userRoleRepository;
+
+    @GetMapping(path = "/userRole")
+    private List<UserRole> userRoleList() {
+        return userRoleRepository.findAll();
+    }
 
 
     @GetMapping(path = "/bussinesRules")
