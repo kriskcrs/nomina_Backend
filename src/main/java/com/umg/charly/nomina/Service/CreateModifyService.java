@@ -37,6 +37,8 @@ public class CreateModifyService {
     StatusUserRepository statusUserRepository;
     @Autowired
     GenderRepository genderRepository;
+    @Autowired
+    UserRoleRepository userRoleRepository;
 
 
     //vars
@@ -309,5 +311,21 @@ public class CreateModifyService {
         response.put("message", fails);
         return response;
     }
+
+
+    @PutMapping(path = "/modifyuserRole")
+    private HashMap<String, String> modifyuserRole(@RequestBody UserRole userrole ){
+        if (userrole.getIdUser() != null) {
+            userrole.setModificationDate(new Date());
+            userRoleRepository.save(userrole);
+            response.put("code", "0");
+            response.put("message", ok);
+            return response;
+        }
+        response.put("code", "1");
+        response.put("message", fails);
+        return response;
+    }
+
 
 }
