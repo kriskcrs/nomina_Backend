@@ -37,8 +37,8 @@ public class BusinessRulesService {
     UserRepository userRepository;
     @Autowired
     StatusUserRepository statusUserRepository;
-
-
+    @Autowired
+    private GenderRepository genderRepository;
 
 
 
@@ -112,5 +112,10 @@ public class BusinessRulesService {
         return statusUserRepository.findAll() ;
 
     }
+
+    @GetMapping(path = "/gender")
+    public List<Gender> genderList() {List<Gender> genders = genderRepository.findAll(); return genders;}
+
+
 
 }

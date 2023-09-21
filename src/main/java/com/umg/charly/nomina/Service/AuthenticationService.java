@@ -80,7 +80,7 @@ public class AuthenticationService {
                     //Valide new user -> first login
                     if (userLogin.getLastDateOfEntry() == null || userLogin.getLastDateOfEntry().equals("")) {
                         response.put("code", "2");
-                        userLogin.setCurrentSession(String.valueOf(new EncodingUUID().SessionManager()));
+                        userLogin.setCurrentSession(String.valueOf(new Encoding().SessionManager()));
                         userRepository.save(userLogin);
                         response.put("session", userLogin.getCurrentSession());
                         response.put("user", userLogin.getIdUser());
@@ -94,7 +94,7 @@ public class AuthenticationService {
                             response.put("message", RequiredChangePassword);
                             response.put("user", userLogin.getIdUser());
                             //creando session
-                            userLogin.setCurrentSession(String.valueOf(new EncodingUUID().SessionManager()));
+                            userLogin.setCurrentSession(String.valueOf(new Encoding().SessionManager()));
                             userRepository.save(userLogin);
                             return response;
                         } else {
@@ -102,7 +102,7 @@ public class AuthenticationService {
                             if (userLogin.getCurrentSession() == null || userLogin.getCurrentSession().equals("")) {
                                 //Login OK
                                 //SesionID, Access Attemps = 0
-                                userLogin.setCurrentSession(String.valueOf(new EncodingUUID().SessionManager()));
+                                userLogin.setCurrentSession(String.valueOf(new Encoding().SessionManager()));
                                 userLogin.setAccessAttempts(0);
                                 userLogin.setLastDateOfEntry(new Date());
 

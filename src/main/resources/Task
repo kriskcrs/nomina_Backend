@@ -35,14 +35,12 @@ Task
 	- creación de sucursales
 	- modificacion de sucursales
 	#- mtto de rutas -> Para saber ruta tiene cada modulo
+	- mtt optiones
 
 	#Pendientes CC
-	- mtt optiones
+    - modificar estado de usuario
 	- mtt asignacion de roles y opciones
 	- administracion de sesiones activas
-    - modificar estado de usuario
-
-
 
 
 4 -RC- Bitacora

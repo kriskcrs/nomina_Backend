@@ -36,6 +36,7 @@ public class BusinessRulesCreateService {
     @Autowired
     StatusUserRepository statusUserRepository;
 
+
     //vars
     String ok = "Se actualiza";
     String error = "La contraseña minima debe ser mayor a 5 caracteres";
@@ -210,8 +211,6 @@ public class BusinessRulesCreateService {
             response.put("message", "Error");
             return response;
         }
-
-
     }
 
 
