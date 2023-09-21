@@ -1,5 +1,7 @@
 package com.umg.charly.nomina.Tools;
 
+import java.util.UUID;
+
 public class Encoding {
     String miString = "";
     StringBuilder nuevaP = new StringBuilder();
@@ -16,6 +18,10 @@ public class Encoding {
         return nuevaP.toString();
     }
 
+    private UUID sessionId;
 
+    public UUID SessionManager(){
+        return sessionId = UUID.randomUUID();
+    }
 
 }

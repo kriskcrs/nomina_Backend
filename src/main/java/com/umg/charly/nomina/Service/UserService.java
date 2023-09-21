@@ -100,35 +100,47 @@ public class UserService {
         return response;
     }
 
-    @GetMapping(path = "/bussinesRules")
-    private List<Company> rules() {
-        return companyRepository.findAll();
-    }
 
     @PostMapping(path = "/changePassword")
     private HashMap<String, String> changePassword(@RequestBody UserChangePassword userChangePassword) {
-        User user = userRepository.findByIdUserAndPassword(userChangePassword.getIdUser(), new Encoding().crypt(userChangePassword.getPassword()));
-        if (user != null) {
-            if (userChangePassword.getNewPassword().equals(userChangePassword.getConfirmNewPassword())) {
-                user.setPassword(new Encoding().crypt(userChangePassword.getConfirmNewPassword()));
-                user.setLastDateOfEntry(new Date());
-                user.setLastPasswordChangeDate(new Date());
-                user.setRequiresChangingPassword(0);
-                user.setAccessAttempts(0);
-                user.setCurrentSession("");
 
-                response.put("code", "0");
-                response.put("message", "");
-                userRepository.save(user);
-                return response;
+        if(new KeepAlive().validateSession(userRepository.findByIdUser(userChangePassword.getIdUser()).getCurrentSession())){
+            User user = userRepository.findByIdUserAndPassword(userChangePassword.getIdUser(), new Encoding().crypt(userChangePassword.getPassword()));
+            if (user != null) {
+                if (userChangePassword.getNewPassword().equals(userChangePassword.getConfirmNewPassword())) {
+
+                    //validación de contraseñas
+                    if(validateRules(userChangePassword.getConfirmNewPassword())){
+                        user.setPassword(new Encoding().crypt(userChangePassword.getConfirmNewPassword()));
+                        user.setLastDateOfEntry(new Date());
+                        user.setLastPasswordChangeDate(new Date());
+                        user.setRequiresChangingPassword(0);
+                        user.setAccessAttempts(0);
+                        user.setCurrentSession("");
+
+                        response.put("code", "0");
+                        response.put("message", "");
+                        userRepository.save(user);
+                        return response;
+                    } else{
+                        response.put("code", "1");
+                        response.put("message", "Contraseña no cumple con las politicas");
+                        return response;
+                    }
+
+                } else {
+                    response.put("code", "1");
+                    response.put("message", "Contraseñas no coinciden");
+                    return response;
+                }
             } else {
                 response.put("code", "1");
-                response.put("message", "Contraseñas no coinciden");
+                response.put("message", "Contraseña  incorrecta");
                 return response;
             }
         } else {
-            response.put("code", "1");
-            response.put("message", "Usuario o contraseña incorrecta");
+            response.put("code", "401");
+            response.put("message", "No cuenta con sesión valida");
             return response;
         }
     }

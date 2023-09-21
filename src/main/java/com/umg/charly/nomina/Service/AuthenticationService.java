@@ -80,7 +80,7 @@ public class AuthenticationService {
                     //Valide new user -> first login
                     if (userLogin.getLastDateOfEntry() == null || userLogin.getLastDateOfEntry().equals("")) {
                         response.put("code", "2");
-                        userLogin.setCurrentSession(String.valueOf(new EncodingUUID().SessionManager()));
+                        userLogin.setCurrentSession(String.valueOf(new Encoding().SessionManager()));
                         userRepository.save(userLogin);
                         response.put("session", userLogin.getCurrentSession());
                         response.put("user", userLogin.getIdUser());
@@ -93,13 +93,16 @@ public class AuthenticationService {
                             response.put("code", "3");
                             response.put("message", RequiredChangePassword);
                             response.put("user", userLogin.getIdUser());
+                            //creando session
+                            userLogin.setCurrentSession(String.valueOf(new Encoding().SessionManager()));
+                            userRepository.save(userLogin);
                             return response;
                         } else {
                             //validate session
                             if (userLogin.getCurrentSession() == null || userLogin.getCurrentSession().equals("")) {
                                 //Login OK
                                 //SesionID, Access Attemps = 0
-                                userLogin.setCurrentSession(String.valueOf(new EncodingUUID().SessionManager()));
+                                userLogin.setCurrentSession(String.valueOf(new Encoding().SessionManager()));
                                 userLogin.setAccessAttempts(0);
                                 userLogin.setLastDateOfEntry(new Date());
 
@@ -126,7 +129,7 @@ public class AuthenticationService {
                 FailedLogin(userExist);
                 response.put("code", "1");
                 response.put("message", FailedLogin);
-                createtypeAccess(2, userLogin.getIdUser());
+                createtypeAccess(2, user.getIdUser());
                 return response;
             }
         } else {
