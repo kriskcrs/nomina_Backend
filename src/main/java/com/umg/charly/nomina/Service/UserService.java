@@ -100,10 +100,6 @@ public class UserService {
         return response;
     }
 
-    @GetMapping(path = "/bussinesRules")
-    private List<Company> rules() {
-        return companyRepository.findAll();
-    }
 
     @PostMapping(path = "/changePassword")
     private HashMap<String, String> changePassword(@RequestBody UserChangePassword userChangePassword) {

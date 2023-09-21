@@ -33,6 +33,8 @@ public class BusinessRulesCreateService {
     LocationRepository locationRepository;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    StatusUserRepository statusUserRepository;
 
     //vars
     String ok = "Se actualiza";
@@ -41,15 +43,15 @@ public class BusinessRulesCreateService {
     HashMap<String, String> response = new HashMap<>();
 
 
-    @PostMapping(path = "/updateCompany")
-    private HashMap<String, String> modify(@RequestBody Company company){
-        if(company.getIdCompany() != null ){
-            if(company.getPasswordlength()>5){
+    @PutMapping(path = "/updateCompany")
+    private HashMap<String, String> modifyCompany(@RequestBody Company company) {
+        if (company.getIdCompany() != null) {
+            if (company.getPasswordlength() > 5) {
                 company.setModificationDate(new Date());
                 companyRepository.save(company);
                 response.put("code", "0");
                 response.put("message", ok);
-                return response ;
+                return response;
             }
             response.put("code", "1");
             response.put("message", error);
@@ -60,36 +62,83 @@ public class BusinessRulesCreateService {
         return response;
     }
 
+    @PostMapping(path = "/createCompany")
+    private HashMap<String, String> createCompany(@RequestBody Company company) {
+
+        if (company.getPasswordlength() > 5) {
+            long idCompany = companyRepository.findAll().size();
+            idCompany++;
+            company.setIdCompany(idCompany);
+            company.setCreationDate(new Date());
+            companyRepository.save(company);
+            response.put("code", "0");
+            response.put("message", ok);
+            return response;
+        }
+        response.put("code", "1");
+        response.put("message", error);
+        return response;
+
+    }
+
+
+    @PutMapping(path = "/updateStatusUser")
+    private HashMap<String, String> modifyStatusUser(@RequestBody StatusUser statusUser) {
+        if (statusUser.getIdStatusUser() != null) {
+            statusUser.setModificationDate(new Date());
+            statusUserRepository.save(statusUser);
+            response.put("code", "0");
+            response.put("message", ok);
+            return response;
+        }
+        response.put("code", "1");
+        response.put("message", fails);
+        return response;
+    }
+
+    @PostMapping(path = "/createStatusUser")
+    private HashMap<String, String> createStatusUser(@RequestBody StatusUser statusUser) {
+        long idStatusUser = statusUserRepository.findAll().size();
+        idStatusUser++;
+        statusUser.setIdStatusUser(idStatusUser);
+        statusUser.setCreationDate(new Date());
+        statusUserRepository.save(statusUser);
+        response.put("code", "0");
+        response.put("message", ok);
+        return response;
+
+
+    }
 
 
     @PostMapping(path = "/createMenu")
-    private Menu createMenu(@RequestBody Menu menu){
+    private Menu createMenu(@RequestBody Menu menu) {
         return menuRepository.save(menu);
     }
 
     @PostMapping(path = "/createOption")
-    private HashMap<String, String> createMenu(@RequestBody Option option){
-        try{
+    private HashMap<String, String> createMenu(@RequestBody Option option) {
+        try {
             long idOption = optionRepository.findAll().size();
             idOption++;
             option.setIdOption(idOption);
             option.setCreationDate(new Date());
             optionRepository.save(option);
-            response.put("code","0");
-            response.put("message","Se agrego exitosamente");
+            response.put("code", "0");
+            response.put("message", "Se agrego exitosamente");
             return response;
-        }catch (Exception e){
-            System.out.println("Error creando opciones" + e.getMessage() +" causa" +e.getCause());
-            response.put("code","1");
-            response.put("message","Error");
+        } catch (Exception e) {
+            System.out.println("Error creando opciones" + e.getMessage() + " causa" + e.getCause());
+            response.put("code", "1");
+            response.put("message", "Error");
             return response;
         }
     }
 
 
     @PostMapping(path = "/createModulo")
-    private HashMap<String, String> createModulo(@RequestBody Module module){
-        try{
+    private HashMap<String, String> createModulo(@RequestBody Module module) {
+        try {
             long idModulo = moduleRepository.findAll().size();
             idModulo++;
             module.setIdModule(idModulo);
@@ -97,36 +146,36 @@ public class BusinessRulesCreateService {
             module.setName(module.getName());
             module.setCreationDate(new Date());
             moduleRepository.save(module);
-            response.put("code","0");
-            response.put("message","Se agrego exitosamente");
+            response.put("code", "0");
+            response.put("message", "Se agrego exitosamente");
             return response;
-        }catch (Exception e){
-            System.out.println("Error creando roles" + e.getMessage() +" causa" +e.getCause());
-            response.put("code","1");
-            response.put("message","Error");
+        } catch (Exception e) {
+            System.out.println("Error creando roles" + e.getMessage() + " causa" + e.getCause());
+            response.put("code", "1");
+            response.put("message", "Error");
             return response;
         }
     }
 
     @PutMapping(path = "/modifyOption")
-    private HashMap<String , String> modifyOption(@RequestBody Option option){
-       try{
+    private HashMap<String, String> modifyOption(@RequestBody Option option) {
+        try {
             option.setModificationDate(new Date());
             optionRepository.save(option);
-            response.put("code","0");
-            response.put("message","Se actualizo exitosamente");
+            response.put("code", "0");
+            response.put("message", "Se actualizo exitosamente");
             return response;
-        }catch (Exception e){
-        System.out.println("Error actualizando opciones" + e.getMessage() +" causa" +e.getCause());
-        response.put("code","1");
-        response.put("message","Error");
-        return response;
-       }
+        } catch (Exception e) {
+            System.out.println("Error actualizando opciones" + e.getMessage() + " causa" + e.getCause());
+            response.put("code", "1");
+            response.put("message", "Error");
+            return response;
+        }
     }
 
     @PostMapping(path = "/createRol")
-    private HashMap<String, String> createRole(@RequestBody Role role){
-        try{
+    private HashMap<String, String> createRole(@RequestBody Role role) {
+        try {
             long idRol = roleRepository.findAll().size();
             idRol++;
             role.setIdRole(idRol);
@@ -134,13 +183,13 @@ public class BusinessRulesCreateService {
             role.setModificationDate(null);
             role.setUserModification(null);
             roleRepository.save(role);
-            response.put("code","0");
-            response.put("message","Se agrego exitosamente");
+            response.put("code", "0");
+            response.put("message", "Se agrego exitosamente");
             return response;
-        }catch (Exception e){
-            System.out.println("Error creando roles" + e.getMessage() +" causa" +e.getCause());
-            response.put("code","1");
-            response.put("message","Error");
+        } catch (Exception e) {
+            System.out.println("Error creando roles" + e.getMessage() + " causa" + e.getCause());
+            response.put("code", "1");
+            response.put("message", "Error");
             return response;
         }
 
@@ -148,17 +197,17 @@ public class BusinessRulesCreateService {
     }
 
     @PutMapping(path = "/modifyRol")
-    private HashMap<String, String> modifyRole(@RequestBody Role role){
-        try{
+    private HashMap<String, String> modifyRole(@RequestBody Role role) {
+        try {
             role.setModificationDate(new Date());
             roleRepository.save(role);
-            response.put("code","0");
-            response.put("message","Se actualizo exitosamente");
+            response.put("code", "0");
+            response.put("message", "Se actualizo exitosamente");
             return response;
-        }catch (Exception e){
-            System.out.println("Error actualizando roles" + e.getMessage() +" causa" +e.getCause());
-            response.put("code","1");
-            response.put("message","Error");
+        } catch (Exception e) {
+            System.out.println("Error actualizando roles" + e.getMessage() + " causa" + e.getCause());
+            response.put("code", "1");
+            response.put("message", "Error");
             return response;
         }
 
@@ -167,7 +216,7 @@ public class BusinessRulesCreateService {
 
 
     @PostMapping(path = "/createLocation")
-    private HashMap<String, String> createBranch(@RequestBody Location location){
+    private HashMap<String, String> createBranch(@RequestBody Location location) {
         try {
             long count = locationRepository.findAll().size();
             count++;
@@ -176,56 +225,54 @@ public class BusinessRulesCreateService {
             location.setModificationDate(null);
             location.setUserModification(null);
             locationRepository.save(location);
-            response.put("code","0");
-            response.put("message","Se agrego exitosamente");
-            return  response;
-        }catch (Exception e){
-            System.out.println("Error menssage "+e.getMessage() + " causa " +e.getCause());
-            response.put("code","1");
-            response.put("message","No se agrego");
-            return  response;
+            response.put("code", "0");
+            response.put("message", "Se agrego exitosamente");
+            return response;
+        } catch (Exception e) {
+            System.out.println("Error menssage " + e.getMessage() + " causa " + e.getCause());
+            response.put("code", "1");
+            response.put("message", "No se agrego");
+            return response;
         }
     }
 
     @PutMapping(path = "/modifyLocation")
-    private HashMap<String, String> modifyBranch(@RequestBody Location location){
-        if(location.getIdBranch()>0){
+    private HashMap<String, String> modifyBranch(@RequestBody Location location) {
+        if (location.getIdBranch() > 0) {
             Optional<Location> dataBranch = locationRepository.findById(location.getIdBranch());
-            if(dataBranch.isPresent()){
+            if (dataBranch.isPresent()) {
                 location.setIdBranch(dataBranch.get().getIdBranch());
                 location.setModificationDate(new Date());
                 locationRepository.save(location);
-                response.put("code","0");
-                response.put("message","Se actualizo exitosamente");
-                return  response;
+                response.put("code", "0");
+                response.put("message", "Se actualizo exitosamente");
+                return response;
             }
         }
-        response.put("code","1");
-        response.put("message","No se actualizo");
-        return  response;
+        response.put("code", "1");
+        response.put("message", "No se actualizo");
+        return response;
     }
 
 
     @PutMapping(path = "/modifyModule/{idModule}")
-    private HashMap<String, String> modifyModule(@RequestBody Module module, @PathVariable long idModule){
-        if(idModule>0){
+    private HashMap<String, String> modifyModule(@RequestBody Module module, @PathVariable long idModule) {
+        if (idModule > 0) {
             Optional<Module> dataBranch = moduleRepository.findById(idModule);
-            if(dataBranch.isPresent()){
+            if (dataBranch.isPresent()) {
                 dataBranch.get().setName(module.getName());
                 dataBranch.get().setModificationDate(new Date());
                 dataBranch.get().setUserModification(module.getUserModification());
                 moduleRepository.save(dataBranch.get());
-                response.put("code","0");
-                response.put("message","Se actualizo exitosamente");
-                return  response;
+                response.put("code", "0");
+                response.put("message", "Se actualizo exitosamente");
+                return response;
             }
         }
-        response.put("code","1");
-        response.put("message","No se actualizo");
-        return  response;
+        response.put("code", "1");
+        response.put("message", "No se actualizo");
+        return response;
     }
-
-
 
 
 }

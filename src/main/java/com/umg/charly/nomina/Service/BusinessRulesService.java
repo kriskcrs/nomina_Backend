@@ -35,9 +35,17 @@ public class BusinessRulesService {
     LocationRepository locationRepository;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    StatusUserRepository statusUserRepository;
 
 
-    HashMap<String, String> response = new HashMap<>();
+
+
+
+    @GetMapping(path = "/bussinesRules")
+    private List<Company> rules() {
+        return companyRepository.findAll();
+    }
 
     @GetMapping(path = "/role/{idRol}")
     private Role roleList(@PathVariable Long idRol){
@@ -97,6 +105,12 @@ public class BusinessRulesService {
     @GetMapping(path = "/encripta/{text}")
     private String encrip(@PathVariable String text){
         return new Encoding().crypt(text);
+    }
+
+    @GetMapping(path = "/statusUser")
+    private List<StatusUser> userList(){
+        return statusUserRepository.findAll() ;
+
     }
 
 }
