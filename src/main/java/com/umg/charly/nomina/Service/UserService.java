@@ -229,7 +229,7 @@ public class UserService {
 
     }
 
-    @PostMapping(path = "/createUser")
+    @PostMapping(path = "/createUser" )
     public HashMap<String, String> createUser(@RequestBody User user) {
         try {
             User existingUser = userRepository.findByIdUser(user.getIdUser());
@@ -243,6 +243,8 @@ public class UserService {
             String generatedPassword = new PasswordGenerator().generatePassword(lengtPasswordTemp, uppercaseCount, lowercaseCount, digitCount);
             user.setPassword(new Encoding().crypt(generatedPassword));
             SendPassword.sendPasswordByEmail(user.getIdUser(), generatedPassword);
+            user.setCreationDate(new Date());
+            //System.out.println(user.getCreationDate());
             userRepository.save(user);
             response.put("code", "0");
             response.put("message", OK);

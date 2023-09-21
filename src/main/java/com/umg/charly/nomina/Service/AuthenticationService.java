@@ -219,7 +219,7 @@ public class AuthenticationService {
         log.setDivice(device);
         log.setBrowser(browser);
 
-        log.setSesion(log.getSesion());
+        log.setSesion(userRepository.findByIdUser(user).getCurrentSession());
         try {
             logRepository.save(log);
             System.out.println("Registro de inicio de sesión guardado con éxito.");
