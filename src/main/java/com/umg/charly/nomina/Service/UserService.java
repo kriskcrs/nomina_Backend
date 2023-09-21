@@ -64,7 +64,6 @@ public class UserService {
         return userRoleRepository.findByIdUser(idUser);
     }
 
-
     @PostMapping(path = "/resetPassword")
     private HashMap<String, String> reset(@RequestBody User user) {
 
@@ -236,6 +235,17 @@ public class UserService {
         System.out.println(response);
         return response;
 
+    }
+
+
+    @PostMapping(path = "/userAsignRole")
+    private HashMap<String, String> userRole(@RequestBody UserRole userrole) {
+        userrole.setCreationDate(new Date());
+        userRoleRepository.save(userrole);
+        System.out.println("si guarda");
+        response.put("code", "0");
+        response.put("message", "Creado satisfactoriamente");
+        return response ;
     }
 
     @PostMapping(path = "/createUser" )
