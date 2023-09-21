@@ -13,7 +13,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("v1")
 @CrossOrigin
-public class BusinessRulesCreateService {
+public class CreateModifyService {
 
     @Autowired
     CompanyRepository companyRepository;

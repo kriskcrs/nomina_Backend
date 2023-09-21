@@ -5,7 +5,6 @@ import com.umg.charly.nomina.Entity.*;
 import com.umg.charly.nomina.Entity.Module;
 import com.umg.charly.nomina.Repository.*;
 import com.umg.charly.nomina.Tools.Encoding;
-import org.hibernate.loader.ast.spi.MultiKeyLoadSizingStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +14,7 @@ import java.util.*;
 @RestController
 @RequestMapping("v1")
 @CrossOrigin
-public class BusinessRulesService {
+public class ConsultService {
 
     @Autowired
     CompanyRepository companyRepository;
