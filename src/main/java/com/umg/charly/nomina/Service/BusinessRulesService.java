@@ -36,9 +36,7 @@ public class BusinessRulesService {
     @Autowired
     UserRepository userRepository;
 
-    String ok = "Se actualiza";
-    String error = "La contraseña minima debe ser mayor a 5 caracteres";
-    String fails = "No se puede actualizar";
+
     HashMap<String, String> response = new HashMap<>();
 
     @GetMapping(path = "/role/{idRol}")

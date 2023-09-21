@@ -110,7 +110,18 @@ public class BusinessRulesCreateService {
 
     @PutMapping(path = "/modifyOption")
     private HashMap<String , String> modifyOption(@RequestBody Option option){
+       try{
+            option.setModificationDate(new Date());
+            optionRepository.save(option);
+            response.put("code","0");
+            response.put("message","Se actualizo exitosamente");
+            return response;
+        }catch (Exception e){
+        System.out.println("Error actualizando opciones" + e.getMessage() +" causa" +e.getCause());
+        response.put("code","1");
+        response.put("message","Error");
         return response;
+       }
     }
 
     @PostMapping(path = "/createRol")
