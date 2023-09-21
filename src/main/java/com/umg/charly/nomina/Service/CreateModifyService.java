@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -45,6 +46,43 @@ public class CreateModifyService {
     String fails = "No se puede actualizar";
     HashMap<String, String> response = new HashMap<>();
 
+    @PostMapping(path = "/createRoleOption")
+    private HashMap<String, String> createRoleOption(@RequestBody RoleOption roleOptionCreate){
+        System.out.println(roleOptionCreate);
+        List<RoleOption> roleOptionExistList = roleOptionRepository.findAll();
+        boolean roleOptionAlreadyExist = false;
+
+        for(RoleOption roleOptionExist : roleOptionExistList){
+            if(roleOptionExist.getIdPK().getIdRole() == roleOptionCreate.getIdPK().getIdRole() &&
+                    roleOptionExist.getIdPK().getIdOption() == roleOptionCreate.getIdPK().getIdOption()){
+                roleOptionAlreadyExist = true;
+                break;
+            }
+        }
+
+        if(roleOptionAlreadyExist){
+            response.put("code", "1");
+            response.put("message", "La asignacion de opcion-rol ya existe");
+            return response;
+        }else {
+            roleOptionCreate.setCreationDate(new Date());
+
+            roleOptionRepository.save(roleOptionCreate);
+            response.put("code", "0");
+            response.put("message", "Asignacion rol-opcion creado satisfactoriamente");
+            return response;
+        }
+    }
+
+    @PutMapping(path = "/modifyRoleOption")
+    private HashMap<String, String> modifyRoleOption(@RequestBody RoleOption roleOptionModify){
+        roleOptionModify.setModificationDate(new Date());
+        roleOptionRepository.save(roleOptionModify);
+        response.put("code", "0");
+        response.put("message", ok);
+
+        return response;
+    }
 
     @PutMapping(path = "/updateCompany")
     private HashMap<String, String> modifyCompany(@RequestBody Company company) {
