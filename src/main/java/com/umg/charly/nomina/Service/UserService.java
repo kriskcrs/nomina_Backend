@@ -60,13 +60,10 @@ public class UserService {
     }
 
     @GetMapping(path = "/userRole/{idUser}")
-    private UserRole userRoleList(@PathVariable String idUser) {
+    private UserRole userRoleListId(@PathVariable String idUser) {
         return userRoleRepository.findByIdUser(idUser);
     }
-    @GetMapping(path = "/userRole")
-    private List<UserRole> userRoleList() {
-        return userRoleRepository.findAll();
-    }
+
 
     @PostMapping(path = "/resetPassword")
     private HashMap<String, String> reset(@RequestBody User user) {

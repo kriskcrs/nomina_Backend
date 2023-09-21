@@ -3,14 +3,12 @@ package com.umg.charly.nomina.Service;
 
 import com.umg.charly.nomina.Entity.Company;
 import com.umg.charly.nomina.Entity.Log;
-import com.umg.charly.nomina.Entity.TypeAccess;
 import com.umg.charly.nomina.Entity.User;
 import com.umg.charly.nomina.Repository.CompanyRepository;
 import com.umg.charly.nomina.Repository.TypeAccessRepository;
 import com.umg.charly.nomina.Repository.UserRepository;
 import com.umg.charly.nomina.Repository.LogRepository;
 import com.umg.charly.nomina.Tools.Encoding;
-import com.umg.charly.nomina.Tools.EncodingUUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -20,10 +18,6 @@ import org.springframework.web.context.request.RequestAttributes;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Optional;
-import java.util.SimpleTimeZone;
-import java.util.Random;
-
 
 
 @RestController
