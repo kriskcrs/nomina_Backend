@@ -155,8 +155,45 @@ public class CreateModifyService {
 
 //pablo este lo tenes que cambiar para que retorne un hashmap y valide
     @PostMapping(path = "/createMenu")
-    private Menu createMenu(@RequestBody Menu menu) {
-        return menuRepository.save(menu);
+    private HashMap<String, String> createMenu(@RequestBody Menu menu) {
+        try {
+            long count = menuRepository.findAll().size();
+            count++;
+            menu.setIdMenu(count);
+            menu.setOrderMenu((int) count);
+            menu.setCreationDate(new Date());
+            menu.setModificationDate(null);
+            menu.setUserModification(null);
+            menuRepository.save(menu);
+            response.put("code", "0");
+            response.put("message", "Se agrego exitosamente");
+            return response;
+        } catch (Exception e) {
+            System.out.println("Error menssage " + e.getMessage() + " causa " + e.getCause());
+            response.put("code", "1");
+            response.put("message", "No se agrego");
+            return response;
+        }
+    }
+
+    @PutMapping(path = "/modifyMenu/{idMenu}")
+    private HashMap<String, String> modifyMenu(@RequestBody Menu menu, @PathVariable Long idMenu){
+        if(idMenu!=null){
+            Optional<Menu> dataMenu = Optional.ofNullable(menuRepository.findByIdMenu(idMenu));
+            if(dataMenu.isPresent()){
+                dataMenu.get().setIdModulo(menu.getIdModulo());
+                dataMenu.get().setName(menu.getName());
+                dataMenu.get().setModificationDate(new Date());
+                dataMenu.get().setUserModification(menu.getUserModification());
+                menuRepository.save(dataMenu.get());
+                response.put("code","0");
+                response.put("message","Se actualizo exitosamente");
+                return  response;
+            }
+        }
+        response.put("code","1");
+        response.put("message","No se actualizo");
+        return  response;
     }
 
     @PostMapping(path = "/createOption")
