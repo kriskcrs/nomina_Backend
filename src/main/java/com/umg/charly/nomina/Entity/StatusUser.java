@@ -10,13 +10,13 @@ import lombok.Setter;
 import java.util.Date;
 
 @Entity
-@Table(name = "sucursal")
+@Table(name = "status_usuario")
 @Getter
 @Setter
 public class StatusUser {
 
     @Id
-    @Column(name = "idstatusUsuario")
+    @Column(name = "idstatususuario")
     private Long idStatusUser;
     @Column(name = "nombre")
     private String name;

@@ -61,12 +61,8 @@ public class UserService {
     }
 
     @GetMapping(path = "/userRole/{idUser}")
-    private UserRole userRoleList(@PathVariable String idUser) {
+    private UserRole userRoleListId(@PathVariable String idUser) {
         return userRoleRepository.findByIdUser(idUser);
-    }
-    @GetMapping(path = "/userRole")
-    private List<UserRole> userRoleList() {
-        return userRoleRepository.findAll();
     }
 
     @PostMapping(path = "/resetPassword")
@@ -101,10 +97,6 @@ public class UserService {
         return response;
     }
 
-    @GetMapping(path = "/bussinesRules")
-    private List<Company> rules() {
-        return companyRepository.findAll();
-    }
 
     @PostMapping(path = "/changePassword")
     private HashMap<String, String> changePassword(@RequestBody UserChangePassword userChangePassword) {
@@ -246,7 +238,18 @@ public class UserService {
 
     }
 
-    @PostMapping(path = "/createUser")
+
+    @PostMapping(path = "/userAsignRole")
+    private HashMap<String, String> userRole(@RequestBody UserRole userrole) {
+        userrole.setCreationDate(new Date());
+        userRoleRepository.save(userrole);
+        System.out.println("si guarda");
+        response.put("code", "0");
+        response.put("message", "Creado satisfactoriamente");
+        return response ;
+    }
+
+    @PostMapping(path = "/createUser" )
     public HashMap<String, String> createUser(@RequestBody User user) {
         try {
             User existingUser = userRepository.findByIdUser(user.getIdUser());
@@ -260,6 +263,8 @@ public class UserService {
             String generatedPassword = new PasswordGenerator().generatePassword(lengtPasswordTemp, uppercaseCount, lowercaseCount, digitCount);
             user.setPassword(new Encoding().crypt(generatedPassword));
             SendPassword.sendPasswordByEmail(user.getIdUser(), generatedPassword);
+            user.setCreationDate(new Date());
+            //System.out.println(user.getCreationDate());
             userRepository.save(user);
             response.put("code", "0");
             response.put("message", OK);

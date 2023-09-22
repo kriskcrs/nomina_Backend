@@ -20,8 +20,7 @@ Task
   	- ingreso de preguntas de seguridad
 
 	#Pendientes DI
-	- modificacion de estado usuarios
-
+	- mtt asignacion de roles y opciones
 
 
 3 -CC- Pantalla de Reinicio de contraseña
@@ -34,16 +33,8 @@ Task
 	- creación de roles
 	- creación de sucursales
 	- modificacion de sucursales
-	#- mtto de rutas -> Para saber ruta tiene cada modulo
-
-	#Pendientes CC
 	- mtt optiones
-	- mtt asignacion de roles y opciones
-	- administracion de sesiones activas
-	-modificar usuario
-    -modificar estado de usuario
-    -mtt modulos
-    -mtt menu
+
 
 
 
@@ -58,9 +49,6 @@ Task
     #Pendiente RC
     - asignación de roles usuario
 
-
-
-
 ###5 -PR- Pantalla de bienvenida
 
 8 -PR- servidor images
@@ -70,3 +58,4 @@ Task
 
 	#Pendientes
 	- mtto usuario
+	- mtt menu

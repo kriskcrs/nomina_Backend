@@ -3,14 +3,12 @@ package com.umg.charly.nomina.Service;
 
 import com.umg.charly.nomina.Entity.Company;
 import com.umg.charly.nomina.Entity.Log;
-import com.umg.charly.nomina.Entity.TypeAccess;
 import com.umg.charly.nomina.Entity.User;
 import com.umg.charly.nomina.Repository.CompanyRepository;
 import com.umg.charly.nomina.Repository.TypeAccessRepository;
 import com.umg.charly.nomina.Repository.UserRepository;
 import com.umg.charly.nomina.Repository.LogRepository;
 import com.umg.charly.nomina.Tools.Encoding;
-import com.umg.charly.nomina.Tools.EncodingUUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -20,10 +18,6 @@ import org.springframework.web.context.request.RequestAttributes;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Optional;
-import java.util.SimpleTimeZone;
-import java.util.Random;
-
 
 
 @RestController
@@ -80,7 +74,7 @@ public class AuthenticationService {
                     //Valide new user -> first login
                     if (userLogin.getLastDateOfEntry() == null || userLogin.getLastDateOfEntry().equals("")) {
                         response.put("code", "2");
-                        userLogin.setCurrentSession(String.valueOf(new EncodingUUID().SessionManager()));
+                        userLogin.setCurrentSession(String.valueOf(new Encoding().SessionManager()));
                         userRepository.save(userLogin);
                         response.put("session", userLogin.getCurrentSession());
                         response.put("user", userLogin.getIdUser());
@@ -94,7 +88,7 @@ public class AuthenticationService {
                             response.put("message", RequiredChangePassword);
                             response.put("user", userLogin.getIdUser());
                             //creando session
-                            userLogin.setCurrentSession(String.valueOf(new EncodingUUID().SessionManager()));
+                            userLogin.setCurrentSession(String.valueOf(new Encoding().SessionManager()));
                             userRepository.save(userLogin);
                             return response;
                         } else {
@@ -102,7 +96,7 @@ public class AuthenticationService {
                             if (userLogin.getCurrentSession() == null || userLogin.getCurrentSession().equals("")) {
                                 //Login OK
                                 //SesionID, Access Attemps = 0
-                                userLogin.setCurrentSession(String.valueOf(new EncodingUUID().SessionManager()));
+                                userLogin.setCurrentSession(String.valueOf(new Encoding().SessionManager()));
                                 userLogin.setAccessAttempts(0);
                                 userLogin.setLastDateOfEntry(new Date());
 
@@ -222,7 +216,7 @@ public class AuthenticationService {
         log.setDivice(device);
         log.setBrowser(browser);
 
-        log.setSesion(log.getSesion());
+        log.setSesion(userRepository.findByIdUser(user).getCurrentSession());
         try {
             logRepository.save(log);
             System.out.println("Registro de inicio de sesión guardado con éxito.");

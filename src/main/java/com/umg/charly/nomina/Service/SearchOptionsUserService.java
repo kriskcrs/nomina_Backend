@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -32,76 +33,78 @@ public class SearchOptionsUserService {
     private ModuleRepository moduleRepository;
 
     @GetMapping(path = "/search/{idUser}")
-    private HashMap<String, List> test(@PathVariable String idUser){
-        //consultas
-        UserRole userRole = userRoleRepository.findByIdUser(idUser);
-        List<RoleOption> roleOptionList = roleOptionRepository.findAll();
-        List<Option> optionList = optionRepository.findAll();
-        List<Menu> menuList = menuRepository.findAll();
-        List<Module> moduleList = moduleRepository.findAll();
+    private HashMap<String, List> test(@PathVariable String idUser) {
+        try {
+            //consultas
+            UserRole userRole = userRoleRepository.findByIdUser(idUser);
+            List<RoleOption> roleOptionList = roleOptionRepository.findAll();
+            List<Option> optionList = optionRepository.findAll();
+            List<Menu> menuList = menuRepository.findAll();
+            List<Module> moduleList = moduleRepository.findAll();
 
 
-        //Objetos para devolver
-        List<RoleOption> roleOptionUserList = new ArrayList<>();
-        List<Option> optionUserList = new ArrayList<>();
-        List<Menu> menuUserList = new ArrayList<>();
-        List<Module> moduleUserList = new ArrayList<>();
-        List<Long> menusAlreadyAdded = new ArrayList<>();
-        menusAlreadyAdded.add(Long.valueOf("0"));
-        List<Long> modulesAlreadyAdded = new ArrayList<>();
-        modulesAlreadyAdded.add(Long.valueOf("0"));
+            //Objetos para devolver
+            List<RoleOption> roleOptionUserList = new ArrayList<>();
+            List<Option> optionUserList = new ArrayList<>();
+            List<Menu> menuUserList = new ArrayList<>();
+            List<Module> moduleUserList = new ArrayList<>();
+            List<Long> menusAlreadyAdded = new ArrayList<>();
+            menusAlreadyAdded.add(Long.valueOf("0"));
+            List<Long> modulesAlreadyAdded = new ArrayList<>();
+            modulesAlreadyAdded.add(Long.valueOf("0"));
 
-        boolean fistMenu = true;
-        boolean firstModule = true;
+            boolean fistMenu = true;
+            boolean firstModule = true;
 
-        //Busqueda de opciones en rol de usuario
-        for (RoleOption roleOption : roleOptionList){
-            if(roleOption.getIdPK().getIdRole() == userRole.getIdRole()){
-                roleOptionUserList.add(roleOption);
-                //Busqueda de descripcion de cada opcion
-                for(Option option : optionList){
-                    if(option.getIdOption() == roleOption.getIdPK().getIdOption()){
-                        optionUserList.add(option);
-                        //Busqueda de descripcion de cada menu de cada rol
-                        for(Menu menu : menuList){
-                            if(menu.getIdMenu() == option.getIdMenu()){
-                                if(fistMenu){
-                                    menuUserList.add(menu);
-                                    fistMenu = false;
-                                }else{
-                                    //filtro para no sobre escribri el mismo menu varias veces segun las opciones del usuario
-                                    for(Menu menuAdded : menuUserList){
-                                        boolean idMenuAlreadyExist = false;
-                                        for(Long id : menusAlreadyAdded){
-                                            if(id == option.getIdMenu()){
-                                                idMenuAlreadyExist = true;
+            //Busqueda de opciones en rol de usuario
+            for (RoleOption roleOption : roleOptionList) {
+                if (roleOption.getIdPK().getIdRole() == userRole.getIdRole()) {
+                    roleOptionUserList.add(roleOption);
+                    //Busqueda de descripcion de cada opcion
+                    for (Option option : optionList) {
+                        if (option.getIdOption() == roleOption.getIdPK().getIdOption()) {
+                            optionUserList.add(option);
+                            //Busqueda de descripcion de cada menu de cada rol
+                            for (Menu menu : menuList) {
+                                if (menu.getIdMenu() == option.getIdMenu()) {
+                                    if (fistMenu) {
+                                        menuUserList.add(menu);
+                                        fistMenu = false;
+                                    } else {
+                                        //filtro para no sobre escribri el mismo menu varias veces segun las opciones del usuario
+                                        for (Menu menuAdded : menuUserList) {
+                                            boolean idMenuAlreadyExist = false;
+                                            for (Long id : menusAlreadyAdded) {
+                                                if (id == option.getIdMenu()) {
+                                                    idMenuAlreadyExist = true;
+                                                }
+                                            }
+                                            if (menuAdded.getIdMenu() != option.getIdMenu() && !idMenuAlreadyExist) {
+                                                menuUserList.add(menu);
+                                                menusAlreadyAdded.add(menu.getIdMenu());
+                                                break;
                                             }
                                         }
-                                        if(menuAdded.getIdMenu() != option.getIdMenu() && !idMenuAlreadyExist){
-                                            menuUserList.add(menu);
-                                            menusAlreadyAdded.add(menu.getIdMenu());
-                                            break;
-                                        }
                                     }
-                                }
-                                for(Module module : moduleList){
-                                    if(module.getIdModule() == menu.getIdModulo()){
-                                        if(firstModule){
-                                            moduleUserList.add(module);
-                                            firstModule = false;
-                                        }else{
-                                            //filtro para no sobre escribri el mismo modulo varias veces segun los menu del usuario
-                                            for(Module moduleAdded : moduleUserList){
-                                                boolean idModuleAlreadyExist = false;
-                                                for(Long id : modulesAlreadyAdded){
-                                                    if(id == menu.getIdModulo()){
-                                                        idModuleAlreadyExist = true;
+                                    for (Module module : moduleList) {
+                                        if (module.getIdModule() == menu.getIdModulo()) {
+                                            if (firstModule) {
+                                                moduleUserList.add(module);
+                                                firstModule = false;
+                                            } else {
+                                                //filtro para no sobre escribri el mismo modulo varias veces segun los menu del usuario
+                                                for (Module moduleAdded : moduleUserList) {
+                                                    boolean idModuleAlreadyExist = false;
+                                                    for (Long id : modulesAlreadyAdded) {
+                                                        if (id == menu.getIdModulo()) {
+                                                            idModuleAlreadyExist = true;
+                                                        }
                                                     }
-                                                }
-                                                if(moduleAdded.getIdModule() != menu.getIdModulo() && !idModuleAlreadyExist){
-                                                    moduleUserList.add(module);
-                                                    modulesAlreadyAdded.add(module.getIdModule());
-                                                    break;
+                                                    if (moduleAdded.getIdModule() != menu.getIdModulo() && !idModuleAlreadyExist) {
+                                                        moduleUserList.add(module);
+                                                        modulesAlreadyAdded.add(module.getIdModule());
+                                                        break;
+                                                    }
                                                 }
                                             }
                                         }
@@ -112,16 +115,19 @@ public class SearchOptionsUserService {
                     }
                 }
             }
+
+            //response
+            response.put("roleOption", roleOptionUserList);
+            response.put("option", optionUserList);
+            response.put("menu", menuUserList);
+            response.put("module", moduleUserList);
+            return response;
+        } catch (Exception e) {
+
+            response.put("code", Collections.singletonList("1"));
+            response.put("message", Collections.singletonList("No tiene roles asignados"));
+            return response;
         }
 
-        //response
-        response.put("roleOption", roleOptionUserList);
-        response.put("option", optionUserList);
-        response.put("menu", menuUserList);
-        response.put("module", moduleUserList);
-
-
-
-        return response;
     }
 }
