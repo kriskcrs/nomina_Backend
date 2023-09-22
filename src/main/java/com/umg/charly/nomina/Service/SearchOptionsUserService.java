@@ -19,7 +19,7 @@ import java.util.List;
 @RequestMapping("v1")
 public class SearchOptionsUserService {
 
-    HashMap<String, List> response = new HashMap<String, List>();
+    HashMap<String, List> response = new HashMap<>();
     @Autowired
     UserRoleRepository userRoleRepository;
 
@@ -34,27 +34,33 @@ public class SearchOptionsUserService {
 
     @GetMapping(path = "/search/{idUser}")
     private HashMap<String, List> test(@PathVariable String idUser) {
-        try {
-            //consultas
-            UserRole userRole = userRoleRepository.findByIdUser(idUser);
-            List<RoleOption> roleOptionList = roleOptionRepository.findAll();
-            List<Option> optionList = optionRepository.findAll();
-            List<Menu> menuList = menuRepository.findAll();
-            List<Module> moduleList = moduleRepository.findAll();
+
+        //consultas
+        UserRole userRole = userRoleRepository.findByIdUser(idUser);
+        List<RoleOption> roleOptionList = roleOptionRepository.findAll();
+        List<Option> optionList = optionRepository.findAll();
+        List<Menu> menuList = menuRepository.findAll();
+        List<Module> moduleList = moduleRepository.findAll();
 
 
-            //Objetos para devolver
-            List<RoleOption> roleOptionUserList = new ArrayList<>();
-            List<Option> optionUserList = new ArrayList<>();
-            List<Menu> menuUserList = new ArrayList<>();
-            List<Module> moduleUserList = new ArrayList<>();
-            List<Long> menusAlreadyAdded = new ArrayList<>();
-            menusAlreadyAdded.add(Long.valueOf("0"));
-            List<Long> modulesAlreadyAdded = new ArrayList<>();
-            modulesAlreadyAdded.add(Long.valueOf("0"));
+        //Objetos para devolver
+        List<RoleOption> roleOptionUserList = new ArrayList<>();
+        List<Option> optionUserList = new ArrayList<>();
+        List<Menu> menuUserList = new ArrayList<>();
+        List<Module> moduleUserList = new ArrayList<>();
+        List<Long> menusAlreadyAdded = new ArrayList<>();
+        menusAlreadyAdded.add(Long.valueOf("0"));
+        List<Long> modulesAlreadyAdded = new ArrayList<>();
+        modulesAlreadyAdded.add(Long.valueOf("0"));
 
-            boolean fistMenu = true;
-            boolean firstModule = true;
+        boolean fistMenu = true;
+        boolean firstModule = true;
+        if (userRole == null) {
+            response.put("code", Collections.singletonList("1"));
+            response.put("message", Collections.singletonList("No posees roles asignados"));
+            return response;
+
+        } else {
 
             //Busqueda de opciones en rol de usuario
             for (RoleOption roleOption : roleOptionList) {
@@ -117,15 +123,11 @@ public class SearchOptionsUserService {
             }
 
             //response
+            response.put("code", Collections.singletonList("0"));
             response.put("roleOption", roleOptionUserList);
             response.put("option", optionUserList);
             response.put("menu", menuUserList);
             response.put("module", moduleUserList);
-            return response;
-        } catch (Exception e) {
-
-            response.put("code", Collections.singletonList("1"));
-            response.put("message", Collections.singletonList("No tiene roles asignados"));
             return response;
         }
 
