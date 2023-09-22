@@ -160,7 +160,6 @@ public class CreateModifyService {
             long count = menuRepository.findAll().size();
             count++;
             menu.setIdMenu(count);
-            menu.setOrderMenu((int) count);
             menu.setCreationDate(new Date());
             menu.setModificationDate(null);
             menu.setUserModification(null);
@@ -183,6 +182,7 @@ public class CreateModifyService {
             if(dataMenu.isPresent()){
                 dataMenu.get().setIdModulo(menu.getIdModulo());
                 dataMenu.get().setName(menu.getName());
+                dataMenu.get().setOrderMenu(menu.getOrderMenu());
                 dataMenu.get().setModificationDate(new Date());
                 dataMenu.get().setUserModification(menu.getUserModification());
                 menuRepository.save(dataMenu.get());
