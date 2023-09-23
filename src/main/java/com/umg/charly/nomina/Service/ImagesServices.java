@@ -28,17 +28,20 @@ public class ImagesServices {
     @Value("${image.upload.path}")
     private String uploadPath;
 
+    HashMap<String, String> respuesta = new HashMap<>();
     @PostMapping(path = "/saveImage")
-    private String test(@RequestParam("file") MultipartFile file,
+    private HashMap<String, String> test(@RequestParam("file") MultipartFile file,
         @RequestParam("idUser") String idUser) {
         try {
             User user = userRepository.findByIdUser(idUser);
             saveImageDB(file,user);
             //saveImageFile(file, user);
-            return "ok";
+            respuesta.put("code","0");
+            return respuesta;
         } catch (Exception e) {
             System.out.println(e.getMessage()+ "\n" + e.getCause());
-            return "Error";
+            respuesta.put("code","1");
+            return respuesta;
         }
     }
 
