@@ -34,7 +34,7 @@ public class ImagesServices {
         try {
             User user = userRepository.findByIdUser(idUser);
             saveImageDB(file,user);
-            saveImageFile(file, user);
+            //saveImageFile(file, user);
             return "ok";
         } catch (Exception e) {
             System.out.println(e.getMessage()+ "\n" + e.getCause());
