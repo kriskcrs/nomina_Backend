@@ -122,8 +122,14 @@ public class SearchOptionsUserService {
                 }
             }
 
+            if(roleOptionList.size()==0){
+                response.put("code", Collections.singletonList("1"));
+                response.put("message", Collections.singletonList("Su rol no tiene opciones"));
+                return response;
+            }
             //response
             response.put("code", Collections.singletonList("0"));
+            response.put("message", Collections.singletonList("Se obtuvieron roles"));
             response.put("roleOption", roleOptionUserList);
             response.put("option", optionUserList);
             response.put("menu", menuUserList);

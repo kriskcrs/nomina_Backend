@@ -103,6 +103,7 @@ public class AuthenticationService {
                                 //response
                                 response.put("code", "0");
                                 response.put("message", "ok");
+                                response.put("nameUser",userLogin.getName() + " " + userLogin.getLastName());
                                 response.put("session", userLogin.getCurrentSession());
                                 response.put("user", userLogin.getIdUser());
                                 createtypeAccess(1, userLogin.getIdUser());
