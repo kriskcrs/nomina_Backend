@@ -178,7 +178,7 @@ public class AuthenticationService {
 
 
     private void createtypeAccess(int status, String user) {
-        String message = "";
+        try { String message = "";
 
         switch (status) {
             case 1:
@@ -218,7 +218,7 @@ public class AuthenticationService {
         log.setBrowser(browser);
 
         log.setSesion(userRepository.findByIdUser(user).getCurrentSession());
-        try {
+
             logRepository.save(log);
             System.out.println("Registro de inicio de sesión guardado con éxito.");
         } catch (Exception e) {
