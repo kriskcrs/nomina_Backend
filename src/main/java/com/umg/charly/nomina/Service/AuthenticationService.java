@@ -220,7 +220,7 @@ public class AuthenticationService {
         log.setSesion(userRepository.findByIdUser(user).getCurrentSession());
 
             logRepository.save(log);
-            System.out.println("Registro de inicio de sesión guardado con éxito.");
+            System.out.println("Registro de inicio de sesión guardado con exito.");
         } catch (Exception e) {
             System.err.println("Error al guardar en el registro: " + e.getMessage());
         }
