@@ -48,8 +48,8 @@ public class AuthenticationService {
     CompanyRepository companyRepository;
 
 
-    @PostMapping(path = "/login")
-    private HashMap<String, String> login(@RequestBody User user) {
+    @PostMapping(path = "/login/{ip}")
+    private HashMap<String, String> login(@RequestBody User user, @PathVariable String ip ) {
 
         //System.out.println(user.getIdUser() + user.getPassword());
 
@@ -68,7 +68,7 @@ public class AuthenticationService {
                 if (userLogin.getIdStatusUser() != 1) {
                     response.put("code", "1");
                     response.put("message", StatusUser);
-                    createtypeAccess(3, userLogin.getIdUser());
+                    createtypeAccess(3, userLogin.getIdUser(), ip);
                     return response;
                 } else {
                     //Valide new user -> first login
@@ -106,7 +106,7 @@ public class AuthenticationService {
                                 response.put("nameUser",userLogin.getName() + " " + userLogin.getLastName());
                                 response.put("session", userLogin.getCurrentSession());
                                 response.put("user", userLogin.getIdUser());
-                                createtypeAccess(1, userLogin.getIdUser());
+                                createtypeAccess(1, userLogin.getIdUser(), ip);
 
 
                                 //validate user inactive
@@ -124,13 +124,13 @@ public class AuthenticationService {
                 FailedLogin(userExist);
                 response.put("code", "1");
                 response.put("message", FailedLogin);
-                createtypeAccess(2, user.getIdUser());
+                createtypeAccess(2, user.getIdUser(), ip);
                 return response;
             }
         } else {
             response.put("code", "1");
             response.put("message", FailedLogin);
-            createtypeAccess(4, user.getIdUser());
+            createtypeAccess(4, user.getIdUser(), ip);
             return response;
         }
 
@@ -168,7 +168,7 @@ public class AuthenticationService {
 
 
 
-    private void createtypeAccess(int status, String user) {
+    private void createtypeAccess(int status, String user, String ip) {
         try { String message = "";
 
         switch (status) {
@@ -186,7 +186,6 @@ public class AuthenticationService {
                 break;
         }
         String userAgent = getUserAgent();
-
         //stored in log :D
         int idLog = logRepository.findAll().size();
         idLog++;
@@ -197,7 +196,7 @@ public class AuthenticationService {
         log.setDateAccess(new Date());
         log.setHttpUserAgent(getUserAgent());
         log.setAction(message);
-
+        log.setIpAdress(ip);
         String os = parseOsFromUserAgent(userAgent);
         String device = parseDeviceFromUserAgent(userAgent);
         String browser = parseBrowserFromUserAgent(userAgent);
