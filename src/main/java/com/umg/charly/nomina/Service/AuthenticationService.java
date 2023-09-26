@@ -165,16 +165,7 @@ public class AuthenticationService {
         }
     }
 
-    private String getIpAddress() {
-        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
 
-        if (requestAttributes instanceof ServletRequestAttributes) {
-            String ipAddress = ((ServletRequestAttributes) requestAttributes).getRequest().getRemoteAddr();
-            return ipAddress;
-        } else {
-            return "IP Address not available";
-        }
-    }
 
 
     private void createtypeAccess(int status, String user) {
@@ -195,7 +186,6 @@ public class AuthenticationService {
                 break;
         }
         String userAgent = getUserAgent();
-        String ipAddress = getIpAddress();
 
         //stored in log :D
         int idLog = logRepository.findAll().size();
@@ -206,7 +196,6 @@ public class AuthenticationService {
         log.setIdtypeAccess(status);
         log.setDateAccess(new Date());
         log.setHttpUserAgent(getUserAgent());
-        log.setIpAdress(getIpAddress());
         log.setAction(message);
 
         String os = parseOsFromUserAgent(userAgent);
