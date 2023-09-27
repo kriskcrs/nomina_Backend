@@ -334,6 +334,22 @@ public class CreateModifyService {
         return response;
     }
 
+    @DeleteMapping(path = "/deleteMenu/{id}")
+    private HashMap<String, String> deleteMenu(@PathVariable long id) {
+        try {
+            menuRepository.deleteById(id);
+            response.put("code", "0");
+            response.put("message", delete);
+            return response;
+        } catch (Exception e) {
+            response.put("code", "1");
+            response.put("message", delelteE);
+            return response;
+
+        }
+
+    }
+
     //option
     @PostMapping(path = "/createOption")
     private HashMap<String, String> createMenu(@RequestBody Option option) {
