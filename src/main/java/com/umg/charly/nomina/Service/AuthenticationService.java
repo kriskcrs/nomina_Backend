@@ -137,7 +137,6 @@ public class AuthenticationService {
     }
 
 
-
     private void FailedLogin(User user) {
         //check rule
         Company company = companyRepository.findByIdCompany(1);
@@ -151,22 +150,6 @@ public class AuthenticationService {
 
         userRepository.save(user);
     }
-
-
-    private String getUserAgent() {
-        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
-
-        if (requestAttributes instanceof ServletRequestAttributes) {
-            HttpServletRequest request = ((ServletRequestAttributes) requestAttributes).getRequest();
-            String userAgent = request.getHeader("User-Agent");
-            return userAgent;
-        } else {
-            return "User-Agent not available";
-        }
-    }
-
-
-
 
     private void createtypeAccess(int status, String user, String ip) {
         try { String message = "";
@@ -225,8 +208,17 @@ public class AuthenticationService {
             return "Desconocido";
         }
     }
+    private String getUserAgent() {
+        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
 
-
+        if (requestAttributes instanceof ServletRequestAttributes) {
+            HttpServletRequest request = ((ServletRequestAttributes) requestAttributes).getRequest();
+            String userAgent = request.getHeader("User-Agent");
+            return userAgent;
+        } else {
+            return "User-Agent not available";
+        }
+    }
     private String parseDeviceFromUserAgent(String userAgent) {
         if (userAgent.contains("Mobile")) {
             return "Dispositivo móvil";
@@ -240,7 +232,6 @@ public class AuthenticationService {
             return "Desconocido";
         }
     }
-
     private String parseBrowserFromUserAgent(String userAgent) {
         if (userAgent.contains("Chrome")) {
             return "Google Chrome";

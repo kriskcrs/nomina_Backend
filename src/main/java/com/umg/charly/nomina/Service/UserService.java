@@ -35,6 +35,7 @@ public class UserService {
     String sessionOk = "sesion no activa";
     String responseFail = "Respuestas no validas";
     HashMap<String, String> response = new HashMap<>();
+    //parametros para generacion de contraseña por email
     int MaxCharterPassword = 25;
     int uppercaseCount = 2;
     int lengtPasswordTemp = 8;
@@ -137,7 +138,6 @@ public class UserService {
 
 
     //Questions User
-
     @GetMapping(path = "/questionUserAll/{user}")
     private List<UserQuestions> userQuestionsAll(@PathVariable String user) {
 
@@ -231,16 +231,6 @@ public class UserService {
 
     }
 
-
-    @PostMapping(path = "/userAsignRole")
-    private HashMap<String, String> userRole(@RequestBody UserRole userrole) {
-        userrole.setCreationDate(new Date());
-        userRoleRepository.save(userrole);
-        System.out.println("si guarda");
-        response.put("code", "0");
-        response.put("message", "Creado satisfactoriamente");
-        return response ;
-    }
 
     @PostMapping(path = "/createUser" )
     public HashMap<String, String> createUser(@RequestBody User user) {
