@@ -16,7 +16,7 @@ import java.util.Date;
 public class Location {
     @Id
     @Column(name = "idsucursal")
-    private Long idBranch;
+    private Long idLocation;
     @Column(name = "nombre")
     private String name;
     @Column(name = "direccion")
