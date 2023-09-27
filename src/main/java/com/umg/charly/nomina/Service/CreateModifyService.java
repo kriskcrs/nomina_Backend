@@ -58,14 +58,14 @@ public class CreateModifyService {
     @PostMapping(path = "/createCompany")
     private HashMap<String, String> createCompany(@RequestBody Company company) {
         try {
-                long idCompany = companyRepository.findAll().size();
-                idCompany++;
-                company.setIdCompany(idCompany);
-                company.setCreationDate(new Date());
-                companyRepository.save(company);
-                response.put("code", "0");
-                response.put("message", okC);
-                return response;
+            long idCompany = companyRepository.findAll().size();
+            idCompany++;
+            company.setIdCompany(idCompany);
+            company.setCreationDate(new Date());
+            companyRepository.save(company);
+            response.put("code", "0");
+            response.put("message", okC);
+            return response;
 
         } catch (Exception e) {
             System.out.println(e.getCause() + e.getMessage());
@@ -74,7 +74,6 @@ public class CreateModifyService {
             return response;
         }
     }
-
 
     @PutMapping(path = "/updateCompany/{id}")
     private HashMap<String, String> updateCompany(@RequestBody Company company, @PathVariable long id) {
@@ -136,26 +135,25 @@ public class CreateModifyService {
         }
     }
 
-    @PutMapping(path = "/modifyLocation/{id}")
+    @PutMapping(path = "/updateLocation/{id}")
     private HashMap<String, String> modifyLocation(@RequestBody Location location, @PathVariable long id) {
         try {
-                Location locationFind = locationRepository.findByIdLocation(id);
+            Location locationFind = locationRepository.findByIdLocation(id);
             System.out.println(locationFind.getCreationDate());
-                    locationFind.setModificationDate(new Date());
-                    locationFind.setUserModification(location.getUserModification());
-                    locationFind.setName(location.getName());
-                    locationFind.setAddress(location.getAddress());
-                    locationRepository.save(locationFind);
-                    response.put("code", "0");
-                    response.put("message", "Se actualizo exitosamente");
-                    return response;
+            locationFind.setModificationDate(new Date());
+            locationFind.setUserModification(location.getUserModification());
+            locationFind.setName(location.getName());
+            locationFind.setAddress(location.getAddress());
+            locationRepository.save(locationFind);
+            response.put("code", "0");
+            response.put("message", "Se actualizo exitosamente");
+            return response;
         } catch (Exception e) {
             response.put("code", "1");
             response.put("message", "No se actualizo");
             return response;
         }
     }
-
 
     @DeleteMapping(path = "/deleteLocation/{id}")
     private HashMap<String, String> deleteLocation(@PathVariable long id) {
@@ -173,32 +171,123 @@ public class CreateModifyService {
 
     }
 
+    //gender
+    @PostMapping(path = "/createGender")
+    private HashMap<String, String> createGender(@RequestBody Gender gender) {
+        try {
+            long count = genderRepository.findAll().size();
+            count++;
+            gender.setIdGender(count);
+            gender.setCreationDate(new Date());
+            genderRepository.save(gender);
+            response.put("code", "0");
+            response.put("message", okC);
+            return response;
+        } catch (Exception e) {
+            System.out.println("Error menssage " + e.getMessage() + " causa " + e.getCause());
+            response.put("code", "1");
+            response.put("message", failsC);
+            return response;
+        }
 
-    //statusUser
-    @PutMapping(path = "/updateStatusUser")
-    private HashMap<String, String> modifyStatusUser(@RequestBody StatusUser statusUser) {
-        if (statusUser.getIdStatusUser() != null) {
-            statusUser.setModificationDate(new Date());
-            statusUserRepository.save(statusUser);
+    }
+
+    @PutMapping(path = "/updateGender/{id}")
+    private HashMap<String, String> updateGender(@RequestBody Gender gender, @PathVariable long id) {
+        try {
+            Gender genderFind = genderRepository.findByIdGender(id);
+            genderFind.setUserModification(gender.getUserModification());
+            genderFind.setModificationDate(new Date());
+            genderFind.setName(gender.getName());
+            genderRepository.save(genderFind);
             response.put("code", "0");
             response.put("message", okU);
             return response;
+        } catch (Exception e) {
+            response.put("code", "1");
+            response.put("message", failsU);
+            return response;
         }
-        response.put("code", "1");
-        response.put("message", failsU);
-        return response;
     }
+
+    @DeleteMapping(path = "/deleteGender/{id}")
+    private HashMap<String, String> deleteGender(@PathVariable long id) {
+        try {
+            genderRepository.deleteById(id);
+            response.put("code", "0");
+            response.put("message", delete);
+            return response;
+        } catch (Exception e) {
+            response.put("code", "1");
+            response.put("message", delelteE);
+            return response;
+
+        }
+
+    }
+
+
+    //statusUser
 
     @PostMapping(path = "/createStatusUser")
     private HashMap<String, String> createStatusUser(@RequestBody StatusUser statusUser) {
-        long idStatusUser = statusUserRepository.findAll().size();
-        idStatusUser++;
-        statusUser.setIdStatusUser(idStatusUser);
-        statusUser.setCreationDate(new Date());
-        statusUserRepository.save(statusUser);
-        response.put("code", "0");
-        response.put("message", okC);
-        return response;
+        try {
+            long idStatusUser = statusUserRepository.findAll().size();
+            idStatusUser++;
+            statusUser.setIdStatusUser(idStatusUser);
+            statusUser.setCreationDate(new Date());
+            statusUserRepository.save(statusUser);
+            response.put("code", "0");
+            response.put("message", okC);
+            return response;
+
+        } catch (Exception e) {
+            System.out.println(e.getCause() + " " + e.getMessage());
+            statusUserRepository.save(statusUser);
+            response.put("code", "1");
+            response.put("message", failsC);
+            return response;
+        }
+
+    }
+
+    @PutMapping(path = "/updateStatusUser/{id}")
+    private HashMap<String, String> updateStatusUser(@RequestBody StatusUser statusUser, @PathVariable long id) {
+        try {
+            StatusUser statusUserFind = statusUserRepository.findByIdStatusUser(id);
+            statusUserFind.setUserModification(statusUser.getUserModification());
+            statusUserFind.setModificationDate(new Date());
+            statusUserFind.setName(statusUser.getName());
+
+            statusUserRepository.save(statusUserFind);
+            response.put("code", "0");
+            response.put("message", okU);
+            return response;
+
+        } catch (Exception e) {
+            System.out.println(e.getCause() + " " + e.getMessage());
+            response.put("code", "1");
+            response.put("message", failsU);
+            return response;
+        }
+    }
+
+
+    @DeleteMapping(path = "/deleteStatusUser/{id}")
+    private HashMap<String, String> deleteStatusUser(@PathVariable long id) {
+        try {
+            statusUserRepository.deleteById(id);
+            response.put("code", "0");
+            response.put("message", delete);
+            return response;
+        } catch (Exception e) {
+            System.out.println(e.getCause() + " " + e.getMessage());
+            response.put("code", "1");
+            response.put("message", delelteE);
+            return response;
+
+        }
+
     }
 
 
@@ -401,41 +490,6 @@ public class CreateModifyService {
             response.put("message", "Error");
             return response;
         }
-    }
-
-    //gender
-    @PostMapping(path = "/createGender")
-    private HashMap<String, String> createGender(@RequestBody Gender gender) {
-        try {
-            long count = genderRepository.findAll().size();
-            count++;
-            gender.setIdGender(count);
-            gender.setCreationDate(new Date());
-            genderRepository.save(gender);
-            response.put("code", "0");
-            response.put("message", "Se agrego exitosamente");
-            return response;
-        } catch (Exception e) {
-            System.out.println("Error menssage " + e.getMessage() + " causa " + e.getCause());
-            response.put("code", "1");
-            response.put("message", "No se agrego");
-            return response;
-        }
-
-    }
-
-    @PutMapping(path = "/modifyGender")
-    private HashMap<String, String> modifyGender(@RequestBody Gender gender) {
-        if (gender.getIdGender() != null) {
-            gender.setModificationDate(new Date());
-            genderRepository.save(gender);
-            response.put("code", "0");
-            response.put("message", okU);
-            return response;
-        }
-        response.put("code", "1");
-        response.put("message", failsU);
-        return response;
     }
 
 
