@@ -139,7 +139,6 @@ public class CreateModifyService {
     private HashMap<String, String> modifyLocation(@RequestBody Location location, @PathVariable long id) {
         try {
             Location locationFind = locationRepository.findByIdLocation(id);
-            System.out.println(locationFind.getCreationDate());
             locationFind.setModificationDate(new Date());
             locationFind.setUserModification(location.getUserModification());
             locationFind.setName(location.getName());
@@ -291,6 +290,74 @@ public class CreateModifyService {
     }
 
 
+    //userRole
+
+    @PostMapping(path = "/createUserRole")
+    private HashMap<String, String> createUserRole(@RequestBody UserRole userRole) {
+     try{
+         UserRole userRoleFind = userRoleRepository.findByIdUser(userRole.getIdUser());
+         if(userRoleFind == null){
+             long id = userRoleRepository.findAll().size();
+             id++;
+             userRole.setIdRole(id);
+             userRole.setCreationDate(new Date());
+             userRoleRepository.save(userRole);
+             response.put("code", "0");
+             response.put("message", okC);
+             return response;
+         }else{
+             response.put("code", "1");
+             response.put("message", "Usuario ya tiene rol no puede agregar otro");
+             return response;
+         }
+
+
+     }catch (Exception e){
+         response.put("code", "1");
+         response.put("message", failsC);
+         return response;
+     }
+
+    }
+
+
+    @PutMapping(path = "/updateUserRole/{id}")
+    private HashMap<String, String> updateUserRole(@RequestBody UserRole userRole,@PathVariable String id) {
+        try {
+            UserRole userRoleFind = userRoleRepository.findByIdUser(id);
+            userRoleFind.setIdRole(userRole.getIdRole());
+            userRoleFind.setUserModification(userRole.getUserModification());
+            userRoleFind.setModificationDate(new Date());
+            userRoleRepository.save(userRoleFind);
+            response.put("code", "0");
+            response.put("message", okU);
+            return response;
+        } catch (Exception e) {
+            response.put("code", "1");
+            response.put("message", failsU);
+            return response;
+
+        }
+
+    }
+
+
+    @DeleteMapping(path = "/deleteUserRole/{id}")
+    private HashMap<String, String> deleteStatusUser(@PathVariable String id) {
+        try {
+            userRoleRepository.deleteById(id);
+            response.put("code", "0");
+            response.put("message", delete);
+            return response;
+        } catch (Exception e) {
+            System.out.println(e.getCause() + " " + e.getMessage());
+            response.put("code", "1");
+            response.put("message", delelteE);
+            return response;
+        }
+    }
+
+
     //menu
     @PostMapping(path = "/createMenu")
     private HashMap<String, String> createMenu(@RequestBody Menu menu) {
@@ -373,7 +440,7 @@ public class CreateModifyService {
     //roleOption
     @PostMapping(path = "/createRoleOption")
     private HashMap<String, String> createRoleOption(@RequestBody RoleOption roleOptionCreate) {
-        System.out.println(roleOptionCreate);
+
         List<RoleOption> roleOptionExistList = roleOptionRepository.findAll();
         boolean roleOptionAlreadyExist = false;
 
@@ -492,30 +559,5 @@ public class CreateModifyService {
         }
     }
 
-
-    //userRole
-    @PutMapping(path = "/modifyuserRole")
-    private HashMap<String, String> modifyuserRole(@RequestBody UserRole userrole) {
-        if (userrole.getIdUser() != null) {
-            userrole.setModificationDate(new Date());
-            userRoleRepository.save(userrole);
-            response.put("code", "0");
-            response.put("message", okU);
-            return response;
-        }
-        response.put("code", "1");
-        response.put("message", failsU);
-        return response;
-    }
-
-    @PostMapping(path = "/userAsignRole")
-    private HashMap<String, String> userRole(@RequestBody UserRole userrole) {
-        userrole.setCreationDate(new Date());
-        userRoleRepository.save(userrole);
-        System.out.println("si guarda");
-        response.put("code", "0");
-        response.put("message", okC);
-        return response;
-    }
 
 }
