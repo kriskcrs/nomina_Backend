@@ -270,6 +270,7 @@ public class UserService {
             if(dataUser.isPresent()){
                 dataUser.get().setName(user.getName());
                 dataUser.get().setLastName(user.getLastName());
+                //dataUser.get().setDob(user.getDob());
                 dataUser.get().setIdStatusUser(user.getIdStatusUser());
                 dataUser.get().setEmail(user.getEmail());
                 dataUser.get().setMobilePhone(user.getMobilePhone());
