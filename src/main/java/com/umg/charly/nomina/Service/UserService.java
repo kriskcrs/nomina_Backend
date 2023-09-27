@@ -1,16 +1,9 @@
 package com.umg.charly.nomina.Service;
 
 
-import com.umg.charly.nomina.Entity.Company;
-import com.umg.charly.nomina.Entity.Module;
-import com.umg.charly.nomina.Entity.User;
-import com.umg.charly.nomina.Entity.UserQuestions;
-import com.umg.charly.nomina.Entity.UserChangePassword;
-import com.umg.charly.nomina.Entity.UserRole;
-import com.umg.charly.nomina.Repository.CompanyRepository;
-import com.umg.charly.nomina.Repository.UserQuestionsRepository;
-import com.umg.charly.nomina.Repository.UserRepository;
-import com.umg.charly.nomina.Repository.UserRoleRepository;
+import com.umg.charly.nomina.Entity.*;
+
+import com.umg.charly.nomina.Repository.*;
 import com.umg.charly.nomina.Tools.Encoding;
 import com.umg.charly.nomina.Tools.KeepAlive;
 import com.umg.charly.nomina.Tools.PasswordGenerator;
