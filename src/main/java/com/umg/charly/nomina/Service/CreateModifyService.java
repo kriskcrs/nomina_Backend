@@ -423,33 +423,56 @@ public class CreateModifyService {
             idOption++;
             option.setIdOption(idOption);
             option.setCreationDate(new Date());
+            option.setIdMenu(option.getIdMenu());
             optionRepository.save(option);
             response.put("code", "0");
-            response.put("message", "Se agrego exitosamente");
+            response.put("message", okC);
             return response;
         } catch (Exception e) {
-            System.out.println("Error creando opciones" + e.getMessage() + " causa" + e.getCause());
+            System.out.println( e.getMessage() + " " + e.getCause());
             response.put("code", "1");
-            response.put("message", "Error");
+            response.put("message", failsC);
             return response;
         }
     }
 
-    @PutMapping(path = "/modifyOption")
-    private HashMap<String, String> modifyOption(@RequestBody Option option) {
+    @PutMapping(path = "/updateOption/{id}")
+    private HashMap<String, String> updateOption(@RequestBody Option option,@PathVariable long id) {
         try {
-            option.setModificationDate(new Date());
-            optionRepository.save(option);
+            Option optionlFind = optionRepository.findByIdOption(id);
+            optionlFind.setModificationDate(new Date());
+            optionlFind.setUserModification(option.getUserModification());
+            optionlFind.setName(option.getName());
+            optionlFind.setPage(option.getPage());
+            optionlFind.setIdMenu(option.getIdMenu());
+            optionlFind.setIdOrderMenu(option.getIdOrderMenu());
+            optionRepository.save(optionlFind);
             response.put("code", "0");
-            response.put("message", "Se actualizo exitosamente");
+            response.put("message", okU);
             return response;
         } catch (Exception e) {
-            System.out.println("Error actualizando opciones" + e.getMessage() + " causa" + e.getCause());
+            System.out.println( e.getMessage() + " " + e.getCause());
             response.put("code", "1");
-            response.put("message", "Error");
+            response.put("message", failsU);
             return response;
         }
     }
+
+    @DeleteMapping(path = "/deleteOption/{id}")
+    private HashMap<String, String> deleteOption(@PathVariable long id) {
+        try {
+            optionRepository.deleteById(id);
+            response.put("code", "0");
+            response.put("message", delete);
+            return response;
+        } catch (Exception e) {
+            response.put("code", "1");
+            response.put("message", delelteE);
+            return response;
+        }
+
+    }
+
 
     //roleOption
     @PostMapping(path = "/createRoleOption")
