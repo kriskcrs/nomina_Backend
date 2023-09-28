@@ -555,6 +555,21 @@ public class CreateModifyService {
         return response;
     }
 
+    @DeleteMapping(path = "/deleteModule/{id}")
+    private HashMap<String, String> deleteModule(@PathVariable long id) {
+        try {
+            moduleRepository.deleteById(id);
+            response.put("code", "0");
+            response.put("message", delete);
+            return response;
+        } catch (Exception e) {
+            response.put("code", "1");
+            response.put("message", delelteE);
+            return response;
+
+        }
+
+    }
 
     //Rol
     @PostMapping(path = "/createRol")
