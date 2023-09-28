@@ -10,9 +10,9 @@ import java.util.Date;
 @Table(name = "periodo_planilla")
 @Getter
 @Setter
-public class PeriodSpreadsheet {
+public class PayrollPeriod {
     @EmbeddedId
-    private PeriodSpreadsheetPK IdPK;
+    private PayrollPeriodPK IdPK;
 
     @Column(name = "fechainicio")
     private Date startDate;
