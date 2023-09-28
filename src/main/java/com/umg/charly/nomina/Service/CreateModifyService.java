@@ -509,8 +509,26 @@ public class CreateModifyService {
         roleOptionRepository.save(roleOptionModify);
         response.put("code", "0");
         response.put("message", okU);
-
         return response;
+    }
+
+    @DeleteMapping(path = "/deleteRoleOption/{idRole}/{idOption}")
+    private HashMap<String, String> deleteStatusUser(@PathVariable Long idRole, @PathVariable Long idOption) {
+        try {
+            RoleOptionPK roleOptionPK = new RoleOptionPK();
+            roleOptionPK.setIdRole(idRole);
+            roleOptionPK.setIdOption(idOption);
+
+            roleOptionRepository.deleteById(roleOptionPK);
+            response.put("code", "0");
+            response.put("message", delete);
+            return response;
+        } catch (Exception e) {
+            System.out.println(e.getCause() + " " + e.getMessage());
+            response.put("code", "1");
+            response.put("message", delelteE);
+            return response;
+        }
     }
 
 
