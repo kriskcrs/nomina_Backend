@@ -32,8 +32,6 @@ public class UserService {
     String errorClient = "Cliente no existe";
     String errorParameters = "Error en parametros";
     String OK = "Exitoso";
-    String sessionOk = "sesion no activa";
-    String responseFail = "Respuestas no validas";
     String delete = "El registro fue eliminado exitosamente";
     String delelteE = "El registro tiene mas dependencias no puede ser borrado";
     String  errorMessage = "";
