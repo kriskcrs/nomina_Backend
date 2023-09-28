@@ -34,6 +34,8 @@ public class UserService {
     String OK = "Exitoso";
     String sessionOk = "sesion no activa";
     String responseFail = "Respuestas no validas";
+    String delete = "El registro fue eliminado exitosamente";
+    String delelteE = "El registro tiene mas dependencias no puede ser borrado";
     HashMap<String, String> response = new HashMap<>();
     //parametros para generacion de contraseña por email
     int MaxCharterPassword = 25;
@@ -286,6 +288,22 @@ public class UserService {
         response.put("code","1");
         response.put("message","No se actualizo");
         return  response;
+    }
+
+    @DeleteMapping(path = "/deleteUser/{id}")
+    private HashMap<String, String> deleteUser(@PathVariable String id) {
+        try {
+            userRepository.deleteById(Long.valueOf(id));
+            response.put("code", "0");
+            response.put("message", delete);
+            return response;
+        } catch (Exception e) {
+            response.put("code", "1");
+            response.put("message", delelteE);
+            return response;
+
+        }
+
     }
 
     //validaciones de reglas
