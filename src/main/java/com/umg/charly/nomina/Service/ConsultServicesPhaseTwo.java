@@ -30,7 +30,7 @@ public class ConsultServicesPhaseTwo {
         return departmentRepository.findAll();
     }
 
-    @GetMapping(path = "/periodSpreadsheet")
+    @GetMapping(path = "/payrollPeriod")
     private List<PayrollPeriod> payrollPeriodLis(){
         return periodSpreadsheetRepository.findAll();
     }
