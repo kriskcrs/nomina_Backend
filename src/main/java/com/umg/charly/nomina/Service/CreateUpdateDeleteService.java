@@ -40,8 +40,6 @@ public class CreateUpdateDeleteService {
     GenderRepository genderRepository;
     @Autowired
     UserRoleRepository userRoleRepository;
-    @Autowired
-    AbsenceRepository absenceRepository;
 
 
     //vars
@@ -626,36 +624,5 @@ public class CreateUpdateDeleteService {
             return response;
         }
     }
-
-    //Inasistencia
-    @PostMapping(path = "/createAbsence")
-    private HashMap<String, String> createAbsence(@RequestBody Absence absence) {
-        try {
-            long idAbsence = absenceRepository.findAll().size();
-            idAbsence++;
-            absence.setIdAbsence(idAbsence);
-            absence.setCreateDate(new Date());
-            absence.setModificationDate(null);
-            absence.setUserModification(null);
-            absenceRepository.save(absence);
-            response.put("code", "0");
-            response.put("message", "Se agrego exitosamente");
-            return response;
-        } catch (Exception e) {
-            System.out.println("Error creando roles" + e.getMessage() + " causa" + e.getCause());
-            response.put("code", "1");
-            response.put("message", "Error");
-            return response;
-        }
-
-
-    }
-
-    //Persona
-
-
-    //Puesto
-
-
 
 }
