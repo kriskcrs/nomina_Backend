@@ -15,7 +15,6 @@ import java.util.Date;
 public class User {
 
     @Id
-
     @Column(name = "idusuario")
     private String idUser;
     @Column(name = "nombre")
@@ -48,7 +47,7 @@ public class User {
     @Column(name = "telefonomovil")
     private String mobilePhone;
     @Column(name = "idsucursal")
-    private Long idBranch;
+    private Long idLocation;
     @Column(name = "fechacreacion")
     private Date creationDate;
     @Column(name = "usuariocreacion")
