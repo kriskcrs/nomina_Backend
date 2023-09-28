@@ -593,8 +593,6 @@ public class CreateUpdateDeleteService {
             idRol++;
             role.setIdRole(idRol);
             role.setCreationDate(new Date());
-            role.setModificationDate(null);
-            role.setUserModification(null);
             roleRepository.save(role);
             response.put("code", "0");
             response.put("message", "Se agrego exitosamente");

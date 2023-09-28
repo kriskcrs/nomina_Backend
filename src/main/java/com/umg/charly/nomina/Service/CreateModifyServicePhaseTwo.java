@@ -35,9 +35,6 @@ public class CreateModifyServicePhaseTwo {
             idAbsence++;
             absence.setIdAbsence(idAbsence);
             absence.setCreateDate(new Date());
-            absence.setProcessingDate(null);
-            absence.setModificationDate(null);
-            absence.setUserModification(null);
             absenceRepository.save(absence);
             response.put("code", "0");
             response.put("message", okC);
