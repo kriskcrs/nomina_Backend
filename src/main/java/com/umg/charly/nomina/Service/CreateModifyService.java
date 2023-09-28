@@ -139,7 +139,6 @@ public class CreateModifyService {
     private HashMap<String, String> modifyLocation(@RequestBody Location location, @PathVariable long id) {
         try {
             Location locationFind = locationRepository.findByIdLocation(id);
-            System.out.println(locationFind.getCreationDate());
             locationFind.setModificationDate(new Date());
             locationFind.setUserModification(location.getUserModification());
             locationFind.setName(location.getName());
@@ -291,16 +290,82 @@ public class CreateModifyService {
     }
 
 
+    //userRole
+
+    @PostMapping(path = "/createUserRole")
+    private HashMap<String, String> createUserRole(@RequestBody UserRole userRole) {
+        try {
+            UserRole userRoleFind = userRoleRepository.findByIdUser(userRole.getIdUser());
+            if (userRoleFind == null) {
+                long id = userRoleRepository.findAll().size();
+                id++;
+                userRole.setIdRole(id);
+                userRole.setCreationDate(new Date());
+                userRoleRepository.save(userRole);
+                response.put("code", "0");
+                response.put("message", okC);
+                return response;
+            } else {
+                response.put("code", "1");
+                response.put("message", "Usuario ya tiene rol no puede agregar otro");
+                return response;
+            }
+
+
+        } catch (Exception e) {
+            response.put("code", "1");
+            response.put("message", failsC);
+            return response;
+        }
+
+    }
+
+
+    @PutMapping(path = "/updateUserRole/{id}")
+    private HashMap<String, String> updateUserRole(@RequestBody UserRole userRole, @PathVariable String id) {
+        try {
+            UserRole userRoleFind = userRoleRepository.findByIdUser(id);
+            userRoleFind.setIdRole(userRole.getIdRole());
+            userRoleFind.setUserModification(userRole.getUserModification());
+            userRoleFind.setModificationDate(new Date());
+            userRoleRepository.save(userRoleFind);
+            response.put("code", "0");
+            response.put("message", okU);
+            return response;
+        } catch (Exception e) {
+            response.put("code", "1");
+            response.put("message", failsU);
+            return response;
+
+        }
+
+    }
+
+
+    @DeleteMapping(path = "/deleteUserRole/{id}")
+    private HashMap<String, String> deleteStatusUser(@PathVariable String id) {
+        try {
+            userRoleRepository.deleteById(id);
+            response.put("code", "0");
+            response.put("message", delete);
+            return response;
+        } catch (Exception e) {
+            System.out.println(e.getCause() + " " + e.getMessage());
+            response.put("code", "1");
+            response.put("message", delelteE);
+            return response;
+        }
+    }
+
+
     //menu
     @PostMapping(path = "/createMenu")
     private HashMap<String, String> createMenu(@RequestBody Menu menu) {
         try {
-            long count = menuRepository.findAll().size();
-            count++;
-            menu.setIdMenu(count);
+            long id = menuRepository.findAll().size();
+            id++;
+            menu.setIdMenu(id);
             menu.setCreationDate(new Date());
-            menu.setModificationDate(null);
-            menu.setUserModification(null);
             menuRepository.save(menu);
             response.put("code", "0");
             response.put("message", okC);
@@ -313,25 +378,25 @@ public class CreateModifyService {
         }
     }
 
-    @PutMapping(path = "/modifyMenu/{idMenu}")
-    private HashMap<String, String> modifyMenu(@RequestBody Menu menu, @PathVariable Long idMenu) {
-        if (idMenu != null) {
-            Optional<Menu> dataMenu = Optional.ofNullable(menuRepository.findByIdMenu(idMenu));
-            if (dataMenu.isPresent()) {
-                dataMenu.get().setIdModulo(menu.getIdModulo());
-                dataMenu.get().setName(menu.getName());
-                dataMenu.get().setOrderMenu(menu.getOrderMenu());
-                dataMenu.get().setModificationDate(new Date());
-                dataMenu.get().setUserModification(menu.getUserModification());
-                menuRepository.save(dataMenu.get());
-                response.put("code", "0");
-                response.put("message", "Se actualizo exitosamente");
-                return response;
-            }
+    @PutMapping(path = "/updateMenu/{id}")
+    private HashMap<String, String> updateMenu(@RequestBody Menu menu, @PathVariable long id) {
+        try {
+            Menu MenuFind = menuRepository.findByIdMenu(id);
+            MenuFind.setName(menu.getName());
+            MenuFind.setOrderMenu(menu.getOrderMenu());
+            MenuFind.setModificationDate(new Date());
+            MenuFind.setUserModification(menu.getUserModification());
+            menuRepository.save(MenuFind);
+            response.put("code", "0");
+            response.put("message", okU);
+            return response;
+        } catch (Exception e) {
+            response.put("code", "1");
+            response.put("message", failsU);
+            return response;
         }
-        response.put("code", "1");
-        response.put("message", "No se actualizo");
-        return response;
+
+
     }
 
     @DeleteMapping(path = "/deleteMenu/{id}")
@@ -358,38 +423,61 @@ public class CreateModifyService {
             idOption++;
             option.setIdOption(idOption);
             option.setCreationDate(new Date());
+            option.setIdMenu(option.getIdMenu());
             optionRepository.save(option);
             response.put("code", "0");
-            response.put("message", "Se agrego exitosamente");
+            response.put("message", okC);
             return response;
         } catch (Exception e) {
-            System.out.println("Error creando opciones" + e.getMessage() + " causa" + e.getCause());
+            System.out.println( e.getMessage() + " " + e.getCause());
             response.put("code", "1");
-            response.put("message", "Error");
+            response.put("message", failsC);
             return response;
         }
     }
 
-    @PutMapping(path = "/modifyOption")
-    private HashMap<String, String> modifyOption(@RequestBody Option option) {
+    @PutMapping(path = "/updateOption/{id}")
+    private HashMap<String, String> updateOption(@RequestBody Option option,@PathVariable long id) {
         try {
-            option.setModificationDate(new Date());
-            optionRepository.save(option);
+            Option optionlFind = optionRepository.findByIdOption(id);
+            optionlFind.setModificationDate(new Date());
+            optionlFind.setUserModification(option.getUserModification());
+            optionlFind.setName(option.getName());
+            optionlFind.setPage(option.getPage());
+            optionlFind.setIdMenu(option.getIdMenu());
+            optionlFind.setIdOrderMenu(option.getIdOrderMenu());
+            optionRepository.save(optionlFind);
             response.put("code", "0");
-            response.put("message", "Se actualizo exitosamente");
+            response.put("message", okU);
             return response;
         } catch (Exception e) {
-            System.out.println("Error actualizando opciones" + e.getMessage() + " causa" + e.getCause());
+            System.out.println( e.getMessage() + " " + e.getCause());
             response.put("code", "1");
-            response.put("message", "Error");
+            response.put("message", failsU);
             return response;
         }
     }
+
+    @DeleteMapping(path = "/deleteOption/{id}")
+    private HashMap<String, String> deleteOption(@PathVariable long id) {
+        try {
+            optionRepository.deleteById(id);
+            response.put("code", "0");
+            response.put("message", delete);
+            return response;
+        } catch (Exception e) {
+            response.put("code", "1");
+            response.put("message", delelteE);
+            return response;
+        }
+
+    }
+
 
     //roleOption
     @PostMapping(path = "/createRoleOption")
     private HashMap<String, String> createRoleOption(@RequestBody RoleOption roleOptionCreate) {
-        System.out.println(roleOptionCreate);
+
         List<RoleOption> roleOptionExistList = roleOptionRepository.findAll();
         boolean roleOptionAlreadyExist = false;
 
@@ -467,6 +555,21 @@ public class CreateModifyService {
         return response;
     }
 
+    @DeleteMapping(path = "/deleteModule/{id}")
+    private HashMap<String, String> deleteModule(@PathVariable long id) {
+        try {
+            moduleRepository.deleteById(id);
+            response.put("code", "0");
+            response.put("message", delete);
+            return response;
+        } catch (Exception e) {
+            response.put("code", "1");
+            response.put("message", delelteE);
+            return response;
+
+        }
+
+    }
 
     //Rol
     @PostMapping(path = "/createRol")
@@ -508,30 +611,5 @@ public class CreateModifyService {
         }
     }
 
-
-    //userRole
-    @PutMapping(path = "/modifyuserRole")
-    private HashMap<String, String> modifyuserRole(@RequestBody UserRole userrole) {
-        if (userrole.getIdUser() != null) {
-            userrole.setModificationDate(new Date());
-            userRoleRepository.save(userrole);
-            response.put("code", "0");
-            response.put("message", okU);
-            return response;
-        }
-        response.put("code", "1");
-        response.put("message", failsU);
-        return response;
-    }
-
-    @PostMapping(path = "/userAsignRole")
-    private HashMap<String, String> userRole(@RequestBody UserRole userrole) {
-        userrole.setCreationDate(new Date());
-        userRoleRepository.save(userrole);
-        System.out.println("si guarda");
-        response.put("code", "0");
-        response.put("message", okC);
-        return response;
-    }
 
 }
