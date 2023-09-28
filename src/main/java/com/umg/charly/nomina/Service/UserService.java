@@ -95,13 +95,13 @@ public class UserService {
     @PostMapping(path = "/changePassword")
     private HashMap<String, String> changePassword(@RequestBody UserChangePassword userChangePassword) {
 
-        if(new KeepAlive().validateSession(userRepository.findByIdUser(userChangePassword.getIdUser()).getCurrentSession())){
+        if (new KeepAlive().validateSession(userRepository.findByIdUser(userChangePassword.getIdUser()).getCurrentSession())) {
             User user = userRepository.findByIdUserAndPassword(userChangePassword.getIdUser(), new Encoding().crypt(userChangePassword.getPassword()));
             if (user != null) {
                 if (userChangePassword.getNewPassword().equals(userChangePassword.getConfirmNewPassword())) {
 
                     //validación de contraseñas
-                    if(validateRules(userChangePassword.getConfirmNewPassword())){
+                    if (validateRules(userChangePassword.getConfirmNewPassword())) {
                         user.setPassword(new Encoding().crypt(userChangePassword.getConfirmNewPassword()));
                         user.setLastDateOfEntry(new Date());
                         user.setLastPasswordChangeDate(new Date());
@@ -113,7 +113,7 @@ public class UserService {
                         response.put("message", "");
                         userRepository.save(user);
                         return response;
-                    } else{
+                    } else {
                         response.put("code", "1");
                         response.put("message", "Contraseña no cumple con las politicas");
                         return response;
@@ -182,29 +182,36 @@ public class UserService {
     private HashMap<String, String> validateQuestion(@RequestBody List<UserQuestions> userQuestions) {
         List<Company> company = companyRepository.findAll();
         int count = company.get(0).getPasswordAmountQuestionsValidate();
-            if (!userQuestions.isEmpty()) {
-                int OK = 0;
-                int tmp = 0;
-                for (UserQuestions userQuestionData : userQuestions
-                ) {
-                    System.out.println(userQuestions.get(tmp).getRespond());
-                    userQuestionData.setRespond(new Encoding().crypt(userQuestionData.getRespond()));
-                    Optional<UserQuestions> userQuestion = userQuestionsRepository.findByIdUserAndAndQuestionsAndAndRespond(userQuestionData.getIdUser(), userQuestionData.getQuestions(), userQuestionData.getRespond());
-                    tmp++;
-                    if (userQuestion.isPresent()) {
-                        OK++;
-                    }
-                }
-                if (OK == count) {
-                    response.put("code", "0");
-                    response.put("message", sessionOk);
-                    return response;
+        int OK = 0;
+        int Question = 0;
+        if (!userQuestions.isEmpty()) {
+            for (UserQuestions userQuestionData : userQuestions
+            ) {
+                userQuestionData.setRespond(new Encoding().crypt(userQuestionData.getRespond()));
+                Optional<UserQuestions> userQuestion = userQuestionsRepository.findByIdUserAndAndQuestionsAndAndRespond(userQuestionData.getIdUser(), userQuestionData.getQuestions(), userQuestionData.getRespond());
+                Question++;
+                if (userQuestion.isPresent()) {
+                    OK++;
                 }
             }
+            if (OK == count) {
+                response.put("code", "0");
+                response.put("message", "OK");
+                return response;
+            }
+            if (Question == OK) {
+                response.put("code", "1");
+                response.put("message", "No posee la cantidad de preguntas necesarias, configuradas en el sistema, por favor comunicarse con el administrador");
+                return response;
+            } else {
+                response.put("code", "1");
+                response.put("message", "Respuesta No Valida");
+                return response;
+            }
+        }
         response.put("code", "1");
-        response.put("message", responseFail);
+        response.put("message", "No hay preguntas para validar");
         return response;
-
     }
 
 
@@ -232,7 +239,7 @@ public class UserService {
     }
 
 
-    @PostMapping(path = "/createUser" )
+    @PostMapping(path = "/createUser")
     public HashMap<String, String> createUser(@RequestBody User user) {
         try {
             User existingUser = userRepository.findByIdUser(user.getIdUser());
@@ -264,10 +271,10 @@ public class UserService {
     }
 
     @PutMapping(path = "/modifyUser/{idUser}")
-    private HashMap<String, String> modifyUser(@RequestBody User user, @PathVariable String idUser){
-        if(idUser!=null){
+    private HashMap<String, String> modifyUser(@RequestBody User user, @PathVariable String idUser) {
+        if (idUser != null) {
             Optional<User> dataUser = Optional.ofNullable(userRepository.findByIdUser(idUser));
-            if(dataUser.isPresent()){
+            if (dataUser.isPresent()) {
                 dataUser.get().setName(user.getName());
                 dataUser.get().setLastName(user.getLastName());
                 //dataUser.get().setDob(user.getDob());
@@ -278,14 +285,14 @@ public class UserService {
                 dataUser.get().setModificationDate(new Date());
                 dataUser.get().setUserModification(user.getUserModification());
                 userRepository.save(dataUser.get());
-                response.put("code","0");
-                response.put("message","Se actualizo exitosamente");
-                return  response;
+                response.put("code", "0");
+                response.put("message", "Se actualizo exitosamente");
+                return response;
             }
         }
-        response.put("code","1");
-        response.put("message","No se actualizo");
-        return  response;
+        response.put("code", "1");
+        response.put("message", "No se actualizo");
+        return response;
     }
 
     //validaciones de reglas
