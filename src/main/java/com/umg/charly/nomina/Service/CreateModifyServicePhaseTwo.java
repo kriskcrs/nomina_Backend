@@ -35,20 +35,55 @@ public class CreateModifyServicePhaseTwo {
             idAbsence++;
             absence.setIdAbsence(idAbsence);
             absence.setCreateDate(new Date());
+            absence.setProcessingDate(null);
             absence.setModificationDate(null);
             absence.setUserModification(null);
             absenceRepository.save(absence);
             response.put("code", "0");
-            response.put("message", "Se agrego exitosamente");
+            response.put("message", okC);
             return response;
         } catch (Exception e) {
             System.out.println("Error creando roles" + e.getMessage() + " causa" + e.getCause());
             response.put("code", "1");
-            response.put("message", "Error");
+            response.put("message", failsC);
             return response;
         }
     }
 
+    @PutMapping(path = "/updateAbsence/{id}")
+    private HashMap<String, String> updateAbsence(@RequestBody Absence absence, @PathVariable long id) {
+        try {
+            Absence absenceFind = absenceRepository.findByIdAbsence(id);
+            absenceFind.setModificationDate(new Date());
+            absenceFind.setUserModification(absence.getUserModification());
+            absenceFind.setInitialDate(absence.getInitialDate());
+            absenceFind.setFinalDate(absence.getFinalDate());
+            absenceFind.setReason(absence.getReason());
+            absenceRepository.save(absenceFind);
+            response.put("code", "0");
+            response.put("message", okU);
+            return response;
+        } catch (Exception e) {
+            response.put("code", "1");
+            response.put("message", failsU);
+            return response;
+        }
+    }
 
+    @DeleteMapping(path = "/deleteAbsence/{id}")
+    private HashMap<String, String> deleteAbsence(@PathVariable long id) {
+        try {
+            absenceRepository.deleteById(id);
+            response.put("code", "0");
+            response.put("message", delete);
+            return response;
+        } catch (Exception e) {
+            response.put("code", "1");
+            response.put("message", delelteE);
+            return response;
+
+        }
+
+    }
 
 }
