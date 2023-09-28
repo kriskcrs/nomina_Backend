@@ -20,7 +20,6 @@ public class CreateModifyServicePhaseTwo {
     //vars
     String okU = "Se actualiza correctamente";
     String okC = "Se creo correctamente";
-    String error = "La contraseña minima debe ser mayor a 5 caracteres";
     String failsU = "Hubo un problema al actualizar";
     String failsC = "Hubo un problema al crear";
     String delete = "El registro fue eliminado exitosamente";
@@ -40,7 +39,7 @@ public class CreateModifyServicePhaseTwo {
             response.put("message", okC);
             return response;
         } catch (Exception e) {
-            System.out.println("Error creando roles" + e.getMessage() + " causa" + e.getCause());
+            System.out.println( e.getMessage() + " causa" + e.getCause());
             response.put("code", "1");
             response.put("message", failsC);
             return response;
@@ -61,6 +60,7 @@ public class CreateModifyServicePhaseTwo {
             response.put("message", okU);
             return response;
         } catch (Exception e) {
+            System.out.println( e.getMessage() + " causa" + e.getCause());
             response.put("code", "1");
             response.put("message", failsU);
             return response;
@@ -75,6 +75,7 @@ public class CreateModifyServicePhaseTwo {
             response.put("message", delete);
             return response;
         } catch (Exception e) {
+            System.out.println( e.getMessage() + " causa" + e.getCause());
             response.put("code", "1");
             response.put("message", delelteE);
             return response;

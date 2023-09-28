@@ -18,7 +18,7 @@ public class PayrollHeader {
     private Double totalIncome;
     @Column(name = "totaldescuentos")
     private Double totalDiscounts;
-    @Column(name = "salarioNeto")
+    @Column(name = "salarioneto")
     private Double salary;
     @Column(name = "fechahoraprocesada")
     private Date dateProcess;

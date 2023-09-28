@@ -33,7 +33,7 @@ public class Employee {
     private Double bonusIncomeDecree;
     @Column(name = "ingresootrosingresos")
     private Double incomeOther;
-    @Column(name = "descuentosigss")
+    @Column(name = "descuentoigss")
     private Double igss;
     @Column(name = "descuentoisr")
     private Double isr;

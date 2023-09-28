@@ -10,7 +10,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 public class PersonDocumentPK implements Serializable {
-    @Column(name = "idtipdocumento")
+    @Column(name = "idtipodocumento")
     private Long idTypeDocument;
     @Column(name = "idpersona")
     private Long idPerson;

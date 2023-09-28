@@ -12,12 +12,16 @@ import java.util.*;
 public class ConsultServicesPhaseTwo {
     @Autowired
     TypeDocumentRepository typeDocumentRepository;
-
     @Autowired
     DepartmentRepository departmentRepository;
-
     @Autowired
     PeriodSpreadsheetRepository periodSpreadsheetRepository;
+    @Autowired
+    EmployeeRepository employeeRepository;
+    @Autowired
+    MaritalStatusRepository maritalStatusRepository;
+    @Autowired
+    PersonDocumentRepository personDocumentRepository;
 
 
     @GetMapping(path = "/typeDocument")
@@ -34,4 +38,23 @@ public class ConsultServicesPhaseTwo {
     private List<PayrollPeriod> payrollPeriodLis(){
         return periodSpreadsheetRepository.findAll();
     }
+
+    @GetMapping(path = "/employee")
+    private List<Employee> employeeList(){
+        return employeeRepository.findAll();
+    }
+
+    @GetMapping(path = "/maritalStatus")
+    private List<MaritalStatus> maritalStatusList(){
+        return maritalStatusRepository.findAll();
+    }
+
+    @GetMapping(path = "/personDocument")
+    private List<PersonDocument> personDocumentList(){
+        return personDocumentRepository.findAll();
+    }
+
+
+
+
 }
