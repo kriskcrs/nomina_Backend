@@ -36,6 +36,7 @@ public class UserService {
     String responseFail = "Respuestas no validas";
     String delete = "El registro fue eliminado exitosamente";
     String delelteE = "El registro tiene mas dependencias no puede ser borrado";
+    String  errorMessage = "";
     HashMap<String, String> response = new HashMap<>();
     //parametros para generacion de contraseña por email
     int MaxCharterPassword = 25;
@@ -246,16 +247,19 @@ public class UserService {
         try {
             User existingUser = userRepository.findByIdUser(user.getIdUser());
             if (existingUser != null) {
-                String errorMessage = "Error: El correo '" + user.getIdUser() + "' ya se encuentra registrado, prueba con otro.";
+                errorMessage = "Error: El correo '" + user.getIdUser() + "' ya se encuentra registrado, prueba con otro.";
                 response.put("code", "1");
                 response.put("message", errorMessage);
                 return response;
             }
             // Va a encriptar la contraseña :D
             String generatedPassword = new PasswordGenerator().generatePassword(lengtPasswordTemp, uppercaseCount, lowercaseCount, digitCount);
-            user.setPassword(new Encoding().crypt(generatedPassword));
             SendPassword.sendPasswordByEmail(user.getIdUser(), generatedPassword);
+            user.setPassword(new Encoding().crypt(generatedPassword));
             user.setCreationDate(new Date());
+            user.setRequiresChangingPassword(1);
+            user.setAccessAttempts(0);
+            user.setIdStatusUser(1L);
             //System.out.println(user.getCreationDate());
             userRepository.save(user);
             response.put("code", "0");
@@ -263,9 +267,9 @@ public class UserService {
             return response;
 
         } catch (Exception e) {
-            String errorMessage = "Error al crear el usuario: " + e.getMessage();
-            System.err.println(errorMessage);
 
+            System.err.println(e.getCause() + e.getMessage());
+            errorMessage = "No se pudo crear su usuario";
             response.put("code", "1");
             response.put("message", errorMessage);
             return response;
@@ -283,7 +287,7 @@ public class UserService {
                 dataUser.get().setIdStatusUser(user.getIdStatusUser());
                 dataUser.get().setEmail(user.getEmail());
                 dataUser.get().setMobilePhone(user.getMobilePhone());
-                dataUser.get().setIdBranch(user.getIdBranch());
+                dataUser.get().setIdLocation(user.getIdLocation());
                 dataUser.get().setModificationDate(new Date());
                 dataUser.get().setUserModification(user.getUserModification());
                 userRepository.save(dataUser.get());
@@ -300,7 +304,8 @@ public class UserService {
     @DeleteMapping(path = "/deleteUser/{id}")
     private HashMap<String, String> deleteUser(@PathVariable String id) {
         try {
-            userRepository.deleteById(Long.valueOf(id));
+            User userFind = userRepository.findByIdUser(id);
+            userRepository.delete(userFind);
             response.put("code", "0");
             response.put("message", delete);
             return response;

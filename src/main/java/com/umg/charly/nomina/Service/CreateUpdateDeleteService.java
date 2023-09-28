@@ -1,6 +1,5 @@
 package com.umg.charly.nomina.Service;
 
-import com.sun.tools.jconsole.JConsoleContext;
 import com.umg.charly.nomina.Entity.*;
 import com.umg.charly.nomina.Entity.Module;
 import com.umg.charly.nomina.Repository.*;
@@ -15,7 +14,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("v1")
 @CrossOrigin
-public class CreateModifyService {
+public class CreateUpdateDeleteService {
 
     @Autowired
     CompanyRepository companyRepository;
@@ -79,11 +78,8 @@ public class CreateModifyService {
     private HashMap<String, String> updateCompany(@RequestBody Company company, @PathVariable long id) {
         try {
             if (company.getPasswordlength() > 5) {
-                Company companyFind = companyRepository.findByIdCompany(id);
-                companyFind.setName(company.getName());
-                companyFind.setModificationDate(new Date());
-                companyFind.setUserModification(company.getUserModification());
-                companyRepository.save(companyFind);
+                company.setModificationDate(new Date());
+                companyRepository.save(company);
                 response.put("code", "0");
                 response.put("message", okU);
                 return response;
