@@ -44,14 +44,20 @@ public class CreateUpdateDeleteServicePhase2 {
     @PostMapping(path = "/createAbsence")
     private HashMap<String, String> createAbsence(@RequestBody Absence absence) {
         try {
-            long idAbsence = absenceRepository.findAll().size();
-            idAbsence++;
-            absence.setIdAbsence(idAbsence);
-            absence.setCreateDate(new Date());
-            absenceRepository.save(absence);
-            response.put("code", "0");
-            response.put("message", okC);
-            return response;
+            if(new KeepAlive().validateSession(UserFind(absence.getUserCreation()).getCurrentSession())){
+                long idAbsence = absenceRepository.findAll().size();
+                idAbsence++;
+                absence.setIdAbsence(idAbsence);
+                absence.setCreateDate(new Date());
+                absenceRepository.save(absence);
+                response.put("code", "0");
+                response.put("message", okC);
+                return response;
+            }else{
+                response.put("code", "999");
+                response.put("message", sesionFail);
+                return response;
+            }
         } catch (Exception e) {
             System.out.println("Error creando la inasistencia" + e.getMessage() + " causa" + e.getCause());
             System.out.println( e.getMessage() + " causa" + e.getCause());
@@ -64,16 +70,22 @@ public class CreateUpdateDeleteServicePhase2 {
     @PutMapping(path = "/updateAbsence/{id}")
     private HashMap<String, String> updateAbsence(@RequestBody Absence absence, @PathVariable long id) {
         try {
-            Absence absenceFind = absenceRepository.findByIdAbsence(id);
-            absenceFind.setModificationDate(new Date());
-            absenceFind.setUserModification(absence.getUserModification());
-            absenceFind.setInitialDate(absence.getInitialDate());
-            absenceFind.setFinalDate(absence.getFinalDate());
-            absenceFind.setReason(absence.getReason());
-            absenceRepository.save(absenceFind);
-            response.put("code", "0");
-            response.put("message", okU);
-            return response;
+            if(new KeepAlive().validateSession(UserFind(absence.getUserModification()).getCurrentSession())){
+                Absence absenceFind = absenceRepository.findByIdAbsence(id);
+                absenceFind.setModificationDate(new Date());
+                absenceFind.setUserModification(absence.getUserModification());
+                absenceFind.setInitialDate(absence.getInitialDate());
+                absenceFind.setFinalDate(absence.getFinalDate());
+                absenceFind.setReason(absence.getReason());
+                absenceRepository.save(absenceFind);
+                response.put("code", "0");
+                response.put("message", okU);
+                return response;
+            }else{
+                response.put("code", "999");
+                response.put("message", sesionFail);
+                return response;
+            }
         } catch (Exception e) {
             System.out.println( e.getMessage() + " causa" + e.getCause());
             response.put("code", "1");
@@ -82,13 +94,19 @@ public class CreateUpdateDeleteServicePhase2 {
         }
     }
 
-    @DeleteMapping(path = "/deleteAbsence/{id}")
-    private HashMap<String, String> deleteAbsence(@PathVariable long id) {
+    @DeleteMapping(path = "/deleteAbsence/{id}/{user}")
+    private HashMap<String, String> deleteAbsence(@PathVariable long id, @PathVariable String user) {
         try {
-            absenceRepository.deleteById(id);
-            response.put("code", "0");
-            response.put("message", delete);
-            return response;
+            if(new KeepAlive().validateSession(UserFind(user).getCurrentSession())){
+                absenceRepository.deleteById(id);
+                response.put("code", "0");
+                response.put("message", delete);
+                return response;
+            }else{
+                response.put("code", "999");
+                response.put("message", sesionFail);
+                return response;
+            }
         } catch (Exception e) {
             System.out.println( e.getMessage() + " causa" + e.getCause());
             response.put("code", "1");
@@ -103,14 +121,21 @@ public class CreateUpdateDeleteServicePhase2 {
     @PostMapping(path = "/createPosition")
     private HashMap<String, String> createPosition(@RequestBody Position position) {
         try {
-            long idPosition = positionRepository.findAll().size();
-            idPosition++;
-            position.setIdPosition(idPosition);
-            position.setCreationDate(new Date());
-            positionRepository.save(position);
-            response.put("code", "0");
-            response.put("message", okC);
-            return response;
+            if (new KeepAlive().validateSession(UserFind(position.getUserCreation()).getCurrentSession())){
+                long idPosition = positionRepository.findAll().size();
+                idPosition++;
+                position.setIdPosition(idPosition);
+                position.setCreationDate(new Date());
+                positionRepository.save(position);
+                response.put("code", "0");
+                response.put("message", okC);
+                return response;
+            }else{
+                response.put("code", "999");
+                response.put("message", sesionFail);
+                return response;
+            }
+
         } catch (Exception e) {
             System.out.println("Error creando el puesto" + e.getMessage() + " causa" + e.getCause());
             response.put("code", "1");
@@ -122,15 +147,21 @@ public class CreateUpdateDeleteServicePhase2 {
     @PutMapping(path = "/updatePosition/{id}")
     private HashMap<String, String> updatePosition(@RequestBody Position position, @PathVariable long id) {
         try {
-            Position positionFind = positionRepository.findByIdPosition(id);
-            positionFind.setModificationDate(new Date());
-            positionFind.setName(position.getName());
-            positionFind.setIdDepartment(position.getIdDepartment());
-            positionFind.setUserModification(position.getUserModification());
-            positionRepository.save(positionFind);
-            response.put("code", "0");
-            response.put("message", okU);
-            return response;
+            if(new KeepAlive().validateSession(UserFind(position.getUserModification()).getCurrentSession())){
+                Position positionFind = positionRepository.findByIdPosition(id);
+                positionFind.setModificationDate(new Date());
+                positionFind.setName(position.getName());
+                positionFind.setIdDepartment(position.getIdDepartment());
+                positionFind.setUserModification(position.getUserModification());
+                positionRepository.save(positionFind);
+                response.put("code", "0");
+                response.put("message", okU);
+                return response;
+            }else{
+                response.put("code", "999");
+                response.put("message", sesionFail);
+                return response;
+            }
         } catch (Exception e) {
             response.put("code", "1");
             response.put("message", failsU);
@@ -138,13 +169,19 @@ public class CreateUpdateDeleteServicePhase2 {
         }
     }
 
-    @DeleteMapping(path = "/deletePosition/{id}")
-    private HashMap<String, String> deletePosition(@PathVariable long id) {
+    @DeleteMapping(path = "/deletePosition/{id}/{user}")
+    private HashMap<String, String> deletePosition(@PathVariable long id,@PathVariable String user ) {
         try {
-            positionRepository.deleteById(id);
-            response.put("code", "0");
-            response.put("message", delete);
-            return response;
+            if(new KeepAlive().validateSession(UserFind(user).getCurrentSession())){
+                positionRepository.deleteById(id);
+                response.put("code", "0");
+                response.put("message", delete);
+                return response;
+            }else{
+                response.put("code", "999");
+                response.put("message", sesionFail);
+                return response;
+            }
         } catch (Exception e) {
             response.put("code", "1");
             response.put("message", delelteE);
@@ -158,14 +195,20 @@ public class CreateUpdateDeleteServicePhase2 {
     @PostMapping(path = "/createPerson")
     private HashMap<String, String> createPerson(@RequestBody Person person) {
         try {
-            long idPerson = personRepository.findAll().size();
-            idPerson++;
-            person.setIdPerson(idPerson);
-            person.setCreationDate(new Date());
-            personRepository.save(person);
-            response.put("code", "0");
-            response.put("message", okC);
-            return response;
+            if(new KeepAlive().validateSession(UserFind(person.getUserCreation()).getCurrentSession())){
+                long idPerson = personRepository.findAll().size();
+                idPerson++;
+                person.setIdPerson(idPerson);
+                person.setCreationDate(new Date());
+                personRepository.save(person);
+                response.put("code", "0");
+                response.put("message", okC);
+                return response;
+            }else{
+                response.put("code", "999");
+                response.put("message", sesionFail);
+                return response;
+            }
         } catch (Exception e) {
             System.out.println("Error creando la persona" + e.getMessage() + " causa" + e.getCause());
             response.put("code", "1");
@@ -177,20 +220,26 @@ public class CreateUpdateDeleteServicePhase2 {
     @PutMapping(path = "/updatePerson/{id}")
     private HashMap<String, String> updatePerson(@RequestBody Person person, @PathVariable long id) {
         try {
-            Person personFind = personRepository.findByIdPerson(id);
-            personFind.setModificationDate(new Date());
-            personFind.setName(person.getName());
-            personFind.setName(person.getLastname());
-            personFind.setIdGender(person.getIdGender());
-            personFind.setAddress(person.getAddress());
-            personFind.setPhone(person.getPhone());
-            personFind.setEmail(person.getEmail());
-            personFind.setIdCivilstatus(person.getIdCivilstatus());
-            personFind.setUserModification(person.getUserModification());
-            personRepository.save(personFind);
-            response.put("code", "0");
-            response.put("message", okU);
-            return response;
+            if(new KeepAlive().validateSession(UserFind(person.getUserModification()).getCurrentSession())){
+                Person personFind = personRepository.findByIdPerson(id);
+                personFind.setModificationDate(new Date());
+                personFind.setName(person.getName());
+                personFind.setName(person.getLastname());
+                personFind.setIdGender(person.getIdGender());
+                personFind.setAddress(person.getAddress());
+                personFind.setPhone(person.getPhone());
+                personFind.setEmail(person.getEmail());
+                personFind.setIdCivilstatus(person.getIdCivilstatus());
+                personFind.setUserModification(person.getUserModification());
+                personRepository.save(personFind);
+                response.put("code", "0");
+                response.put("message", okU);
+                return response;
+            }else{
+                response.put("code", "999");
+                response.put("message", sesionFail);
+                return response;
+            }
         } catch (Exception e) {
             response.put("code", "1");
             response.put("message", failsU);
@@ -198,13 +247,20 @@ public class CreateUpdateDeleteServicePhase2 {
         }
     }
 
-    @DeleteMapping(path = "/deletePerson/{id}")
-    private HashMap<String, String> deletePerson(@PathVariable long id) {
+    @DeleteMapping(path = "/deletePerson/{id}/{user}")
+    private HashMap<String, String> deletePerson(@PathVariable long id, @PathVariable String user) {
         try {
-            personRepository.deleteById(id);
-            response.put("code", "0");
-            response.put("message", delete);
-            return response;
+            if(new KeepAlive().validateSession(UserFind(user).getCurrentSession())){
+                personRepository.deleteById(id);
+                response.put("code", "0");
+                response.put("message", delete);
+                return response;
+            }else{
+                response.put("code", "999");
+                response.put("message", sesionFail);
+                return response;
+            }
+
         } catch (Exception e) {
             response.put("code", "1");
             response.put("message", delelteE);

@@ -357,22 +357,27 @@ public class CreateUpdateDeleteService {
     @PostMapping(path = "/createUserRole")
     private HashMap<String, String> createUserRole(@RequestBody UserRole userRole) {
         try {
-            UserRole userRoleFind = userRoleRepository.findByIdUser(userRole.getIdUser());
-            if (userRoleFind == null) {
-                long id = userRoleRepository.findAll().size();
-                id++;
-                userRole.setIdRole(id);
-                userRole.setCreationDate(new Date());
-                userRoleRepository.save(userRole);
-                response.put("code", "0");
-                response.put("message", okC);
-                return response;
-            } else {
-                response.put("code", "1");
-                response.put("message", "Usuario ya tiene rol no puede agregar otro");
+            if(new KeepAlive().validateSession(UserFind(userRole.getUserCreation()).getCurrentSession())){
+                UserRole userRoleFind = userRoleRepository.findByIdUser(userRole.getIdUser());
+                if (userRoleFind == null) {
+                    long id = userRoleRepository.findAll().size();
+                    id++;
+                    userRole.setIdRole(id);
+                    userRole.setCreationDate(new Date());
+                    userRoleRepository.save(userRole);
+                    response.put("code", "0");
+                    response.put("message", okC);
+                    return response;
+                } else {
+                    response.put("code", "1");
+                    response.put("message", "Usuario ya tiene rol no puede agregar otro");
+                    return response;
+                }
+            }else{
+                response.put("code", "999");
+                response.put("message", sesionFail);
                 return response;
             }
-
 
         } catch (Exception e) {
             response.put("code", "1");
@@ -386,14 +391,20 @@ public class CreateUpdateDeleteService {
     @PutMapping(path = "/updateUserRole/{id}")
     private HashMap<String, String> updateUserRole(@RequestBody UserRole userRole, @PathVariable String id) {
         try {
-            UserRole userRoleFind = userRoleRepository.findByIdUser(id);
-            userRoleFind.setIdRole(userRole.getIdRole());
-            userRoleFind.setUserModification(userRole.getUserModification());
-            userRoleFind.setModificationDate(new Date());
-            userRoleRepository.save(userRoleFind);
-            response.put("code", "0");
-            response.put("message", okU);
-            return response;
+            if(new KeepAlive().validateSession(UserFind(userRole.getUserModification()).getCurrentSession())){
+                UserRole userRoleFind = userRoleRepository.findByIdUser(id);
+                userRoleFind.setIdRole(userRole.getIdRole());
+                userRoleFind.setUserModification(userRole.getUserModification());
+                userRoleFind.setModificationDate(new Date());
+                userRoleRepository.save(userRoleFind);
+                response.put("code", "0");
+                response.put("message", okU);
+                return response;
+            }else{
+                response.put("code", "999");
+                response.put("message", sesionFail);
+                return response;
+            }
         } catch (Exception e) {
             response.put("code", "1");
             response.put("message", failsU);
@@ -404,13 +415,19 @@ public class CreateUpdateDeleteService {
     }
 
 
-    @DeleteMapping(path = "/deleteUserRole/{id}")
-    private HashMap<String, String> deleteStatusUser(@PathVariable String id) {
+    @DeleteMapping(path = "/deleteUserRole/{id}/{user}")
+    private HashMap<String, String> deleteStatusUser(@PathVariable String id, @PathVariable String user) {
         try {
-            userRoleRepository.deleteById(id);
-            response.put("code", "0");
-            response.put("message", delete);
-            return response;
+            if(new KeepAlive().validateSession(UserFind(user).getCurrentSession())){
+                userRoleRepository.deleteById(id);
+                response.put("code", "0");
+                response.put("message", delete);
+                return response;
+            }else{
+                response.put("code", "999");
+                response.put("message", sesionFail);
+                return response;
+            }
         } catch (Exception e) {
             System.out.println(e.getCause() + " " + e.getMessage());
             response.put("code", "1");
