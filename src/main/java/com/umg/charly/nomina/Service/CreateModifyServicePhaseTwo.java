@@ -25,9 +25,6 @@ public class CreateModifyServicePhaseTwo {
     DepartmentRepository departmentRepository;
 
     @Autowired
-    PayrollPeriodRepository payrollPeriodRepository;
-
-    @Autowired
     PositionRepository positionRepository;
 
     @Autowired
@@ -311,66 +308,6 @@ public class CreateModifyServicePhaseTwo {
     private HashMap<String, String> deleteDepartment(@PathVariable long id) {
         try {
             departmentRepository.deleteById(id);
-            response.put("code", "0");
-            response.put("message", delete);
-            return response;
-        } catch (Exception e) {
-            response.put("code", "1");
-            response.put("message", delelteE);
-            return response;
-
-        }
-
-    }
-
-    @PostMapping(path = "/createPayrollPeriod")
-    private HashMap<String, String> createPayrollPeriod(@RequestBody PayrollPeriod payrollPeriod) {
-        List<PayrollPeriod> payrollPeriodExistList = payrollPeriodRepository.findAll();
-        boolean payrollPeriodAlreadyExist = false;
-
-        for (PayrollPeriod payrollPeriodExist : payrollPeriodExistList) {
-            if (payrollPeriodExist.getIdPK().getAnio() == payrollPeriod.getIdPK().getAnio() &&
-                    payrollPeriodExist.getIdPK().getMes() == payrollPeriod.getIdPK().getMes()) {
-                payrollPeriodAlreadyExist = true;
-                break;
-            }
-        }
-        if (payrollPeriodAlreadyExist) {
-            response.put("code", "1");
-            response.put("message", failsC);
-            return response;
-        } else {
-            payrollPeriod.setCreationDate(new Date());
-            payrollPeriodRepository.save(payrollPeriod);
-            response.put("code", "0");
-            response.put("message", okC);
-            return response;
-        }
-    }
-
-    @PutMapping(path = "/updatePayrollPeriod")
-    private HashMap<String, String> updatePayrollPeriod(@RequestBody PayrollPeriod payrollPeriod) {
-        try {
-            payrollPeriod.setModificationDate(new Date());
-            payrollPeriodRepository.save(payrollPeriod);
-            response.put("code", "0");
-            response.put("message", okU);
-            return response;
-        } catch (Exception e) {
-            response.put("code", "1");
-            response.put("message", failsU);
-            return response;
-        }
-    }
-
-    @DeleteMapping(path = "/deletePayrollPeriod/{anio}/{mes}")
-    private HashMap<String, String> deletePayrollPeriod(@PathVariable Long anio, @PathVariable Long mes) {
-        try {
-            PayrollPeriodPK payrollPeriodPK = new PayrollPeriodPK();
-            payrollPeriodPK.setAnio(anio);
-            payrollPeriodPK.setMes(mes);
-
-            payrollPeriodRepository.deleteById(payrollPeriodPK);
             response.put("code", "0");
             response.put("message", delete);
             return response;

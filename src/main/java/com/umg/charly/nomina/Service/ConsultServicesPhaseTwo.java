@@ -39,11 +39,6 @@ public class ConsultServicesPhaseTwo {
         return departmentRepository.findAll();
     }
 
-    @GetMapping(path = "/payrollPeriod")
-    private List<PayrollPeriod> payrollPeriodLis(){
-        return payrollPeriodRepository.findAll();
-    }
-
     @GetMapping(path = "/employee")
     private List<Employee> employeeList(){
         return employeeRepository.findAll();
