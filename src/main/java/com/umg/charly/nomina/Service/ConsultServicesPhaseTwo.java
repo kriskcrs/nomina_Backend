@@ -28,6 +28,8 @@ public class ConsultServicesPhaseTwo {
     PositionRepository positionRepository;
     @Autowired
     PersonRepository personRepository;
+    @Autowired
+    AbsenceRepository absenceRepository;
 
     @GetMapping(path = "/typeDocument")
     private List<TypeDocument> typeDocumentList() {
@@ -65,9 +67,10 @@ public class ConsultServicesPhaseTwo {
     }
 
     @GetMapping(path = "/persons")
-    private List<Person> PersonList() {
-        return personRepository.findAll();
+    private List<Person> PersonList() {return personRepository.findAll();}
+
+    @GetMapping(path = "/absences")
+    private List<Absence> AbsenceList() {return absenceRepository.findAll();}
 
 
-}
 }
