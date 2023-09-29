@@ -11,7 +11,7 @@ import java.util.*;
 @RestController
 @RequestMapping("v1")
 @CrossOrigin
-public class ConsultServicesPhaseTwo {
+public class ConsultServicesPhase2 {
     @Autowired
     TypeDocumentRepository typeDocumentRepository;
     @Autowired
