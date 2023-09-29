@@ -1,27 +1,27 @@
 package com.umg.charly.nomina.Entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
 
 @Entity
-@Table(name = "puesto")
+@Table(name = "planilla_cabecera")
 @Getter
 @Setter
+public class PayrollHeader {
 
-public class Position {
-    @Id
-    @Column(name = "idpuesto")
-    private Long idPosition;
-    @Column(name = "nombre")
-    private String name;
-    @Column(name = "iddepartamento")
-    private String idDepartment;
+    @EmbeddedId
+    private PayrollHeaderPK IdPK;
+    @Column(name = "totalingresos")
+    private Double totalIncome;
+    @Column(name = "totaldescuentos")
+    private Double totalDiscounts;
+    @Column(name = "salarioneto")
+    private Double salary;
+    @Column(name = "fechahoraprocesada")
+    private Date dateProcess;
     @Column(name = "fechacreacion")
     private Date creationDate;
     @Column(name = "usuariocreacion")

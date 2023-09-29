@@ -13,8 +13,6 @@ import java.util.Date;
 @Table(name = "persona")
 @Getter
 @Setter
-
-
 public class Person {
     @Id
     @Column(name = "idpersona")
@@ -28,7 +26,7 @@ public class Person {
     @Column(name = "idgenero")
     private Long idGender;
     @Column(name = "direccion")
-    private Long idAddress;
+    private String Address;
     @Column(name = "telefono")
     private String phone;
     @Column(name = "correoelectronico")
@@ -37,6 +35,8 @@ public class Person {
     private String IdCivilstatus;
     @Column(name = "fechacreacion")
     private Date creationDate;
+    @Column(name = "usuariocreacion")
+    private String userCreation;
     @Column(name = "fechamodificacion")
     private Date modificationDate;
     @Column(name = "usuariomodificacion")
