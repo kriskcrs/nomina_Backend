@@ -17,6 +17,15 @@ public class CreateModifyServicePhaseTwo {
     @Autowired
     AbsenceRepository absenceRepository;
 
+    @Autowired
+    TypeDocumentRepository typeDocumentRepository;
+
+    @Autowired
+    DepartmentRepository departmentRepository;
+
+    @Autowired
+    PeriodSpreadsheetRepository periodSpreadsheetRepository;
+
     //vars
     String okU = "Se actualiza correctamente";
     String okC = "Se creo correctamente";
@@ -69,6 +78,61 @@ public class CreateModifyServicePhaseTwo {
 
     @DeleteMapping(path = "/deleteAbsence/{id}")
     private HashMap<String, String> deleteAbsence(@PathVariable long id) {
+        try {
+            absenceRepository.deleteById(id);
+            response.put("code", "0");
+            response.put("message", delete);
+            return response;
+        } catch (Exception e) {
+            response.put("code", "1");
+            response.put("message", delelteE);
+            return response;
+
+        }
+
+    }
+
+    @PostMapping(path = "/createTypeDocument")
+    private HashMap<String, String> createTypeDocument(@RequestBody TypeDocument typeDocument) {
+        try {
+            long idTypeDocument = typeDocumentRepository.findAll().size();
+            idTypeDocument++;
+            typeDocument.setIdTypeDocument(idTypeDocument);
+            typeDocument.setCreationDate(new Date());
+            typeDocumentRepository.save(typeDocument);
+            response.put("code", "0");
+            response.put("message", okC);
+            return response;
+        } catch (Exception e) {
+            System.out.println("Error creando el tipo de documento" + e.getMessage() + " causa" + e.getCause());
+            response.put("code", "1");
+            response.put("message", failsC);
+            return response;
+        }
+    }
+
+    @PutMapping(path = "/updateTypeDocument/{id}")
+    private HashMap<String, String> updateTypeDocument(@RequestBody Absence absence, @PathVariable long id) {
+        try {
+            Absence absenceFind = absenceRepository.findByIdAbsence(id);
+            absenceFind.setModificationDate(new Date());
+            absenceFind.setUserModification(absence.getUserModification());
+            absenceFind.setInitialDate(absence.getInitialDate());
+            absenceFind.setFinalDate(absence.getFinalDate());
+            absenceFind.setReason(absence.getReason());
+            absenceRepository.save(absenceFind);
+            response.put("code", "0");
+            response.put("message", okU);
+            return response;
+        } catch (Exception e) {
+            response.put("code", "1");
+            response.put("message", failsU);
+            return response;
+        }
+    }
+
+    @DeleteMapping(path = "/deleteTypeDocument/{id}")
+    private HashMap<String, String> deleteTypeDocument(@PathVariable long id) {
         try {
             absenceRepository.deleteById(id);
             response.put("code", "0");
