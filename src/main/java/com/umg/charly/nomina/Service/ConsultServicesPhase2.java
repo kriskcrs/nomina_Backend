@@ -11,13 +11,13 @@ import java.util.*;
 @RestController
 @RequestMapping("v1")
 @CrossOrigin
-public class ConsultServicesPhaseTwo {
+public class ConsultServicesPhase2 {
     @Autowired
     TypeDocumentRepository typeDocumentRepository;
     @Autowired
     DepartmentRepository departmentRepository;
     @Autowired
-    PeriodSpreadsheetRepository periodSpreadsheetRepository;
+    PayrollPeriodRepository payrollPeriodRepository;
     @Autowired
     EmployeeRepository employeeRepository;
     @Autowired
@@ -31,6 +31,9 @@ public class ConsultServicesPhaseTwo {
     @Autowired
     AbsenceRepository absenceRepository;
 
+    @Autowired
+    BankRepository bankRepository;
+
     @GetMapping(path = "/typeDocument")
     private List<TypeDocument> typeDocumentList() {
         return typeDocumentRepository.findAll();
@@ -39,11 +42,6 @@ public class ConsultServicesPhaseTwo {
     @GetMapping(path = "/department")
     private List<Department> departmentList() {
         return departmentRepository.findAll();
-    }
-
-    @GetMapping(path = "/payrollPeriod")
-    private List<PayrollPeriod> payrollPeriodLis(){
-        return periodSpreadsheetRepository.findAll();
     }
 
     @GetMapping(path = "/employee")
@@ -72,5 +70,11 @@ public class ConsultServicesPhaseTwo {
     @GetMapping(path = "/absences")
     private List<Absence> AbsenceList() {return absenceRepository.findAll();}
 
+    @GetMapping(path = "/bank")
+    private List<Bank> bankList(){return bankRepository.findAll();
+    }
+
 
 }
+
+
