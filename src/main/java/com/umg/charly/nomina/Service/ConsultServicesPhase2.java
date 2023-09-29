@@ -28,6 +28,8 @@ public class ConsultServicesPhase2 {
     PositionRepository positionRepository;
     @Autowired
     PersonRepository personRepository;
+    @Autowired
+    AbsenceRepository absenceRepository;
 
     @Autowired
     BankRepository bankRepository;
@@ -63,14 +65,16 @@ public class ConsultServicesPhase2 {
     }
 
     @GetMapping(path = "/persons")
-    private List<Person> PersonList() {
-        return personRepository.findAll();
+    private List<Person> PersonList() {return personRepository.findAll();}
 
-
-}
+    @GetMapping(path = "/absences")
+    private List<Absence> AbsenceList() {return absenceRepository.findAll();}
 
     @GetMapping(path = "/bank")
-    private List<Bank> bankList(){
-        return bankRepository.findAll();
+    private List<Bank> bankList(){return bankRepository.findAll();
     }
+
+
 }
+
+
