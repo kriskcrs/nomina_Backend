@@ -17,18 +17,16 @@ import java.util.List;
 public class CreateModifyServicePhaseTwo {
     @Autowired
     AbsenceRepository absenceRepository;
-
     @Autowired
     TypeDocumentRepository typeDocumentRepository;
-
     @Autowired
     DepartmentRepository departmentRepository;
-
     @Autowired
     PositionRepository positionRepository;
-
     @Autowired
     PersonRepository personRepository;
+    @Autowired
+    EmployeeRepository employeeRepository;
 
     //vars
     String okU = "Se actualiza correctamente";
@@ -213,6 +211,7 @@ public class CreateModifyServicePhaseTwo {
 
     }
 
+    //Tipo de documento
     @PostMapping(path = "/createTypeDocument")
     private HashMap<String, String> createTypeDocument(@RequestBody TypeDocument typeDocument) {
         try {
@@ -266,6 +265,7 @@ public class CreateModifyServicePhaseTwo {
 
     }
 
+    //Departamento
     @PostMapping(path = "/createDepartment")
     private HashMap<String, String> createDepartment(@RequestBody Department department) {
         try {
@@ -318,6 +318,39 @@ public class CreateModifyServicePhaseTwo {
 
         }
 
+    }
+
+
+    //employee
+    @PostMapping(path = "/createEmployee")
+    private HashMap<String, String> createEmployee(@RequestBody Employee employee){
+        try{
+            long id = employeeRepository.findAll().size(); id++;
+            employee.setIdEmployee(id);
+            employee.setCreationDate(new Date());
+            response.put("code", "0");
+            response.put("message", okC);
+            return response;
+        }catch (Exception e){
+            response.put("code", "1");
+            response.put("message", failsC);
+            return response;
+        }
+    }
+
+    @PutMapping(path = "/updateEmployee/{id}")
+    private HashMap<String, String> updateEmployee(@RequestBody Employee employee, @PathVariable long id){
+        try{
+            Employee employeeFind = employeeRepository.findByIdEmployee(id);
+            employeeFind.setModificationDate(new Date());
+            response.put("code", "0");
+            response.put("message", okU);
+            return response;
+        }catch (Exception e){
+            response.put("code", "1");
+            response.put("message", failsU);
+            return response;
+        }
     }
 
 }
