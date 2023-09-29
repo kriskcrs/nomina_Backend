@@ -8,13 +8,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 
 
 @RestController
 @RequestMapping("v1")
 @CrossOrigin
-public class CreateModifyServicePhaseTwo {
+public class CreateUpdateDeleteServicePhase2 {
     @Autowired
     AbsenceRepository absenceRepository;
     @Autowired
