@@ -29,6 +29,9 @@ public class ConsultServicesPhaseTwo {
     @Autowired
     PersonRepository personRepository;
 
+    @Autowired
+    BankRepository bankRepository;
+
     @GetMapping(path = "/typeDocument")
     private List<TypeDocument> typeDocumentList() {
         return typeDocumentRepository.findAll();
@@ -65,4 +68,9 @@ public class ConsultServicesPhaseTwo {
 
 
 }
+
+    @GetMapping(path = "/bank")
+    private List<Bank> bankList(){
+        return bankRepository.findAll();
+    }
 }
