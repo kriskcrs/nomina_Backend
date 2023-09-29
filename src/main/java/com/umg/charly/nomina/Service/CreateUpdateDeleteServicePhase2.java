@@ -2,6 +2,7 @@ package com.umg.charly.nomina.Service;
 
 import com.umg.charly.nomina.Entity.*;
 import com.umg.charly.nomina.Repository.*;
+import com.umg.charly.nomina.Tools.KeepAlive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,6 +27,8 @@ public class CreateUpdateDeleteServicePhase2 {
     PersonRepository personRepository;
     @Autowired
     EmployeeRepository employeeRepository;
+    @Autowired
+    UserRepository userRepository;
 
     //vars
     String okU = "Se actualiza correctamente";
@@ -34,6 +37,7 @@ public class CreateUpdateDeleteServicePhase2 {
     String failsC = "Hubo un problema al crear";
     String delete = "El registro fue eliminado exitosamente";
     String delelteE = "El registro tiene mas dependencias no puede ser borrado";
+    String sesionFail = "Sesion no valida";
     HashMap<String, String> response = new HashMap<>();
 
     //Inasistencia
@@ -324,12 +328,19 @@ public class CreateUpdateDeleteServicePhase2 {
     @PostMapping(path = "/createEmployee")
     private HashMap<String, String> createEmployee(@RequestBody Employee employee){
         try{
-            long id = employeeRepository.findAll().size(); id++;
-            employee.setIdEmployee(id);
-            employee.setCreationDate(new Date());
-            response.put("code", "0");
-            response.put("message", okC);
-            return response;
+            if(new KeepAlive().validateSession(UserFind(employee.getUserCreation()).getCurrentSession())){
+                long id = employeeRepository.findAll().size(); id++;
+                employee.setIdEmployee(id);
+                employee.setCreationDate(new Date());
+                response.put("code", "0");
+                response.put("message", okC);
+                return response;
+            }else{
+                response.put("code", "999");
+                response.put("message",sesionFail );
+                return response;
+            }
+
         }catch (Exception e){
             response.put("code", "1");
             response.put("message", failsC);
@@ -340,11 +351,17 @@ public class CreateUpdateDeleteServicePhase2 {
     @PutMapping(path = "/updateEmployee/{id}")
     private HashMap<String, String> updateEmployee(@RequestBody Employee employee, @PathVariable long id){
         try{
-            Employee employeeFind = employeeRepository.findByIdEmployee(id);
-            employeeFind.setModificationDate(new Date());
-            response.put("code", "0");
-            response.put("message", okU);
-            return response;
+            if(new KeepAlive().validateSession(UserFind(employee.getUserModification()).getCurrentSession())){
+                Employee employeeFind = employeeRepository.findByIdEmployee(id);
+                employeeFind.setModificationDate(new Date());
+                response.put("code", "0");
+                response.put("message", okU);
+                return response;
+            } else{
+                response.put("code", "999");
+                response.put("message", sesionFail);
+                return response;
+            }
         }catch (Exception e){
             response.put("code", "1");
             response.put("message", failsU);
@@ -352,4 +369,29 @@ public class CreateUpdateDeleteServicePhase2 {
         }
     }
 
+    @DeleteMapping ( path = "/deleteEmployee/{id}/{user}")
+    private HashMap<String, String > deleteEmployee(@PathVariable long id, @PathVariable String user){
+        try{
+            if(new KeepAlive().validateSession(UserFind(user).getCurrentSession())){
+                employeeRepository.deleteById(id);
+                response.put("code","0");
+                response.put("message", delete);
+                return response;
+
+            }else{
+                response.put("code","999");
+                response.put("message", sesionFail);
+                return response;
+            }
+        }catch (Exception e){
+            response.put("code", "1");
+            response.put("message", delelteE);
+            return response;
+        }
+    }
+
+
+    private User UserFind(String user){
+        return userRepository.findByIdUser(user);
+    }
 }

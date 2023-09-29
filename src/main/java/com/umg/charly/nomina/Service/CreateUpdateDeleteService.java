@@ -212,9 +212,7 @@ public class CreateUpdateDeleteService {
     @PostMapping(path = "/createGender")
     private HashMap<String, String> createGender(@RequestBody Gender gender) {
         try {
-            User userFind = userRepository.findByIdUser(gender.getUserCreation());
-
-            if (new KeepAlive().validateSession(userFind.getCurrentSession())) {
+            if(new KeepAlive().validateSession(UserFind(gender.getUserCreation()).getCurrentSession())){
                 long count = genderRepository.findAll().size();
                 count++;
                 gender.setIdGender(count);
@@ -241,8 +239,8 @@ public class CreateUpdateDeleteService {
     @PutMapping(path = "/updateGender/{id}")
     private HashMap<String, String> updateGender(@RequestBody Gender gender, @PathVariable long id) {
         try {
-            User userFinde =userRepository.findByIdUser(gender.getUserModification());
-            if(new KeepAlive().validateSession(userFinde.getCurrentSession())){
+
+            if(new KeepAlive().validateSession(UserFind(gender.getUserModification()).getCurrentSession())){
                 Gender genderFind = genderRepository.findByIdGender(id);
                 genderFind.setUserModification(gender.getUserModification());
                 genderFind.setModificationDate(new Date());
@@ -268,8 +266,8 @@ public class CreateUpdateDeleteService {
     @DeleteMapping(path = "/deleteGender/{id}/{user}")
     private HashMap<String, String> deleteGender(@PathVariable long id,@PathVariable String user) {
         try {
-            User userFind = userRepository.findByIdUser(user);
-            if(new KeepAlive().validateSession(userFind.getCurrentSession())){
+
+            if(new KeepAlive().validateSession(UserFind(user).getCurrentSession())){
                 genderRepository.deleteById(id);
                 response.put("code", "0");
                 response.put("message", delete);
