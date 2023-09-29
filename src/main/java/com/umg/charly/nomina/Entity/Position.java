@@ -28,4 +28,6 @@ public class Position {
     private String userCreation;
     @Column(name = "fechamodificacion")
     private Date modificationDate;
+    @Column(name = "usuariomodificacion")
+    private String userModification;
 }

@@ -28,7 +28,7 @@ public class Person {
     @Column(name = "idgenero")
     private Long idGender;
     @Column(name = "direccion")
-    private Long idAddress;
+    private String Address;
     @Column(name = "telefono")
     private String phone;
     @Column(name = "correoelectronico")
