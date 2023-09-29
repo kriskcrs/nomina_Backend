@@ -17,7 +17,7 @@ public class ConsultServicesPhaseTwo {
     @Autowired
     DepartmentRepository departmentRepository;
     @Autowired
-    PeriodSpreadsheetRepository periodSpreadsheetRepository;
+    PayrollPeriodRepository payrollPeriodRepository;
     @Autowired
     EmployeeRepository employeeRepository;
     @Autowired
@@ -41,7 +41,7 @@ public class ConsultServicesPhaseTwo {
 
     @GetMapping(path = "/payrollPeriod")
     private List<PayrollPeriod> payrollPeriodLis(){
-        return periodSpreadsheetRepository.findAll();
+        return payrollPeriodRepository.findAll();
     }
 
     @GetMapping(path = "/employee")

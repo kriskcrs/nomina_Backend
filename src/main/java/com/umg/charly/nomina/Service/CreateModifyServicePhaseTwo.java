@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 
 @RestController
@@ -24,7 +25,7 @@ public class CreateModifyServicePhaseTwo {
     DepartmentRepository departmentRepository;
 
     @Autowired
-    PeriodSpreadsheetRepository periodSpreadsheetRepository;
+    PayrollPeriodRepository payrollPeriodRepository;
 
     @Autowired
     PositionRepository positionRepository;
@@ -235,15 +236,13 @@ public class CreateModifyServicePhaseTwo {
     }
 
     @PutMapping(path = "/updateTypeDocument/{id}")
-    private HashMap<String, String> updateTypeDocument(@RequestBody Absence absence, @PathVariable long id) {
+    private HashMap<String, String> updateTypeDocument(@RequestBody TypeDocument typeDocument, @PathVariable long id) {
         try {
-            Absence absenceFind = absenceRepository.findByIdAbsence(id);
-            absenceFind.setModificationDate(new Date());
-            absenceFind.setUserModification(absence.getUserModification());
-            absenceFind.setInitialDate(absence.getInitialDate());
-            absenceFind.setFinalDate(absence.getFinalDate());
-            absenceFind.setReason(absence.getReason());
-            absenceRepository.save(absenceFind);
+            TypeDocument typeDocument1 = typeDocumentRepository.findByidTypeDocument(id);
+            typeDocument1.setName(typeDocument.getName());
+            typeDocument1.setModificationDate(new Date());
+            typeDocument1.setUserModification(typeDocument.getUserModification());
+            typeDocumentRepository.save(typeDocument1);
             response.put("code", "0");
             response.put("message", okU);
             return response;
@@ -257,7 +256,121 @@ public class CreateModifyServicePhaseTwo {
     @DeleteMapping(path = "/deleteTypeDocument/{id}")
     private HashMap<String, String> deleteTypeDocument(@PathVariable long id) {
         try {
-            absenceRepository.deleteById(id);
+            typeDocumentRepository.deleteById(id);
+            response.put("code", "0");
+            response.put("message", delete);
+            return response;
+        } catch (Exception e) {
+            response.put("code", "1");
+            response.put("message", delelteE);
+            return response;
+
+        }
+
+    }
+
+    @PostMapping(path = "/createDepartment")
+    private HashMap<String, String> createDepartment(@RequestBody Department department) {
+        try {
+            long idDepartment = departmentRepository.findAll().size();
+            idDepartment++;
+            department.setIdDepartment(idDepartment);
+            department.setCreationDate(new Date());
+            departmentRepository.save(department);
+            response.put("code", "0");
+            response.put("message", okC);
+            return response;
+        } catch (Exception e) {
+            System.out.println("Error creando el departamento" + e.getMessage() + " causa" + e.getCause());
+            response.put("code", "1");
+            response.put("message", failsC);
+            return response;
+        }
+    }
+
+    @PutMapping(path = "/updateDepartment/{id}")
+    private HashMap<String, String> updateDepartment(@RequestBody Department department, @PathVariable long id) {
+        try {
+            Department department1 = departmentRepository.findByidDepartment(id);
+            department1.setName(department.getName());
+            department1.setIdDepartment(department.getIdDepartment());
+            department1.setModificationDate(new Date());
+            department1.setUserModification(department.getUserModification());
+            departmentRepository.save(department1);
+            response.put("code", "0");
+            response.put("message", okU);
+            return response;
+        } catch (Exception e) {
+            response.put("code", "1");
+            response.put("message", failsU);
+            return response;
+        }
+    }
+
+    @DeleteMapping(path = "/deleteDepartment/{id}")
+    private HashMap<String, String> deleteDepartment(@PathVariable long id) {
+        try {
+            departmentRepository.deleteById(id);
+            response.put("code", "0");
+            response.put("message", delete);
+            return response;
+        } catch (Exception e) {
+            response.put("code", "1");
+            response.put("message", delelteE);
+            return response;
+
+        }
+
+    }
+
+    @PostMapping(path = "/createPayrollPeriod")
+    private HashMap<String, String> createPayrollPeriod(@RequestBody PayrollPeriod payrollPeriod) {
+        List<PayrollPeriod> payrollPeriodExistList = payrollPeriodRepository.findAll();
+        boolean payrollPeriodAlreadyExist = false;
+
+        for (PayrollPeriod payrollPeriodExist : payrollPeriodExistList) {
+            if (payrollPeriodExist.getIdPK().getAnio() == payrollPeriod.getIdPK().getAnio() &&
+                    payrollPeriodExist.getIdPK().getMes() == payrollPeriod.getIdPK().getMes()) {
+                payrollPeriodAlreadyExist = true;
+                break;
+            }
+        }
+        if (payrollPeriodAlreadyExist) {
+            response.put("code", "1");
+            response.put("message", failsC);
+            return response;
+        } else {
+            payrollPeriod.setCreationDate(new Date());
+            payrollPeriodRepository.save(payrollPeriod);
+            response.put("code", "0");
+            response.put("message", okC);
+            return response;
+        }
+    }
+
+    @PutMapping(path = "/updatePayrollPeriod")
+    private HashMap<String, String> updatePayrollPeriod(@RequestBody PayrollPeriod payrollPeriod) {
+        try {
+            payrollPeriod.setModificationDate(new Date());
+            payrollPeriodRepository.save(payrollPeriod);
+            response.put("code", "0");
+            response.put("message", okU);
+            return response;
+        } catch (Exception e) {
+            response.put("code", "1");
+            response.put("message", failsU);
+            return response;
+        }
+    }
+
+    @DeleteMapping(path = "/deletePayrollPeriod/{anio}/{mes}")
+    private HashMap<String, String> deletePayrollPeriod(@PathVariable Long anio, @PathVariable Long mes) {
+        try {
+            PayrollPeriodPK payrollPeriodPK = new PayrollPeriodPK();
+            payrollPeriodPK.setAnio(anio);
+            payrollPeriodPK.setMes(mes);
+
+            payrollPeriodRepository.deleteById(payrollPeriodPK);
             response.put("code", "0");
             response.put("message", delete);
             return response;
