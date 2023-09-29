@@ -17,7 +17,7 @@ public class Bank {
 
     @Id
     @Column(name = "idbanco")
-    private Long idBanco;
+    private Long idBank;
     @Column(name = "nombre")
     private String name;
     @Column(name = "fechacreacion")
