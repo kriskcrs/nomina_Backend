@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 @Getter
 @Setter
-public class PeriodSpreadsheetPK implements Serializable {
+public class PayrollPeriodPK implements Serializable {
     @Column(name = "anio")
     private Long anio;
     @Column(name = "mes")

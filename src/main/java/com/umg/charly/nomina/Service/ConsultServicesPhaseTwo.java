@@ -11,22 +11,52 @@ import java.util.*;
 @RestController
 @RequestMapping("v1")
 @CrossOrigin
-
 public class ConsultServicesPhaseTwo {
-
     @Autowired
-    AbsenceRepository absenceRepository;
-
+    TypeDocumentRepository typeDocumentRepository;
+    @Autowired
+    DepartmentRepository departmentRepository;
+    @Autowired
+    PeriodSpreadsheetRepository periodSpreadsheetRepository;
+    @Autowired
+    EmployeeRepository employeeRepository;
+    @Autowired
+    MaritalStatusRepository maritalStatusRepository;
+    @Autowired
+    PersonDocumentRepository personDocumentRepository;
     @Autowired
     PositionRepository positionRepository;
-
     @Autowired
     PersonRepository personRepository;
 
+    @GetMapping(path = "/typeDocument")
+    private List<TypeDocument> typeDocumentList() {
+        return typeDocumentRepository.findAll();
+    }
 
-    @GetMapping(path = "/absences")
-    private List<Absence> AbsenceList() {
-        return absenceRepository.findAll();
+    @GetMapping(path = "/department")
+    private List<Department> departmentList() {
+        return departmentRepository.findAll();
+    }
+
+    @GetMapping(path = "/payrollPeriod")
+    private List<PayrollPeriod> payrollPeriodLis(){
+        return periodSpreadsheetRepository.findAll();
+    }
+
+    @GetMapping(path = "/employee")
+    private List<Employee> employeeList(){
+        return employeeRepository.findAll();
+    }
+
+    @GetMapping(path = "/maritalStatus")
+    private List<MaritalStatus> maritalStatusList(){
+        return maritalStatusRepository.findAll();
+    }
+
+    @GetMapping(path = "/personDocument")
+    private List<PersonDocument> personDocumentList(){
+        return personDocumentRepository.findAll();
     }
 
     @GetMapping(path = "/positions")
@@ -37,5 +67,7 @@ public class ConsultServicesPhaseTwo {
     @GetMapping(path = "/persons")
     private List<Person> PersonList() {
         return personRepository.findAll();
-    }
+
+
+}
 }

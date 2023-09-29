@@ -7,28 +7,21 @@ import lombok.Setter;
 import java.util.Date;
 
 @Entity
-@Table(name = "periodo_planilla")
+@Table(name = "documento_persona")
 @Getter
 @Setter
-public class PeriodSpreadsheet {
+public class PersonDocument {
     @EmbeddedId
-    private PeriodSpreadsheetPK IdPK;
-
-    @Column(name = "fechainicio")
-    private Date startDate;
-
-    @Column(name = "fechafin")
-    private Date endDate;
-
+    private PersonDocumentPK IdPK;
+    @Column(name = "nodocumento")
+    private String numberDocument;
     @Column(name = "fechacreacion")
     private Date creationDate;
-
     @Column(name = "usuariocreacion")
     private String userCreation;
-
     @Column(name = "fechamodificacion")
     private Date modificationDate;
-
     @Column(name = "usuariomodificacion")
     private String userModification;
+
 }
