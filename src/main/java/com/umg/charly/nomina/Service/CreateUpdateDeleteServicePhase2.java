@@ -41,6 +41,10 @@ public class CreateUpdateDeleteServicePhase2 {
     String delelteE = "El registro tiene mas dependencias no puede ser borrado";
     String sesionFail = "Sesion no valida";
     HashMap<String, String> response = new HashMap<>();
+    @Autowired
+    private BankRepository bankRepository;
+    @Autowired
+    private StatusEmployeeRepository statusEmployeeRepository;
 
     //Inasistencia
     @PostMapping(path = "/createAbsence")
@@ -429,6 +433,7 @@ public class CreateUpdateDeleteServicePhase2 {
         }
     }
 
+<<<<<<< HEAD
     @DeleteMapping ( path = "/deleteEmployee/{id}/{user}")
     private HashMap<String, String > deleteEmployee(@PathVariable long id, @PathVariable String user){
         try{
@@ -468,6 +473,19 @@ public class CreateUpdateDeleteServicePhase2 {
                 return response;
             }
 
+=======
+    //bank
+    @PostMapping(path = "/createBank")
+    private HashMap<String, String> createBank(@RequestBody Bank bank){
+        try{
+            long id = bankRepository.findAll().size(); id++;
+            bank.setIdBank(id);
+            bank.setCreationDate(new Date());
+            response.put("code", "0");
+            response.put("message", okC);
+            bankRepository.save(bank);
+            return response;
+>>>>>>> diboy
         }catch (Exception e){
             response.put("code", "1");
             response.put("message", failsC);
@@ -475,6 +493,7 @@ public class CreateUpdateDeleteServicePhase2 {
         }
     }
 
+<<<<<<< HEAD
     @PutMapping(path = "/updateMaritalStatus/{id}")
     private HashMap<String, String> updateMaritalStatus(@RequestBody MaritalStatus maritalStatus, @PathVariable long id){
         try{
@@ -491,12 +510,24 @@ public class CreateUpdateDeleteServicePhase2 {
             }
         }catch (Exception e){
             System.out.println(e.getCause() +" " + e.getMessage());
+=======
+    @PutMapping(path = "/updateBank")
+    private HashMap<String, String> updateBank(@RequestBody Bank bank){
+        try{
+            bank.setModificationDate(new Date());
+            bankRepository.save(bank);
+            response.put("code", "0");
+            response.put("message", okU);
+            return response;
+        }catch (Exception e){
+>>>>>>> diboy
             response.put("code", "1");
             response.put("message", failsU);
             return response;
         }
     }
 
+<<<<<<< HEAD
     @DeleteMapping ( path = "/deleteMaritalStatus/{id}/{user}")
     private HashMap<String, String > deleteMaritalStatus(@PathVariable long id, @PathVariable String user){
         try{
@@ -514,10 +545,27 @@ public class CreateUpdateDeleteServicePhase2 {
         }catch (Exception e){
             response.put("code", "1");
             response.put("message", delelteE);
+=======
+    //status employee
+    @PostMapping(path = "/createStatusEmployee")
+    private HashMap<String, String> createStatusEmployee(@RequestBody StatusEmployee statusEmployee){
+        try{
+            long id = statusEmployeeRepository.findAll().size(); id++;
+            statusEmployee.setIdStatusEmployee(id);
+            statusEmployee.setCreationDate(new Date());
+            response.put("code", "0");
+            response.put("message", okC);
+            statusEmployeeRepository.save(statusEmployee);
+            return response;
+        }catch (Exception e){
+            response.put("code", "1");
+            response.put("message", failsC);
+>>>>>>> diboy
             return response;
         }
     }
 
+<<<<<<< HEAD
     //documento persona
 
 
@@ -525,5 +573,20 @@ public class CreateUpdateDeleteServicePhase2 {
 
     private User UserFind(String user){
         return userRepository.findByIdUser(user);
+=======
+    @PutMapping(path = "/updateStatusEmployee")
+    private HashMap<String, String> updateStatusEmployee(@RequestBody StatusEmployee statusEmployee){
+        try{
+            statusEmployee.setModificationDate(new Date());
+            statusEmployeeRepository.save(statusEmployee);
+            response.put("code", "0");
+            response.put("message", okU);
+            return response;
+        }catch (Exception e){
+            response.put("code", "1");
+            response.put("message", failsU);
+            return response;
+        }
+>>>>>>> diboy
     }
 }
