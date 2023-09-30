@@ -50,7 +50,7 @@ public class CreateUpdateDeleteServicePhase2 {
     @PostMapping(path = "/createAbsence")
     private HashMap<String, String> createAbsence(@RequestBody Absence absence) {
         try {
-            if(new KeepAlive().validateSession(UserFind(absence.getUserCreation()).getCurrentSession())){
+            if (new KeepAlive().validateSession(UserFind(absence.getUserCreation()).getCurrentSession())) {
                 long idAbsence = absenceRepository.findAll().size();
                 idAbsence++;
                 absence.setIdAbsence(idAbsence);
@@ -59,14 +59,14 @@ public class CreateUpdateDeleteServicePhase2 {
                 response.put("code", "0");
                 response.put("message", okC);
                 return response;
-            }else{
+            } else {
                 response.put("code", "999");
                 response.put("message", sesionFail);
                 return response;
             }
         } catch (Exception e) {
             System.out.println("Error creando la inasistencia" + e.getMessage() + " causa" + e.getCause());
-            System.out.println( e.getMessage() + " causa" + e.getCause());
+            System.out.println(e.getMessage() + " causa" + e.getCause());
             response.put("code", "1");
             response.put("message", failsC);
             return response;
@@ -76,7 +76,7 @@ public class CreateUpdateDeleteServicePhase2 {
     @PutMapping(path = "/updateAbsence/{id}")
     private HashMap<String, String> updateAbsence(@RequestBody Absence absence, @PathVariable long id) {
         try {
-            if(new KeepAlive().validateSession(UserFind(absence.getUserModification()).getCurrentSession())){
+            if (new KeepAlive().validateSession(UserFind(absence.getUserModification()).getCurrentSession())) {
                 Absence absenceFind = absenceRepository.findByIdAbsence(id);
                 absenceFind.setModificationDate(new Date());
                 absenceFind.setUserModification(absence.getUserModification());
@@ -87,13 +87,13 @@ public class CreateUpdateDeleteServicePhase2 {
                 response.put("code", "0");
                 response.put("message", okU);
                 return response;
-            }else{
+            } else {
                 response.put("code", "999");
                 response.put("message", sesionFail);
                 return response;
             }
         } catch (Exception e) {
-            System.out.println( e.getMessage() + " causa" + e.getCause());
+            System.out.println(e.getMessage() + " causa" + e.getCause());
             response.put("code", "1");
             response.put("message", failsU);
             return response;
@@ -103,18 +103,18 @@ public class CreateUpdateDeleteServicePhase2 {
     @DeleteMapping(path = "/deleteAbsence/{id}/{user}")
     private HashMap<String, String> deleteAbsence(@PathVariable long id, @PathVariable String user) {
         try {
-            if(new KeepAlive().validateSession(UserFind(user).getCurrentSession())){
+            if (new KeepAlive().validateSession(UserFind(user).getCurrentSession())) {
                 absenceRepository.deleteById(id);
                 response.put("code", "0");
                 response.put("message", delete);
                 return response;
-            }else{
+            } else {
                 response.put("code", "999");
                 response.put("message", sesionFail);
                 return response;
             }
         } catch (Exception e) {
-            System.out.println( e.getMessage() + " causa" + e.getCause());
+            System.out.println(e.getMessage() + " causa" + e.getCause());
             response.put("code", "1");
             response.put("message", delelteE);
             return response;
@@ -127,7 +127,7 @@ public class CreateUpdateDeleteServicePhase2 {
     @PostMapping(path = "/createPosition")
     private HashMap<String, String> createPosition(@RequestBody Position position) {
         try {
-            if (new KeepAlive().validateSession(UserFind(position.getUserCreation()).getCurrentSession())){
+            if (new KeepAlive().validateSession(UserFind(position.getUserCreation()).getCurrentSession())) {
                 long idPosition = positionRepository.findAll().size();
                 idPosition++;
                 position.setIdPosition(idPosition);
@@ -136,7 +136,7 @@ public class CreateUpdateDeleteServicePhase2 {
                 response.put("code", "0");
                 response.put("message", okC);
                 return response;
-            }else{
+            } else {
                 response.put("code", "999");
                 response.put("message", sesionFail);
                 return response;
@@ -153,7 +153,7 @@ public class CreateUpdateDeleteServicePhase2 {
     @PutMapping(path = "/updatePosition/{id}")
     private HashMap<String, String> updatePosition(@RequestBody Position position, @PathVariable long id) {
         try {
-            if(new KeepAlive().validateSession(UserFind(position.getUserModification()).getCurrentSession())){
+            if (new KeepAlive().validateSession(UserFind(position.getUserModification()).getCurrentSession())) {
                 Position positionFind = positionRepository.findByIdPosition(id);
                 positionFind.setModificationDate(new Date());
                 positionFind.setName(position.getName());
@@ -163,7 +163,7 @@ public class CreateUpdateDeleteServicePhase2 {
                 response.put("code", "0");
                 response.put("message", okU);
                 return response;
-            }else{
+            } else {
                 response.put("code", "999");
                 response.put("message", sesionFail);
                 return response;
@@ -176,14 +176,14 @@ public class CreateUpdateDeleteServicePhase2 {
     }
 
     @DeleteMapping(path = "/deletePosition/{id}/{user}")
-    private HashMap<String, String> deletePosition(@PathVariable long id,@PathVariable String user ) {
+    private HashMap<String, String> deletePosition(@PathVariable long id, @PathVariable String user) {
         try {
-            if(new KeepAlive().validateSession(UserFind(user).getCurrentSession())){
+            if (new KeepAlive().validateSession(UserFind(user).getCurrentSession())) {
                 positionRepository.deleteById(id);
                 response.put("code", "0");
                 response.put("message", delete);
                 return response;
-            }else{
+            } else {
                 response.put("code", "999");
                 response.put("message", sesionFail);
                 return response;
@@ -201,7 +201,7 @@ public class CreateUpdateDeleteServicePhase2 {
     @PostMapping(path = "/createPerson")
     private HashMap<String, String> createPerson(@RequestBody Person person) {
         try {
-            if(new KeepAlive().validateSession(UserFind(person.getUserCreation()).getCurrentSession())){
+            if (new KeepAlive().validateSession(UserFind(person.getUserCreation()).getCurrentSession())) {
                 long idPerson = personRepository.findAll().size();
                 idPerson++;
                 person.setIdPerson(idPerson);
@@ -210,7 +210,7 @@ public class CreateUpdateDeleteServicePhase2 {
                 response.put("code", "0");
                 response.put("message", okC);
                 return response;
-            }else{
+            } else {
                 response.put("code", "999");
                 response.put("message", sesionFail);
                 return response;
@@ -226,7 +226,7 @@ public class CreateUpdateDeleteServicePhase2 {
     @PutMapping(path = "/updatePerson/{id}")
     private HashMap<String, String> updatePerson(@RequestBody Person person, @PathVariable long id) {
         try {
-            if(new KeepAlive().validateSession(UserFind(person.getUserModification()).getCurrentSession())){
+            if (new KeepAlive().validateSession(UserFind(person.getUserModification()).getCurrentSession())) {
                 Person personFind = personRepository.findByIdPerson(id);
                 personFind.setModificationDate(new Date());
                 personFind.setName(person.getName());
@@ -241,7 +241,7 @@ public class CreateUpdateDeleteServicePhase2 {
                 response.put("code", "0");
                 response.put("message", okU);
                 return response;
-            }else{
+            } else {
                 response.put("code", "999");
                 response.put("message", sesionFail);
                 return response;
@@ -256,12 +256,12 @@ public class CreateUpdateDeleteServicePhase2 {
     @DeleteMapping(path = "/deletePerson/{id}/{user}")
     private HashMap<String, String> deletePerson(@PathVariable long id, @PathVariable String user) {
         try {
-            if(new KeepAlive().validateSession(UserFind(user).getCurrentSession())){
+            if (new KeepAlive().validateSession(UserFind(user).getCurrentSession())) {
                 personRepository.deleteById(id);
                 response.put("code", "0");
                 response.put("message", delete);
                 return response;
-            }else{
+            } else {
                 response.put("code", "999");
                 response.put("message", sesionFail);
                 return response;
@@ -388,23 +388,24 @@ public class CreateUpdateDeleteServicePhase2 {
 
     //employee
     @PostMapping(path = "/createEmployee")
-    private HashMap<String, String> createEmployee(@RequestBody Employee employee){
-        try{
-            if(new KeepAlive().validateSession(UserFind(employee.getUserCreation()).getCurrentSession())){
-                long id = employeeRepository.findAll().size(); id++;
+    private HashMap<String, String> createEmployee(@RequestBody Employee employee) {
+        try {
+            if (new KeepAlive().validateSession(UserFind(employee.getUserCreation()).getCurrentSession())) {
+                long id = employeeRepository.findAll().size();
+                id++;
                 employee.setIdEmployee(id);
                 employee.setCreationDate(new Date());
                 employeeRepository.save(employee);
                 response.put("code", "0");
                 response.put("message", okC);
                 return response;
-            }else{
+            } else {
                 response.put("code", "999");
-                response.put("message",sesionFail );
+                response.put("message", sesionFail);
                 return response;
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             response.put("code", "1");
             response.put("message", failsC);
             return response;
@@ -412,181 +413,187 @@ public class CreateUpdateDeleteServicePhase2 {
     }
 
     @PutMapping(path = "/updateEmployee/{id}")
-    private HashMap<String, String> updateEmployee(@RequestBody Employee employee, @PathVariable long id){
-        try{
-            if(new KeepAlive().validateSession(UserFind(employee.getUserModification()).getCurrentSession())){
+    private HashMap<String, String> updateEmployee(@RequestBody Employee employee, @PathVariable long id) {
+        try {
+            if (new KeepAlive().validateSession(UserFind(employee.getUserModification()).getCurrentSession())) {
 
                 employee.setModificationDate(new Date());
                 employeeRepository.save(employee);
                 response.put("code", "0");
                 response.put("message", okU);
                 return response;
-            } else{
+            } else {
                 response.put("code", "999");
                 response.put("message", sesionFail);
                 return response;
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             response.put("code", "1");
             response.put("message", failsU);
             return response;
         }
     }
 
-<<<<<<< HEAD
-    @DeleteMapping ( path = "/deleteEmployee/{id}/{user}")
-    private HashMap<String, String > deleteEmployee(@PathVariable long id, @PathVariable String user){
-        try{
-            if(new KeepAlive().validateSession(UserFind(user).getCurrentSession())){
+    @DeleteMapping(path = "/deleteEmployee/{id}/{user}")
+    private HashMap<String, String> deleteEmployee(@PathVariable long id, @PathVariable String user) {
+        try {
+            if (new KeepAlive().validateSession(UserFind(user).getCurrentSession())) {
                 employeeRepository.deleteById(id);
-                response.put("code","0");
+                response.put("code", "0");
                 response.put("message", delete);
                 return response;
 
-            }else{
-                response.put("code","999");
+            } else {
+                response.put("code", "999");
                 response.put("message", sesionFail);
                 return response;
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             response.put("code", "1");
             response.put("message", delelteE);
             return response;
         }
     }
 
-    //estado civil
-    @PostMapping(path = "/createMaritalStatus")
-    private HashMap<String, String> createMaritalStatus(@RequestBody MaritalStatus maritalStatus){
-        try{
-            if(new KeepAlive().validateSession(UserFind(maritalStatus.getUserCreation()).getCurrentSession())){
-                long id = maritalStatusRepository.findAll().size(); id++;
-                maritalStatus.setIdMaritalStatus(id);
-                maritalStatus.setCreationDate(new Date());
-                maritalStatusRepository.save(maritalStatus);
-                response.put("code", "0");
-                response.put("message", okC);
-                return response;
-            }else{
-                response.put("code", "999");
-                response.put("message",sesionFail );
-                return response;
-            }
-
-=======
     //bank
     @PostMapping(path = "/createBank")
-    private HashMap<String, String> createBank(@RequestBody Bank bank){
-        try{
-            long id = bankRepository.findAll().size(); id++;
+    private HashMap<String, String> createBank(@RequestBody Bank bank) {
+        try {
+            long id = bankRepository.findAll().size();
+            id++;
             bank.setIdBank(id);
             bank.setCreationDate(new Date());
             response.put("code", "0");
             response.put("message", okC);
             bankRepository.save(bank);
             return response;
->>>>>>> diboy
-        }catch (Exception e){
+
+        } catch (Exception e) {
             response.put("code", "1");
             response.put("message", failsC);
             return response;
         }
     }
 
-<<<<<<< HEAD
-    @PutMapping(path = "/updateMaritalStatus/{id}")
-    private HashMap<String, String> updateMaritalStatus(@RequestBody MaritalStatus maritalStatus, @PathVariable long id){
-        try{
-            if(new KeepAlive().validateSession(UserFind(maritalStatus.getUserModification()).getCurrentSession())){
-                maritalStatus.setModificationDate(new Date());
-                maritalStatusRepository.save(maritalStatus);
-                response.put("code", "0");
-                response.put("message", okU);
-                return response;
-            } else{
-                response.put("code", "999");
-                response.put("message", sesionFail);
-                return response;
-            }
-        }catch (Exception e){
-            System.out.println(e.getCause() +" " + e.getMessage());
-=======
     @PutMapping(path = "/updateBank")
-    private HashMap<String, String> updateBank(@RequestBody Bank bank){
-        try{
+    private HashMap<String, String> updateBank(@RequestBody Bank bank) {
+        try {
             bank.setModificationDate(new Date());
             bankRepository.save(bank);
             response.put("code", "0");
             response.put("message", okU);
             return response;
-        }catch (Exception e){
->>>>>>> diboy
+        } catch (Exception e) {
+
             response.put("code", "1");
             response.put("message", failsU);
             return response;
         }
     }
 
-<<<<<<< HEAD
-    @DeleteMapping ( path = "/deleteMaritalStatus/{id}/{user}")
-    private HashMap<String, String > deleteMaritalStatus(@PathVariable long id, @PathVariable String user){
-        try{
-            if(new KeepAlive().validateSession(UserFind(user).getCurrentSession())){
-                maritalStatusRepository.deleteById(id);
-                response.put("code","0");
-                response.put("message", delete);
-                return response;
-
-            }else{
-                response.put("code","999");
-                response.put("message", sesionFail);
-                return response;
-            }
-        }catch (Exception e){
-            response.put("code", "1");
-            response.put("message", delelteE);
-=======
     //status employee
     @PostMapping(path = "/createStatusEmployee")
-    private HashMap<String, String> createStatusEmployee(@RequestBody StatusEmployee statusEmployee){
-        try{
-            long id = statusEmployeeRepository.findAll().size(); id++;
+    private HashMap<String, String> createStatusEmployee (@RequestBody StatusEmployee statusEmployee){
+        try {
+            long id = statusEmployeeRepository.findAll().size();
+            id++;
             statusEmployee.setIdStatusEmployee(id);
             statusEmployee.setCreationDate(new Date());
             response.put("code", "0");
             response.put("message", okC);
             statusEmployeeRepository.save(statusEmployee);
             return response;
-        }catch (Exception e){
+        } catch (Exception e) {
             response.put("code", "1");
             response.put("message", failsC);
->>>>>>> diboy
             return response;
         }
     }
 
-<<<<<<< HEAD
-    //documento persona
-
-
-
-
-    private User UserFind(String user){
-        return userRepository.findByIdUser(user);
-=======
     @PutMapping(path = "/updateStatusEmployee")
-    private HashMap<String, String> updateStatusEmployee(@RequestBody StatusEmployee statusEmployee){
-        try{
+    private HashMap<String, String> updateStatusEmployee (@RequestBody StatusEmployee statusEmployee){
+        try {
             statusEmployee.setModificationDate(new Date());
             statusEmployeeRepository.save(statusEmployee);
             response.put("code", "0");
             response.put("message", okU);
             return response;
-        }catch (Exception e){
+        } catch (Exception e) {
             response.put("code", "1");
             response.put("message", failsU);
             return response;
         }
->>>>>>> diboy
+    }
+
+    //estado civil
+    @PostMapping(path = "/createMaritalStatus")
+    private HashMap<String, String> createMaritalStatus(@RequestBody MaritalStatus maritalStatus) {
+        try {
+            if (new KeepAlive().validateSession(UserFind(maritalStatus.getUserCreation()).getCurrentSession())) {
+                long id = maritalStatusRepository.findAll().size();
+                id++;
+                maritalStatus.setIdMaritalStatus(id);
+                maritalStatus.setCreationDate(new Date());
+                maritalStatusRepository.save(maritalStatus);
+                response.put("code", "0");
+                response.put("message", okC);
+                return response;
+            } else {
+                response.put("code", "999");
+                response.put("message", sesionFail);
+                return response;
+            }
+        }catch (Exception e) {
+            response.put("code", "1");
+            response.put("message", delelteE);
+        }
+        return null;
+    }
+
+    @PutMapping(path = "/updateMaritalStatus/{id}")
+    private HashMap<String, String> updateMaritalStatus(@RequestBody MaritalStatus maritalStatus, @PathVariable long id) {
+        try {
+            if (new KeepAlive().validateSession(UserFind(maritalStatus.getUserModification()).getCurrentSession())) {
+                maritalStatus.setModificationDate(new Date());
+                maritalStatusRepository.save(maritalStatus);
+                response.put("code", "0");
+                response.put("message", okU);
+                return response;
+            } else {
+                response.put("code", "999");
+                response.put("message", sesionFail);
+                return response;
+            }
+        } catch (Exception e) {
+            System.out.println(e.getCause() + " " + e.getMessage());
+        }
+        return null;
+    }
+
+
+    @DeleteMapping(path = "/deleteMaritalStatus/{id}/{user}")
+    private HashMap<String, String> deleteMaritalStatus(@PathVariable long id, @PathVariable String user) {
+        try {
+            if (new KeepAlive().validateSession(UserFind(user).getCurrentSession())) {
+                maritalStatusRepository.deleteById(id);
+                response.put("code", "0");
+                response.put("message", delete);
+                return response;
+
+            } else {
+                response.put("code", "999");
+                response.put("message", sesionFail);
+                return response;
+            }
+        } catch (Exception e) {
+            response.put("code", "1");
+            response.put("message", delelteE);
+        }
+        return null;
+    }
+
+    //documento persona
+    private User UserFind(String user) {
+        return userRepository.findByIdUser(user);
     }
 }
