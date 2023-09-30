@@ -35,6 +35,10 @@ public class CreateUpdateDeleteServicePhase2 {
     String delete = "El registro fue eliminado exitosamente";
     String delelteE = "El registro tiene mas dependencias no puede ser borrado";
     HashMap<String, String> response = new HashMap<>();
+    @Autowired
+    private BankRepository bankRepository;
+    @Autowired
+    private StatusEmployeeRepository statusEmployeeRepository;
 
     //Inasistencia
     @PostMapping(path = "/createAbsence")
@@ -352,4 +356,69 @@ public class CreateUpdateDeleteServicePhase2 {
         }
     }
 
+    //bank
+    @PostMapping(path = "/createBank")
+    private HashMap<String, String> createBank(@RequestBody Bank bank){
+        try{
+            long id = bankRepository.findAll().size(); id++;
+            bank.setIdBank(id);
+            bank.setCreationDate(new Date());
+            response.put("code", "0");
+            response.put("message", okC);
+            bankRepository.save(bank);
+            return response;
+        }catch (Exception e){
+            response.put("code", "1");
+            response.put("message", failsC);
+            return response;
+        }
+    }
+
+    @PutMapping(path = "/updateBank")
+    private HashMap<String, String> updateBank(@RequestBody Bank bank){
+        try{
+            bank.setModificationDate(new Date());
+            bankRepository.save(bank);
+            response.put("code", "0");
+            response.put("message", okU);
+            return response;
+        }catch (Exception e){
+            response.put("code", "1");
+            response.put("message", failsU);
+            return response;
+        }
+    }
+
+    //status employee
+    @PostMapping(path = "/createStatusEmployee")
+    private HashMap<String, String> createStatusEmployee(@RequestBody StatusEmployee statusEmployee){
+        try{
+            long id = statusEmployeeRepository.findAll().size(); id++;
+            statusEmployee.setIdStatusEmployee(id);
+            statusEmployee.setCreationDate(new Date());
+            response.put("code", "0");
+            response.put("message", okC);
+            statusEmployeeRepository.save(statusEmployee);
+            return response;
+        }catch (Exception e){
+            response.put("code", "1");
+            response.put("message", failsC);
+            return response;
+        }
+    }
+
+    @PutMapping(path = "/updateStatusEmployee")
+    private HashMap<String, String> updateStatusEmployee(@RequestBody StatusEmployee statusEmployee){
+        try{
+            statusEmployee.setModificationDate(new Date());
+            statusEmployeeRepository.save(statusEmployee);
+            response.put("code", "0");
+            response.put("message", okU);
+            return response;
+        }catch (Exception e){
+            response.put("code", "1");
+            response.put("message", failsU);
+            return response;
+        }
+    }
 }
