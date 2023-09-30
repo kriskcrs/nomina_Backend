@@ -180,7 +180,7 @@ public class CreateUpdateDeleteService {
 
         } catch (Exception e) {
             response.put("code", "1");
-            response.put("message", "No se actualizo");
+            response.put("message", failsU);
             return response;
         }
     }
