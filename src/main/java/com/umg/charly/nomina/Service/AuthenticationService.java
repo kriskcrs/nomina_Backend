@@ -259,7 +259,7 @@ public class AuthenticationService {
             } else {
                 System.out.println("no esta");
                 response.put("code", "1");
-                response.put("message", "session no valida");
+                response.put("message", "¡Sesion no valida!");
                 return response;
             }
         }
