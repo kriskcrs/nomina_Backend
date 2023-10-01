@@ -274,14 +274,20 @@ public class CreateUpdateDeleteServicePhase2 {
     @PostMapping(path = "/createTypeDocument")
     private HashMap<String, String> createTypeDocument(@RequestBody TypeDocument typeDocument) {
         try {
-            long idTypeDocument = typeDocumentRepository.findAll().size();
-            idTypeDocument++;
-            typeDocument.setIdTypeDocument(idTypeDocument);
-            typeDocument.setCreationDate(new Date());
-            typeDocumentRepository.save(typeDocument);
-            response.put("code", "0");
-            response.put("message", okC);
-            return response;
+            if (new KeepAlive().validateSession(UserFind(typeDocument.getUserCreation()).getCurrentSession())) {
+                long idTypeDocument = typeDocumentRepository.findAll().size();
+                idTypeDocument++;
+                typeDocument.setIdTypeDocument(idTypeDocument);
+                typeDocument.setCreationDate(new Date());
+                typeDocumentRepository.save(typeDocument);
+                response.put("code", "0");
+                response.put("message", okC);
+                return response;
+            }else{
+                response.put("code", "999");
+                response.put("message", sesionFail);
+                return response;
+            }
         } catch (Exception e) {
             System.out.println("Error creando el tipo de documento" + e.getMessage() + " causa" + e.getCause());
             response.put("code", "1");
@@ -293,14 +299,20 @@ public class CreateUpdateDeleteServicePhase2 {
     @PutMapping(path = "/updateTypeDocument/{id}")
     private HashMap<String, String> updateTypeDocument(@RequestBody TypeDocument typeDocument, @PathVariable long id) {
         try {
-            TypeDocument typeDocument1 = typeDocumentRepository.findByidTypeDocument(id);
-            typeDocument1.setName(typeDocument.getName());
-            typeDocument1.setModificationDate(new Date());
-            typeDocument1.setUserModification(typeDocument.getUserModification());
-            typeDocumentRepository.save(typeDocument1);
-            response.put("code", "0");
-            response.put("message", okU);
-            return response;
+            if(new KeepAlive().validateSession(UserFind(typeDocument.getUserModification()).getCurrentSession())) {
+                TypeDocument typeDocument1 = typeDocumentRepository.findByidTypeDocument(id);
+                typeDocument1.setName(typeDocument.getName());
+                typeDocument1.setModificationDate(new Date());
+                typeDocument1.setUserModification(typeDocument.getUserModification());
+                typeDocumentRepository.save(typeDocument1);
+                response.put("code", "0");
+                response.put("message", okU);
+                return response;
+            }else {
+                response.put("code", "999");
+                response.put("message", sesionFail);
+                return response;
+            }
         } catch (Exception e) {
             response.put("code", "1");
             response.put("message", failsU);
@@ -308,13 +320,19 @@ public class CreateUpdateDeleteServicePhase2 {
         }
     }
 
-    @DeleteMapping(path = "/deleteTypeDocument/{id}")
-    private HashMap<String, String> deleteTypeDocument(@PathVariable long id) {
+    @DeleteMapping(path = "/deleteTypeDocument/{id}/{user}")
+    private HashMap<String, String> deleteTypeDocument(@PathVariable long id, @PathVariable String user) {
         try {
-            typeDocumentRepository.deleteById(id);
-            response.put("code", "0");
-            response.put("message", delete);
-            return response;
+            if(new KeepAlive().validateSession(UserFind(user).getCurrentSession())) {
+                typeDocumentRepository.deleteById(id);
+                response.put("code", "0");
+                response.put("message", delete);
+                return response;
+            }else{
+                response.put("code", "999");
+                response.put("message", sesionFail);
+                return response;
+            }
         } catch (Exception e) {
             response.put("code", "1");
             response.put("message", delelteE);

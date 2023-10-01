@@ -441,14 +441,20 @@ public class CreateUpdateDeleteService {
     @PostMapping(path = "/createMenu")
     private HashMap<String, String> createMenu(@RequestBody Menu menu) {
         try {
-            long id = menuRepository.findAll().size();
-            id++;
-            menu.setIdMenu(id);
-            menu.setCreationDate(new Date());
-            menuRepository.save(menu);
-            response.put("code", "0");
-            response.put("message", okC);
-            return response;
+            if (new KeepAlive().validateSession(UserFind(menu.getUserCreation()).getCurrentSession())) {
+                long id = menuRepository.findAll().size();
+                id++;
+                menu.setIdMenu(id);
+                menu.setCreationDate(new Date());
+                menuRepository.save(menu);
+                response.put("code", "0");
+                response.put("message", okC);
+                return response;
+            }else{
+                response.put("code", "999");
+                response.put("message", sesionFail);
+                return response;
+            }
         } catch (Exception e) {
             System.out.println("Error menssage " + e.getMessage() + " causa " + e.getCause());
             response.put("code", "1");
@@ -460,15 +466,21 @@ public class CreateUpdateDeleteService {
     @PutMapping(path = "/updateMenu/{id}")
     private HashMap<String, String> updateMenu(@RequestBody Menu menu, @PathVariable long id) {
         try {
-            Menu MenuFind = menuRepository.findByIdMenu(id);
-            MenuFind.setName(menu.getName());
-            MenuFind.setOrderMenu(menu.getOrderMenu());
-            MenuFind.setModificationDate(new Date());
-            MenuFind.setUserModification(menu.getUserModification());
-            menuRepository.save(MenuFind);
-            response.put("code", "0");
-            response.put("message", okU);
-            return response;
+            if(new KeepAlive().validateSession(UserFind(menu.getUserModification()).getCurrentSession())) {
+                Menu MenuFind = menuRepository.findByIdMenu(id);
+                MenuFind.setName(menu.getName());
+                MenuFind.setOrderMenu(menu.getOrderMenu());
+                MenuFind.setModificationDate(new Date());
+                MenuFind.setUserModification(menu.getUserModification());
+                menuRepository.save(MenuFind);
+                response.put("code", "0");
+                response.put("message", okU);
+                return response;
+            }else{
+                response.put("code", "999");
+                response.put("message", sesionFail);
+                return response;
+            }
         } catch (Exception e) {
             response.put("code", "1");
             response.put("message", failsU);
@@ -478,13 +490,19 @@ public class CreateUpdateDeleteService {
 
     }
 
-    @DeleteMapping(path = "/deleteMenu/{id}")
-    private HashMap<String, String> deleteMenu(@PathVariable long id) {
+    @DeleteMapping(path = "/deleteMenu/{id}/{user}")
+    private HashMap<String, String> deleteMenu(@PathVariable long id, @PathVariable String user) {
         try {
-            menuRepository.deleteById(id);
-            response.put("code", "0");
-            response.put("message", delete);
-            return response;
+            if(new KeepAlive().validateSession(UserFind(user).getCurrentSession())) {
+                menuRepository.deleteById(id);
+                response.put("code", "0");
+                response.put("message", delete);
+                return response;
+            }else{
+                response.put("code", "999");
+                response.put("message", sesionFail);
+                return response;
+            }
         } catch (Exception e) {
             response.put("code", "1");
             response.put("message", delelteE);
@@ -615,16 +633,22 @@ public class CreateUpdateDeleteService {
     @PostMapping(path = "/createModulo")
     private HashMap<String, String> createModulo(@RequestBody Module module) {
         try {
-            long idModulo = moduleRepository.findAll().size();
-            idModulo++;
-            module.setIdModule(idModulo);
-            module.setOrderMenu((int) idModulo);
-            module.setName(module.getName());
-            module.setCreationDate(new Date());
-            moduleRepository.save(module);
-            response.put("code", "0");
-            response.put("message", "Se agrego exitosamente");
-            return response;
+            if (new KeepAlive().validateSession(UserFind(module.getUserCreation()).getCurrentSession())) {
+                long idModulo = moduleRepository.findAll().size();
+                idModulo++;
+                module.setIdModule(idModulo);
+                module.setOrderMenu((int) idModulo);
+                module.setName(module.getName());
+                module.setCreationDate(new Date());
+                moduleRepository.save(module);
+                response.put("code", "0");
+                response.put("message", "Se agrego exitosamente");
+                return response;
+            }else{
+                response.put("code", "999");
+                response.put("message", sesionFail);
+                return response;
+            }
         } catch (Exception e) {
             System.out.println("Error creando roles" + e.getMessage() + " causa" + e.getCause());
             response.put("code", "1");
@@ -635,30 +659,42 @@ public class CreateUpdateDeleteService {
 
     @PutMapping(path = "/modifyModule/{idModule}")
     private HashMap<String, String> modifyModule(@RequestBody Module module, @PathVariable long idModule) {
-        if (idModule > 0) {
-            Optional<Module> dataBranch = moduleRepository.findById(idModule);
-            if (dataBranch.isPresent()) {
-                dataBranch.get().setName(module.getName());
-                dataBranch.get().setModificationDate(new Date());
-                dataBranch.get().setUserModification(module.getUserModification());
-                moduleRepository.save(dataBranch.get());
-                response.put("code", "0");
-                response.put("message", "Se actualizo exitosamente");
+        try {
+            if(new KeepAlive().validateSession(UserFind(module.getUserModification()).getCurrentSession())) {
+                    Module module1 = moduleRepository.findByIdModule(idModule);
+                        module1.setName(module.getName());
+                        module1.setModificationDate(new Date());
+                        module1.setUserModification(module.getUserModification());
+                        moduleRepository.save(module1);
+                        response.put("code", "0");
+                        response.put("message", "Se actualizo exitosamente");
+                        return response;
+
+            }else{
+                response.put("code", "999");
+                response.put("message", sesionFail);
                 return response;
             }
+        } catch (Exception e){
+            response.put("code", "1");
+            response.put("message", "No se actualizo");
+            return response;
         }
-        response.put("code", "1");
-        response.put("message", "No se actualizo");
-        return response;
     }
 
-    @DeleteMapping(path = "/deleteModule/{id}")
-    private HashMap<String, String> deleteModule(@PathVariable long id) {
+    @DeleteMapping(path = "/deleteModule/{id}/{user}")
+    private HashMap<String, String> deleteModule(@PathVariable long id, @PathVariable String user) {
         try {
-            moduleRepository.deleteById(id);
-            response.put("code", "0");
-            response.put("message", delete);
-            return response;
+            if(new KeepAlive().validateSession(UserFind(user).getCurrentSession())) {
+                moduleRepository.deleteById(id);
+                response.put("code", "0");
+                response.put("message", delete);
+                return response;
+            }else{
+                response.put("code", "999");
+                response.put("message", sesionFail);
+                return response;
+            }
         } catch (Exception e) {
             response.put("code", "1");
             response.put("message", delelteE);
