@@ -380,7 +380,7 @@ public class CreateUpdateDeleteServicePhase2 {
             if(new KeepAlive().validateSession(UserFind(department.getUserModification()).getCurrentSession())) {
                 Department department1 = departmentRepository.findByidDepartment(id);
                 department1.setName(department.getName());
-                department1.setIdDepartment(department.getIdDepartment());
+                department1.setIdCompany(department.getIdCompany());
                 department1.setModificationDate(new Date());
                 department1.setUserModification(department.getUserModification());
                 departmentRepository.save(department1);
