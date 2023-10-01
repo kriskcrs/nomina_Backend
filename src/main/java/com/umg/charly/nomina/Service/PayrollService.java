@@ -3,8 +3,11 @@ package com.umg.charly.nomina.Service;
 import com.umg.charly.nomina.Entity.PayrollHeader;
 import com.umg.charly.nomina.Entity.PayrollPeriod;
 import com.umg.charly.nomina.Entity.PayrollPeriodPK;
+import com.umg.charly.nomina.Entity.User;
 import com.umg.charly.nomina.Repository.PayrollHeaderRepository;
 import com.umg.charly.nomina.Repository.PayrollPeriodRepository;
+import com.umg.charly.nomina.Repository.UserRepository;
+import com.umg.charly.nomina.Tools.KeepAlive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +26,9 @@ public class PayrollService {
     @Autowired
     PayrollPeriodRepository payrollPeriodRepository;
 
+    @Autowired
+    UserRepository userRepository;
+
     //vars
     String okU = "Se actualiza correctamente";
     String okC = "Se creo correctamente";
@@ -30,6 +36,7 @@ public class PayrollService {
     String failsC = "Hubo un problema al crear";
     String delete = "El registro fue eliminado exitosamente";
     String delelteE = "El registro tiene mas dependencias no puede ser borrado";
+    String sesionFail = "Sesion no valida";
     HashMap<String, String> response = new HashMap<>();
 
     @GetMapping(path = "/payrollHeaders")
@@ -46,25 +53,31 @@ public class PayrollService {
 
     @PostMapping(path = "/createPayrollPeriod")
     private HashMap<String, String> createPayrollPeriod(@RequestBody PayrollPeriod payrollPeriod) {
-        List<PayrollPeriod> payrollPeriodExistList = payrollPeriodRepository.findAll();
-        boolean payrollPeriodAlreadyExist = false;
+        if (new KeepAlive().validateSession(UserFind(payrollPeriod.getUserCreation()).getCurrentSession())) {
+            List<PayrollPeriod> payrollPeriodExistList = payrollPeriodRepository.findAll();
+            boolean payrollPeriodAlreadyExist = false;
 
-        for (PayrollPeriod payrollPeriodExist : payrollPeriodExistList) {
-            if (payrollPeriodExist.getIdPK().getAnio() == payrollPeriod.getIdPK().getAnio() &&
-                    payrollPeriodExist.getIdPK().getMes() == payrollPeriod.getIdPK().getMes()) {
-                payrollPeriodAlreadyExist = true;
-                break;
+            for (PayrollPeriod payrollPeriodExist : payrollPeriodExistList) {
+                if (payrollPeriodExist.getIdPK().getAnio() == payrollPeriod.getIdPK().getAnio() &&
+                        payrollPeriodExist.getIdPK().getMes() == payrollPeriod.getIdPK().getMes()) {
+                    payrollPeriodAlreadyExist = true;
+                    break;
+                }
             }
-        }
-        if (payrollPeriodAlreadyExist) {
-            response.put("code", "1");
-            response.put("message", failsC);
-            return response;
-        } else {
-            payrollPeriod.setCreationDate(new Date());
-            payrollPeriodRepository.save(payrollPeriod);
-            response.put("code", "0");
-            response.put("message", okC);
+            if (payrollPeriodAlreadyExist) {
+                response.put("code", "1");
+                response.put("message", failsC);
+                return response;
+            } else {
+                payrollPeriod.setCreationDate(new Date());
+                payrollPeriodRepository.save(payrollPeriod);
+                response.put("code", "0");
+                response.put("message", okC);
+                return response;
+            }
+        }else{
+            response.put("code", "999");
+            response.put("message", sesionFail);
             return response;
         }
     }
@@ -72,29 +85,41 @@ public class PayrollService {
     @PutMapping(path = "/updatePayrollPeriod")
     private HashMap<String, String> updatePayrollPeriod(@RequestBody PayrollPeriod payrollPeriod) {
         try {
-            payrollPeriod.setModificationDate(new Date());
-            payrollPeriodRepository.save(payrollPeriod);
-            response.put("code", "0");
-            response.put("message", okU);
-            return response;
+            if (new KeepAlive().validateSession(UserFind(payrollPeriod.getUserModification()).getCurrentSession())) {
+                payrollPeriod.setModificationDate(new Date());
+                payrollPeriodRepository.save(payrollPeriod);
+                response.put("code", "0");
+                response.put("message", okU);
+                return response;
+            }else{
+                response.put("code", "1");
+                response.put("message", sesionFail);
+                return response;
+            }
         } catch (Exception e) {
-            response.put("code", "1");
-            response.put("message", failsU);
+            response.put("code", "999");
+            response.put("message", sesionFail);
             return response;
         }
     }
 
-    @DeleteMapping(path = "/deletePayrollPeriod/{anio}/{mes}")
-    private HashMap<String, String> deletePayrollPeriod(@PathVariable Long anio, @PathVariable Long mes) {
+    @DeleteMapping(path = "/deletePayrollPeriod/{anio}/{mes}/{user}")
+    private HashMap<String, String> deletePayrollPeriod(@PathVariable Long anio, @PathVariable Long mes, @PathVariable String user) {
         try {
-            PayrollPeriodPK payrollPeriodPK = new PayrollPeriodPK();
-            payrollPeriodPK.setAnio(anio);
-            payrollPeriodPK.setMes(mes);
+            if (new KeepAlive().validateSession(UserFind(user).getCurrentSession())) {
+                PayrollPeriodPK payrollPeriodPK = new PayrollPeriodPK();
+                payrollPeriodPK.setAnio(anio);
+                payrollPeriodPK.setMes(mes);
 
-            payrollPeriodRepository.deleteById(payrollPeriodPK);
-            response.put("code", "0");
-            response.put("message", delete);
-            return response;
+                payrollPeriodRepository.deleteById(payrollPeriodPK);
+                response.put("code", "0");
+                response.put("message", delete);
+                return response;
+            }else{
+                response.put("code", "999");
+                response.put("message", sesionFail);
+                return response;
+            }
         } catch (Exception e) {
             response.put("code", "1");
             response.put("message", delelteE);
@@ -104,5 +129,7 @@ public class PayrollService {
 
     }
 
-
+    private User UserFind(String user) {
+        return userRepository.findByIdUser(user);
+    }
 }

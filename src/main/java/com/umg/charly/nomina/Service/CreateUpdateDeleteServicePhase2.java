@@ -352,14 +352,20 @@ public class CreateUpdateDeleteServicePhase2 {
     @PostMapping(path = "/createDepartment")
     private HashMap<String, String> createDepartment(@RequestBody Department department) {
         try {
-            long idDepartment = departmentRepository.findAll().size();
-            idDepartment++;
-            department.setIdDepartment(idDepartment);
-            department.setCreationDate(new Date());
-            departmentRepository.save(department);
-            response.put("code", "0");
-            response.put("message", okC);
-            return response;
+            if (new KeepAlive().validateSession(UserFind(department.getUserCreation()).getCurrentSession())) {
+                long idDepartment = departmentRepository.findAll().size();
+                idDepartment++;
+                department.setIdDepartment(idDepartment);
+                department.setCreationDate(new Date());
+                departmentRepository.save(department);
+                response.put("code", "0");
+                response.put("message", okC);
+                return response;
+            }else{
+                response.put("code", "999");
+                response.put("message", sesionFail);
+                return response;
+            }
         } catch (Exception e) {
             System.out.println("Error creando el departamento" + e.getMessage() + " causa" + e.getCause());
             response.put("code", "1");
@@ -371,15 +377,21 @@ public class CreateUpdateDeleteServicePhase2 {
     @PutMapping(path = "/updateDepartment/{id}")
     private HashMap<String, String> updateDepartment(@RequestBody Department department, @PathVariable long id) {
         try {
-            Department department1 = departmentRepository.findByidDepartment(id);
-            department1.setName(department.getName());
-            department1.setIdDepartment(department.getIdDepartment());
-            department1.setModificationDate(new Date());
-            department1.setUserModification(department.getUserModification());
-            departmentRepository.save(department1);
-            response.put("code", "0");
-            response.put("message", okU);
-            return response;
+            if(new KeepAlive().validateSession(UserFind(department.getUserModification()).getCurrentSession())) {
+                Department department1 = departmentRepository.findByidDepartment(id);
+                department1.setName(department.getName());
+                department1.setIdDepartment(department.getIdDepartment());
+                department1.setModificationDate(new Date());
+                department1.setUserModification(department.getUserModification());
+                departmentRepository.save(department1);
+                response.put("code", "0");
+                response.put("message", okU);
+                return response;
+            }else{
+                response.put("code", "999");
+                response.put("message", sesionFail);
+                return response;
+            }
         } catch (Exception e) {
             response.put("code", "1");
             response.put("message", failsU);
@@ -387,13 +399,19 @@ public class CreateUpdateDeleteServicePhase2 {
         }
     }
 
-    @DeleteMapping(path = "/deleteDepartment/{id}")
-    private HashMap<String, String> deleteDepartment(@PathVariable long id) {
+    @DeleteMapping(path = "/deleteDepartment/{id}/{user}")
+    private HashMap<String, String> deleteDepartment(@PathVariable long id, @PathVariable String user) {
         try {
-            departmentRepository.deleteById(id);
-            response.put("code", "0");
-            response.put("message", delete);
-            return response;
+            if(new KeepAlive().validateSession(UserFind(user).getCurrentSession())) {
+                departmentRepository.deleteById(id);
+                response.put("code", "0");
+                response.put("message", delete);
+                return response;
+            }else{
+                response.put("code", "999");
+                response.put("message", sesionFail);
+                return response;
+            }
         } catch (Exception e) {
             response.put("code", "1");
             response.put("message", delelteE);
