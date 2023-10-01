@@ -35,6 +35,7 @@ public class UserService {
     String delete = "El registro fue eliminado exitosamente";
     String delelteE = "El registro tiene mas dependencias no puede ser borrado";
     String  errorMessage = "";
+    String sesionFail = "Sesion no valida";
     HashMap<String, String> response = new HashMap<>();
     //parametros para generacion de contraseña por email
     int MaxCharterPassword = 25;
@@ -276,37 +277,49 @@ public class UserService {
 
     @PutMapping(path = "/modifyUser/{idUser}")
     private HashMap<String, String> modifyUser(@RequestBody User user, @PathVariable String idUser) {
-        if (idUser != null) {
-            Optional<User> dataUser = Optional.ofNullable(userRepository.findByIdUser(idUser));
-            if (dataUser.isPresent()) {
-                dataUser.get().setName(user.getName());
-                dataUser.get().setLastName(user.getLastName());
-                //dataUser.get().setDob(user.getDob());
-                dataUser.get().setIdStatusUser(user.getIdStatusUser());
-                dataUser.get().setEmail(user.getEmail());
-                dataUser.get().setMobilePhone(user.getMobilePhone());
-                dataUser.get().setIdLocation(user.getIdLocation());
-                dataUser.get().setModificationDate(new Date());
-                dataUser.get().setUserModification(user.getUserModification());
-                userRepository.save(dataUser.get());
-                response.put("code", "0");
-                response.put("message", "Se actualizo exitosamente");
-                return response;
+        if (new KeepAlive().validateSession(UserFind(user.getUserModification()).getCurrentSession())) {
+            if (idUser != null) {
+                Optional<User> dataUser = Optional.ofNullable(userRepository.findByIdUser(idUser));
+                if (dataUser.isPresent()) {
+                    dataUser.get().setName(user.getName());
+                    dataUser.get().setLastName(user.getLastName());
+                    //dataUser.get().setDob(user.getDob());
+                    dataUser.get().setIdStatusUser(user.getIdStatusUser());
+                    dataUser.get().setEmail(user.getEmail());
+                    dataUser.get().setMobilePhone(user.getMobilePhone());
+                    dataUser.get().setIdLocation(user.getIdLocation());
+                    dataUser.get().setModificationDate(new Date());
+                    dataUser.get().setUserModification(user.getUserModification());
+                    userRepository.save(dataUser.get());
+                    response.put("code", "0");
+                    response.put("message", "Se actualizo exitosamente");
+                    return response;
+                }
             }
+            response.put("code", "1");
+            response.put("message", "No se actualizo");
+            return response;
+        }else{
+            response.put("code", "999");
+            response.put("message", sesionFail);
+            return response;
         }
-        response.put("code", "1");
-        response.put("message", "No se actualizo");
-        return response;
     }
 
-    @DeleteMapping(path = "/deleteUser/{id}")
-    private HashMap<String, String> deleteUser(@PathVariable String id) {
+    @DeleteMapping(path = "/deleteUser/{id}/{user}")
+    private HashMap<String, String> deleteUser(@PathVariable String id, @PathVariable String user) {
         try {
-            User userFind = userRepository.findByIdUser(id);
-            userRepository.delete(userFind);
-            response.put("code", "0");
-            response.put("message", delete);
-            return response;
+            if (new KeepAlive().validateSession(UserFind(user).getCurrentSession())) {
+                User userFind = userRepository.findByIdUser(id);
+                userRepository.delete(userFind);
+                response.put("code", "0");
+                response.put("message", delete);
+                return response;
+            }else{
+                response.put("code", "999");
+                response.put("message", sesionFail);
+                return response;
+            }
         } catch (Exception e) {
             response.put("code", "1");
             response.put("message", delelteE);
@@ -396,5 +409,8 @@ public class UserService {
         }
     }
 
+    private User UserFind(String user) {
+        return userRepository.findByIdUser(user);
+    }
 }
 
