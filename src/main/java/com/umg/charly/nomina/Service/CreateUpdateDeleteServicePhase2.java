@@ -31,6 +31,8 @@ public class CreateUpdateDeleteServicePhase2 {
     UserRepository userRepository;
     @Autowired
     MaritalStatusRepository maritalStatusRepository;
+    @Autowired
+    PersonDocumentRepository personDocumentRepository;
 
     //vars
     String okU = "Se actualiza correctamente";
@@ -628,7 +630,12 @@ public class CreateUpdateDeleteServicePhase2 {
         return null;
     }
 
-    //documento persona
+
+    //persona y documento
+
+
+
+    //retorna el objeto de usuario
     private User UserFind(String user) {
         return userRepository.findByIdUser(user);
     }

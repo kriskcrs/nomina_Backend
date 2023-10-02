@@ -76,12 +76,15 @@ public class ConsultServicesPhase2 {
     private List<Bank> bankList(){return bankRepository.findAll();
     }
 
-
-
     @GetMapping(path = "/statusEmployee")
     private List<StatusEmployee> statusEmployeeList(){
         return statusEmployeeRepository.findAll();
     }
+
+
+
+
+
 }
 
 

@@ -82,9 +82,9 @@ RC -> 4
     INASISTENCIA
 CC -> 4
     PLANILLA_CABECERA
-    ESTADO_CIVIL
-    EMPLEADO
-    DOCUMENTO_PERSONA
+    ESTADO_CIVIL -> ya
+    EMPLEADO -> ya
+    DOCUMENTO_PERSONA  -> no se que espera ahi
 
 
 
