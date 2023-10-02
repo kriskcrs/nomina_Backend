@@ -14,6 +14,7 @@ Task
     - Validación de opciones
     - home screen
     - menu lateral
+
   2 -DI- Pantalla de primer login
   	- cambio de contraseña
   	- validación de caracteres (para nueva contraseña)
@@ -34,8 +35,6 @@ Task
 	- creación de sucursales
 	- modificacion de sucursales
 	- mtt optiones
-
-
 
 
 4 -RC- Bitacora
@@ -60,10 +59,6 @@ Task
 	- mtto usuario
 	- mtt menu
 
-
-
-
-
 //SEGUNDA FASE
 
 PR -> 3
@@ -85,8 +80,4 @@ CC -> 4
     ESTADO_CIVIL -> ya
     EMPLEADO -> ya
     DOCUMENTO_PERSONA  -> no se que espera ahi
-
-
-
-
 
