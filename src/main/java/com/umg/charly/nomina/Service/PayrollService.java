@@ -38,6 +38,15 @@ public class PayrollService {
     String delelteE = "El registro tiene mas dependencias no puede ser borrado";
     String sesionFail = "Sesion no valida";
     HashMap<String, String> response = new HashMap<>();
+    Double Igssx = 0.0483;
+    Double IsrExonerante = 48000.00;
+    Double Cobro5 = 300000.00;
+    Double Cobro7 = 300001.00;
+    Double Isr5 = 0.05;
+    Double Isr7 = 0.07;
+    Double anio = 12.00;
+    Double alto = 15000.00;
+    String noCobro = "No se cobra ISR";
 
     @GetMapping(path = "/payrollHeaders")
     private List<PayrollHeader> payrollHeaders(){
@@ -131,5 +140,28 @@ public class PayrollService {
 
     private User UserFind(String user) {
         return userRepository.findByIdUser(user);
+    }
+
+    private Double Igss(Double num) {
+        num = num * Igssx;
+        return num;
+    }
+
+    private Double Isr(Double num) {
+        double year = num * anio;
+        double igs = Igss(num);
+        igs = igs * anio;
+        num = year - igs;
+        if(num < IsrExonerante){
+            return 0.00;
+        }else if(num > IsrExonerante && num <= Cobro5){
+        num = year - num;
+        num = num * Isr5;
+        }else if(num >= Cobro7){
+            num = year - num;
+            num = num * Isr7;
+            num = num + alto;
+        }
+        return num;
     }
 }
