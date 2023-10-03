@@ -9,7 +9,7 @@ import java.io.Serializable;
 @Setter
 public class PayrollPeriodPK implements Serializable {
     @Column(name = "anio")
-    private Long anio;
+    private Long year;
     @Column(name = "mes")
-    private Long mes;
+    private Long month;
 }
