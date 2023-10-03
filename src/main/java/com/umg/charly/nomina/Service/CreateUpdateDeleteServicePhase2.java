@@ -237,7 +237,7 @@ public class CreateUpdateDeleteServicePhase2 {
                 personFind.setAddress(person.getAddress());
                 personFind.setPhone(person.getPhone());
                 personFind.setEmail(person.getEmail());
-                personFind.setIdCivilstatus(person.getIdCivilstatus());
+                personFind.setIdMaritalStatus(person.getIdMaritalStatus());
                 personFind.setUserModification(person.getUserModification());
                 personRepository.save(personFind);
                 response.put("code", "0");
