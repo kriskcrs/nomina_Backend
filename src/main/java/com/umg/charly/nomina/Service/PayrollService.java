@@ -143,20 +143,20 @@ public class PayrollService {
 
 
 
-    //calculos
+    //funcion de retorno de datos
     private User UserFind(String user) {
         return userRepository.findByIdUser(user);
     }
-
-
-
-    //ingreso a planilla
-
-    private Double Igss(Double num) {
-        return num * igss;
+    private int idEmployee(){
+        return payrollPeriodRepository.findAll().size();
     }
 
-    private Double Isr(Double num) {
+    //calculos
+
+    private Double Igss(double num) {
+        return num * igss;
+    }
+    private Double Isr(double num) {
         double valorAnual = num * anio;
         double igssAnual = Igss(num) * anio;
         num = valorAnual - igssAnual;
@@ -169,42 +169,38 @@ public class PayrollService {
         }
         return num;
     }
-
-
-
-    public Double Suma(double base, double bono, double extra) {
+    private Double Suma(double base, double bono, double extra) {
         return ingreso = base + bono + extra;
     }
-
-
-    public Double Resta(double sueldo, double desc) {
+    private Double Resta(double sueldo, double desc) {
         return egreso = Igss(sueldo) + Isr(sueldo) + desc;
     }
-
-
-    public Double TotalIngresos(double ingreso, double egreso) {
+    private Double TotalIngresos(double ingreso, double egreso) {
         return total = ingreso - egreso;
     }
 
 
-    @GetMapping(path = "PayrollCalc")
-    public List<PayrollDetails> calculos() {
+
+
+    //servicios de calculo
+    @GetMapping(path = "PayrollCalc/{year}/{month}/{user}")
+    public List<PayrollDetails> calculos(@PathVariable long year, @PathVariable long month,@PathVariable String user) {
+
+
         List<PayrollPeriod> payrollPeriod = payrollPeriodRepository.findAll();
         PayrollPeriod data = payrollPeriod.get(0);
         long id = idEmployee();
         for (Employee employee : employeeRepository.findAll()) {
-            grabaPlanillaDetalle(employee, data);
+            PayrollDetails(employee, data,user);
         }
         return payrollDetailsRepository.findAll();
     }
 
-    public int idEmployee(){
-        return payrollPeriodRepository.findAll().size();
-    }
 
-
-    public void grabaPlanillaDetalle(Employee employee, PayrollPeriod payrollPeriod) {
+    private void PayrollDetails(Employee employee, PayrollPeriod payrollPeriod,String user) {
         try {
+
+            PayrollHeaderCreate(payrollPeriod.getIdPK().getYear(),payrollPeriod.getIdPK().getMonth(),user);
             PayrollDetails payrollDetailsData = new PayrollDetails();
             id++;
             payrollDetailsData.setIdPayrollDetails(id);
@@ -227,27 +223,49 @@ public class PayrollService {
             payrollDetailsData.setCreationDate(new Date());
             payrollDetailsData.setUserCreation("temporal");
             payrollDetailsRepository.save(payrollDetailsData);
-            PayrollHeader(payrollPeriod.getIdPK().getYear(),payrollPeriod.getIdPK().getMonth());
+            PayrollHeaderUpdate(payrollPeriod.getIdPK().getYear(),payrollPeriod.getIdPK().getMonth(),user);
+
         } catch (Exception e) {
             System.out.println(e.getCause() + " Mensaje -> " + e.getMessage());
         }
 
     }
 
+    private void PayrollHeaderCreate(long year, long month,String user){
+            double ingreso=0.00;
+            double egreso = 0.00;
 
-    public void PayrollHeader(long year, long month){
+            PayrollHeader payrollHeader = new PayrollHeader();
+            payrollHeader.setTotalIncome(ingreso);
+            payrollHeader.setTotalDiscounts(egreso);
+            PayrollHeaderPK pk = new PayrollHeaderPK();
+            pk.setMonth(month);
+            pk.setYear(year);
+            payrollHeader.setIdPK(pk);
+            payrollHeader.setSalary(ingreso-egreso);
+            payrollHeader.setDateProcess(new Date());
+            payrollHeader.setCreationDate(new Date());
+            payrollHeader.setUserCreation(user);
+            payrollHeaderRepository.save(payrollHeader);
+        }
+
+
+
+    private void PayrollHeaderUpdate(long year, long month,String user){
         List<PayrollDetails>  payrollDetails =payrollDetailsRepository.findAll();
+
+        List<PayrollHeader> payrollHeaderFind = payrollHeaderRepository.findAll();
+
 
         double ingreso=0.00;
         double egreso = 0.00;
 
         for (PayrollDetails pd: payrollDetails
-             ) {
-           ingreso += Suma(pd.getBaseSalaryIncome(),pd.getBonusIncomeDecree(),pd.getIncomeOther());
-           egreso += Resta(pd.getBaseSalaryIncome(),pd.getNoShowDiscount());
+        ) {
+            ingreso += Suma(pd.getBaseSalaryIncome(),pd.getBonusIncomeDecree(),pd.getIncomeOther());
+            egreso += Resta(pd.getBaseSalaryIncome(),pd.getNoShowDiscount());
         }
-
-        PayrollHeader payrollHeader = new PayrollHeader();
+        PayrollHeader payrollHeader = payrollHeaderFind.get(0);
         payrollHeader.setTotalIncome(ingreso);
         payrollHeader.setTotalDiscounts(egreso);
         PayrollHeaderPK pk = new PayrollHeaderPK();
@@ -256,9 +274,39 @@ public class PayrollService {
         payrollHeader.setIdPK(pk);
         payrollHeader.setSalary(ingreso-egreso);
         payrollHeader.setDateProcess(new Date());
-        payrollHeader.setCreationDate(new Date());
-        payrollHeader.setUserCreation("Cristian");
+        payrollHeader.setModificationDate(new Date());
+        payrollHeader.setUserModification(user);
         payrollHeaderRepository.save(payrollHeader);
+    }
+
+
+
+
+
+    @GetMapping(path = "/llenaEmployee")
+    private void llenaEmpleado(){
+        int y = 49800;
+        Employee employee = new Employee();
+        for(int x=0; x<y; x++){
+            long id = employeeRepository.findAll().size();
+            id++;
+            employee.setIdEmployee(id);
+            employee.setIdPerson(1L);
+            employee.setIdLocation(1L);
+            employee.setIdPosition(1L);
+            employee.setIdStatusEmployee(1L);
+            employee.setBaseSalaryIncome(25000.00);
+            employee.setBonusIncomeDecree(250.00);
+            employee.setIgss(Igss(25000));
+            employee.setIsr(Isr(25000));
+            employee.setIncomeOther(500.00);
+            employee.setNoShowDiscount(0.00);
+            employee.setCreationDate(new Date());
+            employee.setDateOfHire(new Date());
+            employee.setUserCreation("cristian");
+            employeeRepository.save(employee);
+        }
 
     }
+
 }
