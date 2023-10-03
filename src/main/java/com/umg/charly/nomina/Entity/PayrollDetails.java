@@ -1,5 +1,6 @@
 package com.umg.charly.nomina.Entity;
 
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -10,17 +11,21 @@ import lombok.Setter;
 import java.util.Date;
 
 @Entity
-@Table(name = "empleado")
+@Table(name = "planilla_detalle")
 @Getter
 @Setter
-public class Employee {
+public class PayrollDetails {
+
     @Id
+    @Column(name = "idplanilladetalle")
+    private Long idPayrollDetails;
+
+    @Column(name = "anio")
+    private Long year;
+    @Column(name = "mes")
+    private Long month;
     @Column(name = "idempleado")
     private Long idEmployee;
-    @Column(name = "idpersona")
-    private Long idPerson;
-    @Column(name = "idsucursal")
-    private Long idLocation;
     @Column(name = "fechacontratacion")
     private Date dateOfHire;
     @Column(name = "idpuesto")
@@ -39,6 +44,8 @@ public class Employee {
     private Double isr;
     @Column(name = "descuentoinasistencias")
     private Double noShowDiscount;
+    @Column(name = "salarioneto")
+    private Double netSalary;
     @Column(name = "fechacreacion")
     private Date creationDate;
     @Column(name = "usuariocreacion")
@@ -47,5 +54,6 @@ public class Employee {
     private Date modificationDate;
     @Column(name = "usuariomodificacion")
     private String userModification;
+
 
 }

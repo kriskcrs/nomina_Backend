@@ -58,8 +58,8 @@ public class PayrollService {
             boolean payrollPeriodAlreadyExist = false;
 
             for (PayrollPeriod payrollPeriodExist : payrollPeriodExistList) {
-                if (payrollPeriodExist.getIdPK().getAnio() == payrollPeriod.getIdPK().getAnio() &&
-                        payrollPeriodExist.getIdPK().getMes() == payrollPeriod.getIdPK().getMes()) {
+                if (payrollPeriodExist.getIdPK().getYear() == payrollPeriod.getIdPK().getYear() &&
+                        payrollPeriodExist.getIdPK().getMonth() == payrollPeriod.getIdPK().getMonth()) {
                     payrollPeriodAlreadyExist = true;
                     break;
                 }
@@ -108,8 +108,8 @@ public class PayrollService {
         try {
             if (new KeepAlive().validateSession(UserFind(user).getCurrentSession())) {
                 PayrollPeriodPK payrollPeriodPK = new PayrollPeriodPK();
-                payrollPeriodPK.setAnio(anio);
-                payrollPeriodPK.setMes(mes);
+                payrollPeriodPK.setYear(anio);
+                payrollPeriodPK.setMonth(mes);
 
                 payrollPeriodRepository.deleteById(payrollPeriodPK);
                 response.put("code", "0");

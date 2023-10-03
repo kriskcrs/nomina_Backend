@@ -5,6 +5,7 @@ import java.util.UUID;
 public class Encoding {
     String miString = "";
     StringBuilder nuevaP = new StringBuilder();
+    UUID sessionId;
 
     public String crypt(String texto) {
         miString = texto;
@@ -18,7 +19,6 @@ public class Encoding {
         return nuevaP.toString();
     }
 
-    private UUID sessionId;
 
     public UUID SessionManager(){
         return sessionId = UUID.randomUUID();

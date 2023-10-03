@@ -1,22 +1,14 @@
 package com.umg.charly.nomina.Service;
 
-import org.springframework.beans.factory.annotation.Value;
+import com.umg.charly.nomina.Entity.User;
 import com.umg.charly.nomina.Repository.*;
-import com.umg.charly.nomina.Entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 
-import java.awt.*;
 import java.io.IOException;
 import java.util.*;
-import java.util.List;
-import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 @RestController
 @RequestMapping("v1")

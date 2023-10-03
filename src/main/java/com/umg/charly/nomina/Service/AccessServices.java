@@ -1,6 +1,6 @@
 package com.umg.charly.nomina.Service;
 
-import com.umg.charly.nomina.Entity.*;
+import com.umg.charly.nomina.Entity.Log;
 import com.umg.charly.nomina.Repository.LogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
