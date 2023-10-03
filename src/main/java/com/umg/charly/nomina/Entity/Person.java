@@ -32,7 +32,7 @@ public class Person {
     @Column(name = "correoelectronico")
     private String email;
     @Column(name = "idestadocivil")
-    private String IdCivilstatus;
+    private String IdMaritalStatus;
     @Column(name = "fechacreacion")
     private Date creationDate;
     @Column(name = "usuariocreacion")
