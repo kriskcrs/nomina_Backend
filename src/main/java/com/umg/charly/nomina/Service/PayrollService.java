@@ -219,7 +219,7 @@ public class PayrollService {
             payrollDetailsData.setNetSalary(total);
             payrollDetailsData.setNoShowDiscount(employee.getNoShowDiscount());
             payrollDetailsData.setCreationDate(new Date());
-            payrollDetailsData.setUserCreation("temporal");
+            payrollDetailsData.setUserCreation(user);
             payrollDetailsRepository.save(payrollDetailsData);
             PayrollHeaderUpdate(payrollPeriod.getIdPK().getYear(),payrollPeriod.getIdPK().getMonth(),user);
 
