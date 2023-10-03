@@ -43,13 +43,13 @@ public class PayrollService {
     HashMap<String, String> response = new HashMap<>();
     Double igss = 0.0483;
     Double IsrExonerante = 48000.00;
-    Double Cobro5 = 300000.00;
-    Double Cobro7 = 300001.00;
-    Double Isr5 = 0.05;
-    Double Isr7 = 0.07;
+    Double limiteMedio = 300000.00;
+    Double limiteMayor = 300000.01;
+    Double isrMinimo = 0.05;
+    Double isrMaximo = 0.07;
     Double anio = 12.00;
     Double valorFijo = 15000.00;
-    String noCobro = "No se cobra ISR";
+
 
     @GetMapping(path = "/payrollHeaders")
     private List<PayrollHeader> payrollHeaders() {
@@ -157,15 +157,15 @@ public class PayrollService {
     }
 
     private Double Isr(Double num) {
-        double year = num * anio;
-        double igss = Igss(num) * anio;
-        num = year - igss;
+        double valorAnual = num * anio;
+        double igssAnual = Igss(num) * anio;
+        num = valorAnual - igssAnual;
         if (num < IsrExonerante) {
             return 0.00;
-        } else if ( num <= Cobro5) {
-            num = ((num - IsrExonerante) * Isr5)/12;
-        } else if (num >= Cobro7) {
-            num = ((num - IsrExonerante) * Isr7 + valorFijo)/12;
+        } else if ( num <= limiteMedio) {
+            num = ((num - IsrExonerante) * isrMinimo)/12;
+        } else if (num >= limiteMayor) {
+            num = ((num - IsrExonerante) * isrMaximo + valorFijo)/12;
         }
         return num;
     }
@@ -187,7 +187,7 @@ public class PayrollService {
     }
 
 
-    @GetMapping(path = "testPlayroll")
+    @GetMapping(path = "PayrollCalc")
     public List<PayrollDetails> calculos() {
         List<PayrollPeriod> payrollPeriod = payrollPeriodRepository.findAll();
         PayrollPeriod data = payrollPeriod.get(0);
@@ -227,6 +227,7 @@ public class PayrollService {
             payrollDetailsData.setCreationDate(new Date());
             payrollDetailsData.setUserCreation("temporal");
             payrollDetailsRepository.save(payrollDetailsData);
+            PayrollHeader(payrollPeriod.getIdPK().getYear(),payrollPeriod.getIdPK().getMonth());
         } catch (Exception e) {
             System.out.println(e.getCause() + " Mensaje -> " + e.getMessage());
         }
@@ -234,9 +235,30 @@ public class PayrollService {
     }
 
 
-    @GetMapping(path = "isr/{valor}")
-    public double isrCal(@PathVariable  Double valor){
-        return Isr(valor);
-    }
+    public void PayrollHeader(long year, long month){
+        List<PayrollDetails>  payrollDetails =payrollDetailsRepository.findAll();
 
+        double ingreso=0.00;
+        double egreso = 0.00;
+
+        for (PayrollDetails pd: payrollDetails
+             ) {
+           ingreso += Suma(pd.getBaseSalaryIncome(),pd.getBonusIncomeDecree(),pd.getIncomeOther());
+           egreso += Resta(pd.getBaseSalaryIncome(),pd.getNoShowDiscount());
+        }
+
+        PayrollHeader payrollHeader = new PayrollHeader();
+        payrollHeader.setTotalIncome(ingreso);
+        payrollHeader.setTotalDiscounts(egreso);
+        PayrollHeaderPK pk = new PayrollHeaderPK();
+        pk.setMonth(month);
+        pk.setYear(year);
+        payrollHeader.setIdPK(pk);
+        payrollHeader.setSalary(ingreso-egreso);
+        payrollHeader.setDateProcess(new Date());
+        payrollHeader.setCreationDate(new Date());
+        payrollHeader.setUserCreation("Cristian");
+        payrollHeaderRepository.save(payrollHeader);
+
+    }
 }
