@@ -187,7 +187,7 @@ public class PayrollService {
     }
 
 
-    @GetMapping(path = "testPlayroll")
+    @GetMapping(path = "/testPlayroll")
     public List<PayrollDetails> calculos() {
         List<PayrollPeriod> payrollPeriod = payrollPeriodRepository.findAll();
         PayrollPeriod data = payrollPeriod.get(0);
