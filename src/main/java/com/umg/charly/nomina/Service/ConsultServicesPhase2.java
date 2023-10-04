@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -48,17 +49,17 @@ public class ConsultServicesPhase2 {
     }
 
     @GetMapping(path = "/employee")
-    private List<Employee> employeeList(){
+    private List<Employee> employeeList() {
         return employeeRepository.findAll();
     }
 
     @GetMapping(path = "/maritalStatus")
-    private List<MaritalStatus> maritalStatusList(){
+    private List<MaritalStatus> maritalStatusList() {
         return maritalStatusRepository.findAll();
     }
 
     @GetMapping(path = "/personDocument")
-    private List<PersonDocument> personDocumentList(){
+    private List<PersonDocument> personDocumentList() {
         return personDocumentRepository.findAll();
     }
 
@@ -68,22 +69,35 @@ public class ConsultServicesPhase2 {
     }
 
     @GetMapping(path = "/persons")
-    private List<Person> PersonList() {return personRepository.findAll();}
+    private List<Person> PersonList() {
+        return personRepository.findAll();
+    }
 
     @GetMapping(path = "/absences")
-    private List<Absence> AbsenceList() {return absenceRepository.findAll();}
+    private List<Absence> AbsenceList() {
+        return absenceRepository.findAll();
+    }
 
     @GetMapping(path = "/bank")
-    private List<Bank> bankList(){return bankRepository.findAll();
+    private List<Bank> bankList() {
+        return bankRepository.findAll();
     }
 
     @GetMapping(path = "/statusEmployee")
-    private List<StatusEmployee> statusEmployeeList(){
+    private List<StatusEmployee> statusEmployeeList() {
         return statusEmployeeRepository.findAll();
     }
 
 
+    @GetMapping(path = "/documentPerson/{id}")
+    private List<PersonDocument> personDocumentList(@PathVariable long id) {
+        List<PersonDocument> personDocumentList = personDocumentRepository.findAll();
 
+        return personDocumentList
+                .stream()
+                .filter(personDoc -> personDoc.getIdPK().getIdPerson() == id)
+                .collect(Collectors.toList());
+    }
 
 
 }

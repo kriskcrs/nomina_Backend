@@ -153,10 +153,10 @@ public class PayrollService {
 
     //calculos
 
-    private Double Igss(double num) {
+    public Double Igss(double num) {
         return num * igss;
     }
-    private Double Isr(double num) {
+    public Double Isr(double num) {
         double valorAnual = num * anio;
         double igssAnual = Igss(num) * anio;
         num = valorAnual - igssAnual;
