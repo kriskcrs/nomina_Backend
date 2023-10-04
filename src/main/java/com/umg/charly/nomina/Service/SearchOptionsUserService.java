@@ -49,9 +49,7 @@ public class SearchOptionsUserService {
         List<Menu> menuUserList = new ArrayList<>();
         List<Module> moduleUserList = new ArrayList<>();
         List<Long> menusAlreadyAdded = new ArrayList<>();
-        menusAlreadyAdded.add(Long.valueOf("0"));
         List<Long> modulesAlreadyAdded = new ArrayList<>();
-        modulesAlreadyAdded.add(Long.valueOf("0"));
 
         boolean fistMenu = true;
         boolean firstModule = true;
@@ -76,6 +74,7 @@ public class SearchOptionsUserService {
                                     if (fistMenu) {
                                         menuUserList.add(menu);
                                         fistMenu = false;
+                                        menusAlreadyAdded.add(menu.getIdMenu());
                                     } else {
                                         //filtro para no sobre escribri el mismo menu varias veces segun las opciones del usuario
                                         for (Menu menuAdded : menuUserList) {
@@ -97,6 +96,7 @@ public class SearchOptionsUserService {
                                             if (firstModule) {
                                                 moduleUserList.add(module);
                                                 firstModule = false;
+                                                modulesAlreadyAdded.add(module.getIdModule());
                                             } else {
                                                 //filtro para no sobre escribri el mismo modulo varias veces segun los menu del usuario
                                                 for (Module moduleAdded : moduleUserList) {

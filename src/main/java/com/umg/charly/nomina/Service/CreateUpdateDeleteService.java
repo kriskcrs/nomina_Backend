@@ -472,6 +472,7 @@ public class CreateUpdateDeleteService {
                 MenuFind.setOrderMenu(menu.getOrderMenu());
                 MenuFind.setModificationDate(new Date());
                 MenuFind.setUserModification(menu.getUserModification());
+                MenuFind.setIdModulo(menu.getIdModulo());
                 menuRepository.save(MenuFind);
                 response.put("code", "0");
                 response.put("message", okU);
