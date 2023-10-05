@@ -50,7 +50,7 @@ public class CreateUpdateDeleteService {
     String failsU = "Hubo un problema al actualizar";
     String failsC = "Hubo un problema al crear";
     String delete = "El registro fue eliminado exitosamente";
-    String delelteE = "El registro tiene mas dependencias no puede ser borrado";
+    String deleteE = "El registro tiene mas dependencias no puede ser borrado";
     String sesionFail = "Sesion no valida";
     HashMap<String, String> response = new HashMap<>();
 
@@ -125,7 +125,7 @@ public class CreateUpdateDeleteService {
             }
         } catch (Exception e) {
             response.put("code", "1");
-            response.put("message", delelteE);
+            response.put("message", deleteE);
             return response;
 
         }
@@ -201,7 +201,7 @@ public class CreateUpdateDeleteService {
 
         } catch (Exception e) {
             response.put("code", "1");
-            response.put("message", delelteE);
+            response.put("message", deleteE);
             return response;
 
         }
@@ -280,7 +280,7 @@ public class CreateUpdateDeleteService {
 
         } catch (Exception e) {
             response.put("code", "1");
-            response.put("message", delelteE);
+            response.put("message", deleteE);
             return response;
 
         }
@@ -344,7 +344,7 @@ public class CreateUpdateDeleteService {
         } catch (Exception e) {
             System.out.println(e.getCause() + " " + e.getMessage());
             response.put("code", "1");
-            response.put("message", delelteE);
+            response.put("message", deleteE);
             return response;
 
         }
@@ -431,7 +431,7 @@ public class CreateUpdateDeleteService {
         } catch (Exception e) {
             System.out.println(e.getCause() + " " + e.getMessage());
             response.put("code", "1");
-            response.put("message", delelteE);
+            response.put("message", deleteE);
             return response;
         }
     }
@@ -506,7 +506,7 @@ public class CreateUpdateDeleteService {
             }
         } catch (Exception e) {
             response.put("code", "1");
-            response.put("message", delelteE);
+            response.put("message", deleteE);
             return response;
 
         }
@@ -565,7 +565,7 @@ public class CreateUpdateDeleteService {
             return response;
         } catch (Exception e) {
             response.put("code", "1");
-            response.put("message", delelteE);
+            response.put("message", deleteE);
             return response;
         }
 
@@ -624,7 +624,7 @@ public class CreateUpdateDeleteService {
         } catch (Exception e) {
             System.out.println(e.getCause() + " " + e.getMessage());
             response.put("code", "1");
-            response.put("message", delelteE);
+            response.put("message", deleteE);
             return response;
         }
     }
@@ -698,7 +698,7 @@ public class CreateUpdateDeleteService {
             }
         } catch (Exception e) {
             response.put("code", "1");
-            response.put("message", delelteE);
+            response.put("message", deleteE);
             return response;
 
         }
@@ -776,7 +776,7 @@ public class CreateUpdateDeleteService {
 
         } catch (Exception e) {
             response.put("code", "1");
-            response.put("message", delelteE);
+            response.put("message", deleteE);
             return response;
 
         }

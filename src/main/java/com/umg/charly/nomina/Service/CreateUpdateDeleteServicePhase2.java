@@ -8,11 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 
 @RestController
@@ -44,13 +43,14 @@ public class CreateUpdateDeleteServicePhase2 {
     String failsU = "Hubo un problema al actualizar";
     String failsC = "Hubo un problema al crear";
     String delete = "El registro fue eliminado exitosamente";
-    String delelteE = "El registro tiene mas dependencias no puede ser borrado";
+    String deleteE = "El registro tiene mas dependencias no puede ser borrado";
     String sesionFail = "Sesion no valida";
     HashMap<String, String> response = new HashMap<>();
     @Autowired
     private BankRepository bankRepository;
     @Autowired
     private StatusEmployeeRepository statusEmployeeRepository;
+
 
     //Inasistencia
     @PostMapping(path = "/createAbsence")
@@ -122,7 +122,7 @@ public class CreateUpdateDeleteServicePhase2 {
         } catch (Exception e) {
             System.out.println(e.getMessage() + " causa" + e.getCause());
             response.put("code", "1");
-            response.put("message", delelteE);
+            response.put("message", deleteE);
             return response;
 
         }
@@ -196,7 +196,7 @@ public class CreateUpdateDeleteServicePhase2 {
             }
         } catch (Exception e) {
             response.put("code", "1");
-            response.put("message", delelteE);
+            response.put("message", deleteE);
             return response;
 
         }
@@ -314,7 +314,7 @@ public class CreateUpdateDeleteServicePhase2 {
 
         } catch (Exception e) {
             response.put("code", "1");
-            response.put("message", delelteE);
+            response.put("message", deleteE);
             return response;
 
         }
@@ -386,7 +386,7 @@ public class CreateUpdateDeleteServicePhase2 {
             }
         } catch (Exception e) {
             response.put("code", "1");
-            response.put("message", delelteE);
+            response.put("message", deleteE);
             return response;
 
         }
@@ -459,7 +459,7 @@ public class CreateUpdateDeleteServicePhase2 {
             }
         } catch (Exception e) {
             response.put("code", "1");
-            response.put("message", delelteE);
+            response.put("message", deleteE);
             return response;
 
         }
@@ -468,31 +468,6 @@ public class CreateUpdateDeleteServicePhase2 {
 
 
     //employee
-    @PostMapping(path = "/createEmployee")
-    private HashMap<String, String> createEmployee(@RequestBody Employee employee) {
-        try {
-            if (new KeepAlive().validateSession(UserFind(employee.getUserCreation()).getCurrentSession())) {
-                long id = employeeRepository.findAll().size();
-                id++;
-                employee.setIdEmployee(id);
-                employee.setCreationDate(new Date());
-                employeeRepository.save(employee);
-                response.put("code", "0");
-                response.put("message", okC);
-                return response;
-            } else {
-                response.put("code", "999");
-                response.put("message", sesionFail);
-                return response;
-            }
-
-        } catch (Exception e) {
-            response.put("code", "1");
-            response.put("message", failsC);
-            return response;
-        }
-    }
-
     @PutMapping(path = "/updateEmployee/{id}")
     private HashMap<String, String> updateEmployee(@RequestBody Employee employee, @PathVariable long id) {
         try {
@@ -531,7 +506,7 @@ public class CreateUpdateDeleteServicePhase2 {
             }
         } catch (Exception e) {
             response.put("code", "1");
-            response.put("message", delelteE);
+            response.put("message", deleteE);
             return response;
         }
     }
@@ -626,7 +601,7 @@ public class CreateUpdateDeleteServicePhase2 {
             }
         } catch (Exception e) {
             response.put("code", "1");
-            response.put("message", delelteE);
+            response.put("message", deleteE);
         }
         return null;
     }
@@ -668,7 +643,7 @@ public class CreateUpdateDeleteServicePhase2 {
             }
         } catch (Exception e) {
             response.put("code", "1");
-            response.put("message", delelteE);
+            response.put("message", deleteE);
         }
         return null;
     }
@@ -676,6 +651,60 @@ public class CreateUpdateDeleteServicePhase2 {
 
     //persona y documento
 
+    @PostMapping(path = "/createPersonDocument")
+    private HashMap<String, String> createPersonDocument(@RequestBody PersonNew personNew) {
+        try {
+            PersonDocument personDocument = new PersonDocument();
+            PersonDocumentPK pk = new PersonDocumentPK();
+
+
+            pk.setIdTypeDocument(personNew.getPersonDocumentTemp().getIdTypeDocument());
+            pk.setIdPerson(personNew.getPerson().getIdPerson());
+            personDocument.setNumberDocument(personNew.getPersonDocumentTemp().getNumberDocument());
+
+
+            personDocument.setIdPK(pk);
+            personDocument.setCreationDate(new Date());
+            personDocument.setUserCreation(personNew.getPerson().getUserCreation());
+
+            personDocumentRepository.save(personDocument);
+            response.put("code", "0");
+            response.put("message", okC);
+            return response;
+        } catch (Exception e) {
+            response.put("code", "1");
+            response.put("message", failsC);
+            return response;
+        }
+    }
+
+
+    @DeleteMapping(path = "/DeletePersonDocument/{id}/{doc}")
+    private HashMap<String, String> deletePersonDocument(@PathVariable long id,@PathVariable long doc){
+        try {
+            System.out.println("entro");
+            PersonDocumentPK pk = new PersonDocumentPK();
+
+            List<PersonDocument> personDocumentFind= personDocumentRepository.findAll();
+
+            for (PersonDocument p: personDocumentFind
+                 ) {
+
+                if(p.getIdPK().getIdPerson()==id && p.getIdPK().getIdTypeDocument() == doc ){
+                    personDocumentRepository.delete(p);
+                }
+
+            }
+
+            response.put("code","0");
+            response.put("message",delete);
+            return response;
+        }catch (Exception e){
+            response.put("code","1");
+            response.put("message",deleteE);
+            return response;
+        }
+    }
 
     //retorna el objeto de usuario
     private User UserFind(String user) {
