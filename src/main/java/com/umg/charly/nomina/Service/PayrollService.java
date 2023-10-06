@@ -185,6 +185,11 @@ public class PayrollService {
     //servicios de calculo
     @GetMapping(path = "PayrollCalc/{year}/{month}/{user}")
     public List<PayrollDetails> calculos(@PathVariable long year, @PathVariable long month,@PathVariable String user) {
+
+        payrollDetailsRepository.deleteAll();
+        payrollHeaderRepository.deleteAll();
+        id=0L;
+
         List<PayrollPeriod> payrollPeriod = payrollPeriodRepository.findAll();
         PayrollPeriod data = payrollPeriod.get(0);
         long id = idEmployee();

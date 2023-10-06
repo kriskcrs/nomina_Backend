@@ -476,8 +476,9 @@ public class CreateUpdateDeleteServicePhase2 {
     private HashMap<String, String> updateEmployee(@RequestBody Employee employee, @PathVariable long id) {
         try {
             if (new KeepAlive().validateSession(UserFind(employee.getUserModification()).getCurrentSession())) {
-
                 employee.setModificationDate(new Date());
+                employee.setIgss(new PayrollService().Igss(employee.getBaseSalaryIncome()));
+                employee.setIsr(new PayrollService().Isr(employee.getBaseSalaryIncome()));
                 employeeRepository.save(employee);
                 response.put("code", "0");
                 response.put("message", okU);
