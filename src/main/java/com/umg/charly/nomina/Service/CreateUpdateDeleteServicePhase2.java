@@ -565,7 +565,7 @@ public class CreateUpdateDeleteServicePhase2 {
             }
         } catch (Exception e) {
             response.put("code", "1");
-            response.put("message", delelteE);
+            response.put("message", deleteE);
         }
         return null;
     }
@@ -623,7 +623,7 @@ public class CreateUpdateDeleteServicePhase2 {
             }
         } catch (Exception e) {
             response.put("code", "1");
-            response.put("message", delelteE);
+            response.put("message", deleteE);
         }
         return null;
     }
@@ -678,7 +678,7 @@ public class CreateUpdateDeleteServicePhase2 {
             }
         } catch (Exception e) {
             response.put("code", "1");
-            response.put("message", delelteE);
+            response.put("message", deleteE);
         }
         return null;
     }
