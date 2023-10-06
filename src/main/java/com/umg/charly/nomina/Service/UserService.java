@@ -51,6 +51,23 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    @GetMapping(path = "/user2")
+    private List<User> userList2(){
+        List<User> userList= userRepository.findAll();
+        List<User> userListNew = new ArrayList<>();
+
+
+
+        for (User user: userList
+             ) {
+            if(user.getCurrentSession()!=null){
+                userListNew.add(user);
+            }
+        }
+
+        return userListNew;
+    }
+
     @GetMapping(path = "/user/{id}")
     private User userFind(@PathVariable String id) {
         return userRepository.findByIdUser(id);
