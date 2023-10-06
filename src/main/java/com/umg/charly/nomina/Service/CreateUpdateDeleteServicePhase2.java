@@ -51,6 +51,8 @@ public class CreateUpdateDeleteServicePhase2 {
     private BankRepository bankRepository;
     @Autowired
     private StatusEmployeeRepository statusEmployeeRepository;
+    @Autowired
+    private AccountBankEmployeeRepository accountBankEmployeeRepository;
 
     //Inasistencia
     @PostMapping(path = "/createAbsence")
@@ -572,6 +574,85 @@ public class CreateUpdateDeleteServicePhase2 {
         }
     }
 
+    @DeleteMapping(path = "/deleteBank/{id}/{user}")
+    private HashMap<String, String> deleteBank(@PathVariable long id, @PathVariable String user) {
+        try {
+            if (new KeepAlive().validateSession(UserFind(user).getCurrentSession())) {
+                bankRepository.deleteById(id);
+                response.put("code", "0");
+                response.put("message", delete);
+                return response;
+
+            } else {
+                response.put("code", "999");
+                response.put("message", sesionFail);
+                return response;
+            }
+        } catch (Exception e) {
+            response.put("code", "1");
+            response.put("message", delelteE);
+        }
+        return null;
+    }
+
+    // account bank employee
+    @PostMapping(path = "/createAccountBankEmployee")
+    private HashMap<String, String> createAccountBankEmployee(@RequestBody AccountBankEmployee accountBankEmployee) {
+        try {
+            long id = accountBankEmployeeRepository.findAll().size();
+            id++;
+            accountBankEmployee.setIdAccountBank(id);
+            accountBankEmployee.setActive(1);
+            accountBankEmployee.setCreationDate(new Date());
+            accountBankEmployeeRepository.save(accountBankEmployee);
+            response.put("code", "0");
+            response.put("message", okC);
+            return response;
+
+        } catch (Exception e) {
+            response.put("code", "1");
+            response.put("message", failsC);
+            return response;
+        }
+    }
+
+    @PutMapping(path = "/updateAccountBankEmployee")
+    private HashMap<String, String> updateAccountBankEmployee(@RequestBody AccountBankEmployee accountBankEmployee) {
+        try {
+            accountBankEmployee.setModificationDate(new Date());
+            accountBankEmployeeRepository.save(accountBankEmployee);
+            response.put("code", "0");
+            response.put("message", okU);
+            return response;
+        } catch (Exception e) {
+
+            response.put("code", "1");
+            response.put("message", failsU);
+            return response;
+        }
+    }
+
+    @DeleteMapping(path = "/deleteAccountBankEmployee/{id}/{user}")
+    private HashMap<String, String> deleteAccountBankEmployee(@PathVariable long id, @PathVariable String user) {
+        try {
+            if (new KeepAlive().validateSession(UserFind(user).getCurrentSession())) {
+                accountBankEmployeeRepository.deleteById(id);
+                response.put("code", "0");
+                response.put("message", delete);
+                return response;
+
+            } else {
+                response.put("code", "999");
+                response.put("message", sesionFail);
+                return response;
+            }
+        } catch (Exception e) {
+            response.put("code", "1");
+            response.put("message", delelteE);
+        }
+        return null;
+    }
+
     //status employee
     @PostMapping(path = "/createStatusEmployee")
     private HashMap<String, String> createStatusEmployee(@RequestBody StatusEmployee statusEmployee) {
@@ -604,6 +685,27 @@ public class CreateUpdateDeleteServicePhase2 {
             response.put("message", failsU);
             return response;
         }
+    }
+
+    @DeleteMapping(path = "/deleteStatusEmployee/{id}/{user}")
+    private HashMap<String, String> deleteStatusEmployee(@PathVariable long id, @PathVariable String user) {
+        try {
+            if (new KeepAlive().validateSession(UserFind(user).getCurrentSession())) {
+                statusEmployeeRepository.deleteById(id);
+                response.put("code", "0");
+                response.put("message", delete);
+                return response;
+
+            } else {
+                response.put("code", "999");
+                response.put("message", sesionFail);
+                return response;
+            }
+        } catch (Exception e) {
+            response.put("code", "1");
+            response.put("message", delelteE);
+        }
+        return null;
     }
 
     //estado civil
