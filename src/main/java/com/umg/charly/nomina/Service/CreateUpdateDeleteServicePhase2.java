@@ -52,6 +52,8 @@ public class CreateUpdateDeleteServicePhase2 {
     private StatusEmployeeRepository statusEmployeeRepository;
     @Autowired
     private AccountBankEmployeeRepository accountBankEmployeeRepository;
+    @Autowired
+    private FlowStatusEmployeeRepository flowStatusEmployeeRepository;
 
 
     //Inasistencia
@@ -681,6 +683,41 @@ public class CreateUpdateDeleteServicePhase2 {
             response.put("message", deleteE);
         }
         return null;
+    }
+
+    //flow status employee
+    @PostMapping(path = "/createFlowStatusEmployee")
+    private HashMap<String, String> createFlowStatusEmployee(@RequestBody FlowStatusEmployee flowStatusEmployee) {
+        try {
+            flowStatusEmployee.setCreationDate(new Date());
+            response.put("code", "0");
+            response.put("message", okC);
+            flowStatusEmployeeRepository.save(flowStatusEmployee);
+            return response;
+        } catch (Exception e) {
+            response.put("code", "1");
+            response.put("message", failsC);
+            return response;
+        }
+    }
+
+    @DeleteMapping(path = "/deleteFlowStatusEmployee/{idStatusCurrent}/{idStatusNew}")
+    private HashMap<String, String> deleteFlowStatusEmployee(@PathVariable Long idStatusCurrent, @PathVariable Long idStatusNew) {
+        try {
+            FlowStatusEmployeePK flowStatusEmployeePK = new FlowStatusEmployeePK();
+            flowStatusEmployeePK.setIdStatusCurrent(idStatusCurrent);
+            flowStatusEmployeePK.setIdStatusNew(idStatusNew);
+
+            flowStatusEmployeeRepository.deleteById(flowStatusEmployeePK);
+            response.put("code", "0");
+            response.put("message", delete);
+            return response;
+        } catch (Exception e) {
+            System.out.println(e.getCause() + " " + e.getMessage());
+            response.put("code", "1");
+            response.put("message", deleteE);
+            return response;
+        }
     }
 
     //estado civil

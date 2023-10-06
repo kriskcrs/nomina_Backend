@@ -1,7 +1,8 @@
 package com.umg.charly.nomina.Repository;
 
 import com.umg.charly.nomina.Entity.FlowStatusEmployee;
+import com.umg.charly.nomina.Entity.FlowStatusEmployeePK;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface FlowStatusEmployeeRepository extends JpaRepository<FlowStatusEmployee, Long> {
+public interface FlowStatusEmployeeRepository extends JpaRepository<FlowStatusEmployee, FlowStatusEmployeePK> {
 }
