@@ -36,7 +36,10 @@ public class ConsultServicesPhase2 {
     @Autowired
     BankRepository bankRepository;
     @Autowired
-    private StatusEmployeeRepository statusEmployeeRepository;
+    StatusEmployeeRepository statusEmployeeRepository;
+
+    @Autowired
+    AccountBankEmployeeRepository accountBankEmployeeRepository;
 
     @GetMapping(path = "/typeDocument")
     private List<TypeDocument> typeDocumentList() {
@@ -81,6 +84,11 @@ public class ConsultServicesPhase2 {
     @GetMapping(path = "/bank")
     private List<Bank> bankList() {
         return bankRepository.findAll();
+    }
+
+    @GetMapping(path = "/accountBankEmployee")
+    private List<AccountBankEmployee> accountBankEmployeeList() {
+        return accountBankEmployeeRepository.findAll();
     }
 
     @GetMapping(path = "/statusEmployee")
