@@ -32,7 +32,7 @@ public class PayrollService {
     Double ingreso = 0.0;
     Double egreso = 0.0;
     Double total = 0.0;
-    Long id= 0L;
+    Long id = 0L;
 
     //vars
     String okU = "Se actualiza correctamente";
@@ -145,7 +145,6 @@ public class PayrollService {
     }
 
 
-
     //Servicios para periodo planilla
     @GetMapping(path = "/payrollHeader")
     private List<PayrollHeader> payrollHeaderList() {
@@ -153,12 +152,12 @@ public class PayrollService {
     }
 
 
-
     //funcion de retorno de datos
     private User UserFind(String user) {
         return userRepository.findByIdUser(user);
     }
-    private int idEmployee(){
+
+    private int idEmployee() {
         return payrollPeriodRepository.findAll().size();
     }
 
@@ -167,54 +166,54 @@ public class PayrollService {
     public Double Igss(double num) {
         return num * igss;
     }
+
     public Double Isr(double num) {
         double valorAnual = num * anio;
         double igssAnual = Igss(num) * anio;
         num = valorAnual - igssAnual;
         if (num < IsrExonerante) {
             return 0.00;
-        } else if ( num <= limiteMedio) {
-            num = ((num - IsrExonerante) * isrMinimo)/12;
+        } else if (num <= limiteMedio) {
+            num = ((num - IsrExonerante) * isrMinimo) / 12;
         } else if (num >= limiteMayor) {
-            num = ((num - IsrExonerante) * isrMaximo + valorFijo)/12;
+            num = ((num - IsrExonerante) * isrMaximo + valorFijo) / 12;
         }
         return num;
     }
+
     private Double Suma(double base, double bono, double extra) {
         return ingreso = base + bono + extra;
     }
+
     private Double Resta(double sueldo, double desc) {
         return egreso = Igss(sueldo) + Isr(sueldo) + desc;
     }
+
     private Double TotalIngresos(double ingreso, double egreso) {
         return total = ingreso - egreso;
     }
 
 
-
-
     //servicios de calculo
     @GetMapping(path = "PayrollCalc/{year}/{month}/{user}")
-    public List<PayrollDetails> calculos(@PathVariable String year, @PathVariable String month,@PathVariable String user) {
+    public List<PayrollDetails> calculos(@PathVariable String year, @PathVariable String month, @PathVariable String user) {
 
-        payrollDetailsRepository.deleteAll();
-        payrollHeaderRepository.deleteAll();
-        id=0L;
+        id = 0L;
         long yearN = Long.parseLong(year);
         long monthN = Long.parseLong(month);
 
-        ParyollPeriodoCreate(yearN,monthN,user);
+        ParyollPeriodoCreate(yearN, monthN, user);
         for (Employee employee : employeeRepository.findAll()) {
-            PayrollDetails(employee, yearN,monthN,user);
+            PayrollDetails(employee, yearN, monthN, user);
         }
         return payrollDetailsRepository.findAll();
     }
 
 
-    private void PayrollDetails(Employee employee, long year, long month ,String user) {
+    private void PayrollDetails(Employee employee, long year, long month, String user) {
         try {
 
-            PayrollHeaderCreate(year,month,user);
+            PayrollHeaderCreate(year, month, user);
             PayrollDetails payrollDetailsData = new PayrollDetails();
             id++;
             payrollDetailsData.setIdPayrollDetails(id);
@@ -229,15 +228,15 @@ public class PayrollService {
             payrollDetailsData.setIncomeOther(employee.getIncomeOther());
             payrollDetailsData.setIgss(Igss(employee.getBaseSalaryIncome()));
             payrollDetailsData.setIsr(Isr(employee.getBaseSalaryIncome()));
-            ingreso = Suma(employee.getBaseSalaryIncome(),employee.getBonusIncomeDecree(),employee.getIncomeOther());
-            egreso = Resta(employee.getBaseSalaryIncome(),employee.getNoShowDiscount());
-            total = TotalIngresos(ingreso,egreso);
+            ingreso = Suma(employee.getBaseSalaryIncome(), employee.getBonusIncomeDecree(), employee.getIncomeOther());
+            egreso = Resta(employee.getBaseSalaryIncome(), employee.getNoShowDiscount());
+            total = TotalIngresos(ingreso, egreso);
             payrollDetailsData.setNetSalary(total);
             payrollDetailsData.setNoShowDiscount(employee.getNoShowDiscount());
             payrollDetailsData.setCreationDate(new Date());
             payrollDetailsData.setUserCreation(user);
             payrollDetailsRepository.save(payrollDetailsData);
-            PayrollHeaderUpdate(year,month,user);
+            PayrollHeaderUpdate(year, month, user);
 
         } catch (Exception e) {
             System.out.println(e.getCause() + " Mensaje -> " + e.getMessage());
@@ -245,53 +244,58 @@ public class PayrollService {
 
     }
 
-    private void PayrollHeaderCreate(long year, long month,String user){
-            double ingreso=0.00;
-            double egreso = 0.00;
-
-            PayrollHeader payrollHeader = new PayrollHeader();
-            payrollHeader.setTotalIncome(ingreso);
-            payrollHeader.setTotalDiscounts(egreso);
-            PayrollHeaderPK pk = new PayrollHeaderPK();
-            pk.setMonth(month);
-            pk.setYear(year);
-            payrollHeader.setIdPK(pk);
-            payrollHeader.setSalary(ingreso-egreso);
-            payrollHeader.setDateProcess(new Date());
-            payrollHeader.setCreationDate(new Date());
-            payrollHeader.setUserCreation(user);
-            payrollHeaderRepository.save(payrollHeader);
-        }
-
-    private void PayrollHeaderUpdate(long year, long month,String user){
-        List<PayrollDetails>  payrollDetails =payrollDetailsRepository.findAll();
-
-        List<PayrollHeader> payrollHeaderFind = payrollHeaderRepository.findAll();
-
-
-        double ingreso=0.00;
+    private void PayrollHeaderCreate(long year, long month, String user) {
+        double ingreso = 0.00;
         double egreso = 0.00;
 
-        for (PayrollDetails pd: payrollDetails
-        ) {
-            ingreso += Suma(pd.getBaseSalaryIncome(),pd.getBonusIncomeDecree(),pd.getIncomeOther());
-            egreso += Resta(pd.getBaseSalaryIncome(),pd.getNoShowDiscount());
-        }
-        PayrollHeader payrollHeader = payrollHeaderFind.get(0);
+        PayrollHeader payrollHeader = new PayrollHeader();
         payrollHeader.setTotalIncome(ingreso);
         payrollHeader.setTotalDiscounts(egreso);
         PayrollHeaderPK pk = new PayrollHeaderPK();
         pk.setMonth(month);
         pk.setYear(year);
         payrollHeader.setIdPK(pk);
-        payrollHeader.setSalary(ingreso-egreso);
+        payrollHeader.setSalary(ingreso - egreso);
+        payrollHeader.setDateProcess(new Date());
+        payrollHeader.setCreationDate(new Date());
+        payrollHeader.setUserCreation(user);
+        payrollHeaderRepository.save(payrollHeader);
+    }
+
+    private void PayrollHeaderUpdate(long year, long month, String user) {
+
+
+        List<PayrollDetails> payrollDetails = payrollDetailsRepository.findAll();
+        List<PayrollHeader> payrollHeaderFind = payrollHeaderRepository.findAll();
+        PayrollHeader payrollHeader = new PayrollHeader();
+
+        for (PayrollHeader p : payrollHeaderFind
+        ) {
+            if (p.getIdPK().getYear() == year && p.getIdPK().getMonth() == month) {
+                payrollHeader = p;
+            }
+        }
+
+        double ingreso = 0.00;
+        double egreso = 0.00;
+
+        for (PayrollDetails pd : payrollDetails
+        ) {
+            ingreso += Suma(pd.getBaseSalaryIncome(), pd.getBonusIncomeDecree(), pd.getIncomeOther());
+            egreso += Resta(pd.getBaseSalaryIncome(), pd.getNoShowDiscount());
+        }
+
+        payrollHeader.setTotalIncome(ingreso);
+        payrollHeader.setTotalDiscounts(egreso);
+        payrollHeader.setSalary(ingreso - egreso);
         payrollHeader.setDateProcess(new Date());
         payrollHeader.setModificationDate(new Date());
         payrollHeader.setUserModification(user);
         payrollHeaderRepository.save(payrollHeader);
+
     }
 
-    private void ParyollPeriodoCreate(long year, long month,String user){
+    private void ParyollPeriodoCreate(long year, long month, String user) {
 
         PayrollPeriod payrollPeriod = new PayrollPeriod();
         PayrollPeriodPK pk = new PayrollPeriodPK();
@@ -302,7 +306,7 @@ public class PayrollService {
         pk.setYear(year);
         payrollPeriod.setIdPK(pk);
 
-        DateCalc((int)year,(int)month);
+        DateCalc((int) year, (int) month);
         payrollPeriod.setStartDate(primerDia);
         payrollPeriod.setEndDate(ultimoDia);
 
@@ -310,7 +314,7 @@ public class PayrollService {
     }
 
 
-    private void DateCalc(int year, int month){
+    private void DateCalc(int year, int month) {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, year);
         cal.set(Calendar.MONTH, month - 1); // Meses en Calendar van de 0 a 11
@@ -323,31 +327,46 @@ public class PayrollService {
 
 
     @DeleteMapping(path = "/deletePayroll/{year}/{month}")
-    private HashMap<String,String> deletePayroll(@PathVariable long year,@PathVariable long month){
+    private HashMap<String, String> deletePayroll(@PathVariable long year, @PathVariable long month) {
 
-        payrollDetailsRepository.deleteAll();
-        payrollHeaderRepository.deleteAll();
-        PayrollPeriodPK pk = new PayrollPeriodPK();
-        pk.setYear(year);
-        pk.setMonth(month);
+
+        List<PayrollDetails> payrollDetailsList = payrollDetailsRepository.findAll();
+        System.out.println("borrando detalle de planilla");
+        for (PayrollDetails p : payrollDetailsList
+        ) {
+            if (p.getYear() == year && p.getMonth() == month) {
+                payrollDetailsRepository.delete(p);
+            }
+        }
+
+        List<PayrollHeader> payrollHeaderList = payrollHeaderRepository.findAll();
+        System.out.println("borrando encabezado de planilla");
+        for (PayrollHeader p : payrollHeaderList
+        ) {
+            if (p.getIdPK().getYear() == year && p.getIdPK().getMonth() == month) {
+                payrollHeaderRepository.delete(p);
+            }
+        }
+
         List<PayrollPeriod> payrollPeriodList = payrollPeriodRepository.findAll();
-        for (PayrollPeriod p: payrollPeriodList
-             ) {
-            if(p.getIdPK().getMonth() == month && p.getIdPK().getYear() == year){
-                System.out.println("elimina year " + p.getIdPK().getYear() +" month " + p.getIdPK().getMonth());
+        System.out.println("borrando periodo de planilla");
+        for (PayrollPeriod p : payrollPeriodList
+        ) {
+            if (p.getIdPK().getMonth() == month && p.getIdPK().getYear() == year) {
+                System.out.println("elimina year " + p.getIdPK().getYear() + " month " + p.getIdPK().getMonth());
                 payrollPeriodRepository.delete(p);
             }
         }
-        response.put("code","0");
-        response.put("message",delete);
+        response.put("code", "0");
+        response.put("message", delete);
         return response;
     }
 
     @GetMapping(path = "/llenaEmployee")
-    private void llenaEmpleado(){
+    private void llenaEmpleado() {
         int y = 49800;
         Employee employee = new Employee();
-        for(int x=0; x<y; x++){
+        for (int x = 0; x < y; x++) {
             long id = employeeRepository.findAll().size();
             id++;
             employee.setIdEmployee(id);
