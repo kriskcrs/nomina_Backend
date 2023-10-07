@@ -20,7 +20,7 @@ public class Absence {
     @Column(name = "idinasistencia")
     private Long idAbsence;
     @Column(name = "idempleado")
-    private String idEmployee;
+    private Long idEmployee;
     @Column(name = "fechainicial")
     private Date initialDate;
     @Column(name = "fechafinal")
