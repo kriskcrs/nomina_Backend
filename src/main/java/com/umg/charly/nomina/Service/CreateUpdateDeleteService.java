@@ -360,9 +360,8 @@ public class CreateUpdateDeleteService {
             if (new KeepAlive().validateSession(UserFind(userRole.getUserCreation()).getCurrentSession())) {
                 UserRole userRoleFind = userRoleRepository.findByIdUser(userRole.getIdUser());
                 if (userRoleFind == null) {
-                    long id = userRoleRepository.findAll().size();
-                    id++;
-                    userRole.setIdRole(id);
+                    userRole.setIdRole(userRole.getIdRole());
+                    userRole.setIdUser(userRole.getIdUser());
                     userRole.setCreationDate(new Date());
                     userRoleRepository.save(userRole);
                     response.put("code", "0");
