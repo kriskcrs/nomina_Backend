@@ -16,6 +16,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.context.request.RequestAttributes;
 
 import jakarta.servlet.http.HttpServletRequest;
+
 import java.util.Date;
 import java.util.HashMap;
 
@@ -49,7 +50,7 @@ public class AuthenticationService {
 
 
     @PostMapping(path = "/login/{ip}")
-    private HashMap<String, String> login(@RequestBody User user, @PathVariable String ip ) {
+    private HashMap<String, String> login(@RequestBody User user, @PathVariable String ip) {
 
         //System.out.println(user.getIdUser() + user.getPassword());
 
@@ -103,7 +104,7 @@ public class AuthenticationService {
                                 //response
                                 response.put("code", "0");
                                 response.put("message", "ok");
-                                response.put("nameUser",userLogin.getName() + " " + userLogin.getLastName());
+                                response.put("nameUser", userLogin.getName() + " " + userLogin.getLastName());
                                 response.put("session", userLogin.getCurrentSession());
                                 response.put("user", userLogin.getIdUser());
                                 createtypeAccess(1, userLogin.getIdUser(), ip);
@@ -122,14 +123,14 @@ public class AuthenticationService {
                 }
             } else {
                 FailedLogin(userExist);
-                String message =  loginBloqueado(user);
+                String message = loginBloqueado(user);
 
-                if(message.equals("")){
+                if (message.equals("")) {
                     response.put("code", "1");
                     response.put("message", FailedLogin);
                     createtypeAccess(2, user.getIdUser(), ip);
                     return response;
-                }else{
+                } else {
                     response.put("code", "1");
                     response.put("message", message);
                     createtypeAccess(2, user.getIdUser(), ip);
@@ -162,13 +163,13 @@ public class AuthenticationService {
     }
 
 
-    private String loginBloqueado(User user){
+    private String loginBloqueado(User user) {
 
         User userFind = userRepository.findByIdUser(user.getIdUser());
-        int intentos= userFind.getAccessAttempts();
+        int intentos = userFind.getAccessAttempts();
         Company company = companyRepository.findByIdCompany(1L);
 
-        if(intentos>=company.getPasswordAmountAttemptsBeforeBlocking()){
+        if (intentos >= company.getPasswordAmountAttemptsBeforeBlocking()) {
             return StatusUser;
         }
 
@@ -176,46 +177,53 @@ public class AuthenticationService {
     }
 
     private void createtypeAccess(int status, String user, String ip) {
-        try { String message = "";
+        try {
+            String message = "";
 
-        switch (status) {
-            case 1:
-                message = "Acceso Concedido";
-                break;
-            case 2:
-                message = " Password incorrecto/Numero de intentos exedidos";
-                break;
-            case 3:
-                message = "Usuario Inactivo";
-                break;
-            case 4:
-                message = "Usuario ingresado no existe";
-                break;
-        }
-        String userAgent = getUserAgent();
-        //stored in log :D
-        int idLog = logRepository.findAll().size();
-        idLog++;
-        Log log = new Log();
-        log.setIdLog(idLog);
-        log.setIdUser(user);
-        log.setIdtypeAccess(status);
-        log.setDateAccess(new Date());
-        log.setHttpUserAgent(getUserAgent());
-        log.setAction(message);
-        log.setIpAdress(ip);
-        String os = parseOsFromUserAgent(userAgent);
-        String device = parseDeviceFromUserAgent(userAgent);
-        String browser = parseBrowserFromUserAgent(userAgent);
+            switch (status) {
+                case 1:
+                    message = "Acceso Concedido";
+                    break;
+                case 2:
+                    message = " Password incorrecto/Numero de intentos exedidos";
+                    break;
+                case 3:
+                    message = "Usuario Inactivo";
+                    break;
+                case 4:
+                    message = "Usuario ingresado no existe";
+                    break;
+            }
+            String userAgent = getUserAgent();
+            //stored in log :D
+            int idLog = logRepository.findAll().size();
+            idLog++;
+            Log log = new Log();
+            log.setIdLog(idLog);
+            log.setIdUser(user);
+            log.setIdtypeAccess(status);
+            log.setDateAccess(new Date());
+            log.setHttpUserAgent(getUserAgent());
+            log.setAction(message);
+            log.setIpAdress(ip);
+            String os = parseOsFromUserAgent(userAgent);
+            String device = parseDeviceFromUserAgent(userAgent);
+            String browser = parseBrowserFromUserAgent(userAgent);
 
-        log.setOs(os);
-        log.setDivice(device);
-        log.setBrowser(browser);
+            log.setOs(os);
+            log.setDivice(device);
+            log.setBrowser(browser);
 
-        log.setSesion(userRepository.findByIdUser(user).getCurrentSession());
+            User userFind = userRepository.findByIdUser(user);
+
+            if (userFind != null) {
+                log.setSesion(userFind.getCurrentSession());
+            } else {
+                log.setSesion(null);
+            }
 
             logRepository.save(log);
-            System.out.println("Registro de inicio de sesión guardado con exito.");
+            System.out.println("Registro de inicio de sesion guardado con exito.");
         } catch (Exception e) {
             System.err.println("Error al guardar en el registro: " + e.getMessage());
         }
@@ -232,6 +240,7 @@ public class AuthenticationService {
             return "Desconocido";
         }
     }
+
     private String getUserAgent() {
         RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
 
@@ -243,6 +252,7 @@ public class AuthenticationService {
             return "User-Agent not available";
         }
     }
+
     private String parseDeviceFromUserAgent(String userAgent) {
         if (userAgent.contains("Mobile")) {
             return "Dispositivo móvil";
@@ -256,6 +266,7 @@ public class AuthenticationService {
             return "Desconocido";
         }
     }
+
     private String parseBrowserFromUserAgent(String userAgent) {
         if (userAgent.contains("Chrome")) {
             return "Google Chrome";
