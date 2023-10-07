@@ -69,25 +69,34 @@ public class CreateUpdateDeleteServicePhase2 {
                 absence.setIdAbsence(idAbsence);
                 absence.setCreateDate(new Date());
                 absence.setProcessingDate(new Date());
+
                 //calculo de valor inasistencia
-                if(absence.getInitialDate().getTime() != absence.getFinalDate().getTime()){
-                    long difMilis = absence.getFinalDate().getTime() - absence.getInitialDate().getTime();
-                    long days = difMilis / (24*60*60*1000);
+                if(absence.getInitialDate().getTime() <= absence.getFinalDate().getTime()){
+                    if(absence.getInitialDate().getTime() != absence.getFinalDate().getTime()){
 
-                    Employee employee = employeeRepository.findByIdEmployee(absence.getIdEmployee());
-                    Double daySalary = employee.getBaseSalaryIncome() / 20;
-                    employee.setNoShowDiscount(employee.getNoShowDiscount() + (daySalary * days));
+                        long difMilis = absence.getFinalDate().getTime() - absence.getInitialDate().getTime();
+                        long days = difMilis / (24*60*60*1000);
 
-                    absenceRepository.save(absence);
-                    employeeRepository.save(employee);
-                    response.put("code", "0");
-                    response.put("message", okC);
-                    return response;
+                        Employee employee = employeeRepository.findByIdEmployee(absence.getIdEmployee());
+                        Double daySalary = employee.getBaseSalaryIncome() / 20;
+                        employee.setNoShowDiscount(employee.getNoShowDiscount() + (daySalary * days));
+
+                        absenceRepository.save(absence);
+                        employeeRepository.save(employee);
+                        response.put("code", "0");
+                        response.put("message", okC);
+                        return response;
+                    }else{
+                        response.put("code", "1");
+                        response.put("message", "La fecha final no puede ser igual a la fecha inicial");
+                        return response;
+                    }
                 }else{
                     response.put("code", "1");
-                    response.put("message", "La fecha final no puede ser igual a la fecha inicial");
+                    response.put("message", "La fecha final no puede ser mayor a la fecha inicial");
                     return response;
                 }
+
 
             } else {
                 response.put("code", "999");
