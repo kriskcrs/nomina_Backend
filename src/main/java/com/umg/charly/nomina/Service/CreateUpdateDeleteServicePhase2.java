@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.Temporal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -65,10 +68,27 @@ public class CreateUpdateDeleteServicePhase2 {
                 idAbsence++;
                 absence.setIdAbsence(idAbsence);
                 absence.setCreateDate(new Date());
-                absenceRepository.save(absence);
-                response.put("code", "0");
-                response.put("message", okC);
-                return response;
+                absence.setProcessingDate(new Date());
+                //calculo de valor inasistencia
+                if(absence.getInitialDate().getTime() != absence.getFinalDate().getTime()){
+                    long difMilis = absence.getFinalDate().getTime() - absence.getInitialDate().getTime();
+                    long days = difMilis / (24*60*60*1000);
+
+                    Employee employee = employeeRepository.findByIdEmployee(absence.getIdEmployee());
+                    Double daySalary = employee.getBaseSalaryIncome() / 20;
+                    employee.setNoShowDiscount(employee.getNoShowDiscount() + (daySalary * days));
+
+                    absenceRepository.save(absence);
+                    employeeRepository.save(employee);
+                    response.put("code", "0");
+                    response.put("message", okC);
+                    return response;
+                }else{
+                    response.put("code", "1");
+                    response.put("message", "La fecha final no puede ser igual a la fecha inicial");
+                    return response;
+                }
+
             } else {
                 response.put("code", "999");
                 response.put("message", sesionFail);
@@ -114,6 +134,16 @@ public class CreateUpdateDeleteServicePhase2 {
     private HashMap<String, String> deleteAbsence(@PathVariable long id, @PathVariable String user) {
         try {
             if (new KeepAlive().validateSession(UserFind(user).getCurrentSession())) {
+                Absence absence = absenceRepository.findByIdAbsence(id);
+                long difMilis = absence.getFinalDate().getTime() - absence.getInitialDate().getTime();
+                long days = difMilis / (24*60*60*1000);
+
+                Employee employee = employeeRepository.findByIdEmployee(absence.getIdEmployee());
+                Double daySalary = employee.getBaseSalaryIncome() / 20;
+                employee.setNoShowDiscount(employee.getNoShowDiscount() - (daySalary * days));
+
+
+                employeeRepository.save(employee);
                 absenceRepository.deleteById(id);
                 response.put("code", "0");
                 response.put("message", delete);
