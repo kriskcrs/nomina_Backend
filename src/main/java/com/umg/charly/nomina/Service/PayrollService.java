@@ -6,6 +6,8 @@ import com.umg.charly.nomina.Tools.KeepAlive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -49,6 +51,8 @@ public class PayrollService {
     Double isrMaximo = 0.07;
     Double anio = 12.00;
     Double valorFijo = 15000.00;
+    Date primerDia = null;
+    Date ultimoDia = null;
 
 
     @GetMapping(path = "/payrollHeaders")
@@ -142,6 +146,13 @@ public class PayrollService {
 
 
 
+    //Servicios para periodo planilla
+    @GetMapping(path = "/payrollHeader")
+    private List<PayrollHeader> payrollHeaderList() {
+        return payrollHeaderRepository.findAll();
+    }
+
+
 
     //funcion de retorno de datos
     private User UserFind(String user) {
@@ -184,31 +195,31 @@ public class PayrollService {
 
     //servicios de calculo
     @GetMapping(path = "PayrollCalc/{year}/{month}/{user}")
-    public List<PayrollDetails> calculos(@PathVariable long year, @PathVariable long month,@PathVariable String user) {
+    public List<PayrollDetails> calculos(@PathVariable String year, @PathVariable String month,@PathVariable String user) {
 
         payrollDetailsRepository.deleteAll();
         payrollHeaderRepository.deleteAll();
         id=0L;
+        long yearN = Long.parseLong(year);
+        long monthN = Long.parseLong(month);
 
-        List<PayrollPeriod> payrollPeriod = payrollPeriodRepository.findAll();
-        PayrollPeriod data = payrollPeriod.get(0);
-        long id = idEmployee();
+        ParyollPeriodoCreate(yearN,monthN,user);
         for (Employee employee : employeeRepository.findAll()) {
-            PayrollDetails(employee, data,user);
+            PayrollDetails(employee, yearN,monthN,user);
         }
         return payrollDetailsRepository.findAll();
     }
 
 
-    private void PayrollDetails(Employee employee, PayrollPeriod payrollPeriod,String user) {
+    private void PayrollDetails(Employee employee, long year, long month ,String user) {
         try {
 
-            PayrollHeaderCreate(payrollPeriod.getIdPK().getYear(),payrollPeriod.getIdPK().getMonth(),user);
+            PayrollHeaderCreate(year,month,user);
             PayrollDetails payrollDetailsData = new PayrollDetails();
             id++;
             payrollDetailsData.setIdPayrollDetails(id);
-            payrollDetailsData.setYear(payrollPeriod.getIdPK().getYear());
-            payrollDetailsData.setMonth(payrollPeriod.getIdPK().getMonth());
+            payrollDetailsData.setYear(year);
+            payrollDetailsData.setMonth(month);
             payrollDetailsData.setIdEmployee(employee.getIdEmployee());
             payrollDetailsData.setDateOfHire(employee.getDateOfHire());
             payrollDetailsData.setIdPosition(employee.getIdPosition());
@@ -226,7 +237,7 @@ public class PayrollService {
             payrollDetailsData.setCreationDate(new Date());
             payrollDetailsData.setUserCreation(user);
             payrollDetailsRepository.save(payrollDetailsData);
-            PayrollHeaderUpdate(payrollPeriod.getIdPK().getYear(),payrollPeriod.getIdPK().getMonth(),user);
+            PayrollHeaderUpdate(year,month,user);
 
         } catch (Exception e) {
             System.out.println(e.getCause() + " Mensaje -> " + e.getMessage());
@@ -251,8 +262,6 @@ public class PayrollService {
             payrollHeader.setUserCreation(user);
             payrollHeaderRepository.save(payrollHeader);
         }
-
-
 
     private void PayrollHeaderUpdate(long year, long month,String user){
         List<PayrollDetails>  payrollDetails =payrollDetailsRepository.findAll();
@@ -282,9 +291,57 @@ public class PayrollService {
         payrollHeaderRepository.save(payrollHeader);
     }
 
+    private void ParyollPeriodoCreate(long year, long month,String user){
+
+        PayrollPeriod payrollPeriod = new PayrollPeriod();
+        PayrollPeriodPK pk = new PayrollPeriodPK();
+
+        payrollPeriod.setCreationDate(new Date());
+        payrollPeriod.setUserCreation(user);
+        pk.setMonth(month);
+        pk.setYear(year);
+        payrollPeriod.setIdPK(pk);
+
+        DateCalc((int)year,(int)month);
+        payrollPeriod.setStartDate(primerDia);
+        payrollPeriod.setEndDate(ultimoDia);
+
+        payrollPeriodRepository.save(payrollPeriod);
+    }
 
 
+    private void DateCalc(int year, int month){
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, year);
+        cal.set(Calendar.MONTH, month - 1); // Meses en Calendar van de 0 a 11
+        cal.set(Calendar.DAY_OF_MONTH, 1);  // Primer día del mes
+        primerDia = cal.getTime();
 
+        cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH)); // Último día del mes
+        ultimoDia = cal.getTime();
+    }
+
+
+    @DeleteMapping(path = "/deletePayroll/{year}/{month}")
+    private HashMap<String,String> deletePayroll(@PathVariable long year,@PathVariable long month){
+
+        payrollDetailsRepository.deleteAll();
+        payrollHeaderRepository.deleteAll();
+        PayrollPeriodPK pk = new PayrollPeriodPK();
+        pk.setYear(year);
+        pk.setMonth(month);
+        List<PayrollPeriod> payrollPeriodList = payrollPeriodRepository.findAll();
+        for (PayrollPeriod p: payrollPeriodList
+             ) {
+            if(p.getIdPK().getMonth() == month && p.getIdPK().getYear() == year){
+                System.out.println("elimina year " + p.getIdPK().getYear() +" month " + p.getIdPK().getMonth());
+                payrollPeriodRepository.delete(p);
+            }
+        }
+        response.put("code","0");
+        response.put("message",delete);
+        return response;
+    }
 
     @GetMapping(path = "/llenaEmployee")
     private void llenaEmpleado(){
