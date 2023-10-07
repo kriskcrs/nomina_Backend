@@ -32,7 +32,6 @@ public class AuthenticationService {
     String CurrentSession = "Usuario ya cuenta con una sesión activa";
     String StatusUser = "El usuario no se encuentra activo";
     String FirstLogin = "Primer login";
-    String message = "Usuario Bloqueado intenta reiniciar tu contraseña o contacta el administrador";
     HashMap<String, String> response = new HashMap<>();
 
     @Autowired
@@ -170,7 +169,7 @@ public class AuthenticationService {
         Company company = companyRepository.findByIdCompany(1L);
 
         if(intentos>=company.getPasswordAmountAttemptsBeforeBlocking()){
-            return message;
+            return StatusUser;
         }
 
         return "";

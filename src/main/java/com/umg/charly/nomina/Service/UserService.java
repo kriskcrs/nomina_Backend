@@ -56,12 +56,12 @@ public class UserService {
         List<User> userList= userRepository.findAll();
         List<User> userListNew = new ArrayList<>();
 
-
-
         for (User user: userList
              ) {
             if(user.getCurrentSession()!=null){
-                userListNew.add(user);
+                if(!user.getCurrentSession().equals("")){
+                    userListNew.add(user);
+                }
             }
         }
 
