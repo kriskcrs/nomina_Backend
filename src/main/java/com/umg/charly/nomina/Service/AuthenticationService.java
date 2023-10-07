@@ -32,6 +32,7 @@ public class AuthenticationService {
     String CurrentSession = "Usuario ya cuenta con una sesión activa";
     String StatusUser = "El usuario no se encuentra activo";
     String FirstLogin = "Primer login";
+    String message = "Usuario Bloqueado intenta reiniciar tu contraseña o contacta el administrador";
     HashMap<String, String> response = new HashMap<>();
 
     @Autowired
@@ -122,10 +123,20 @@ public class AuthenticationService {
                 }
             } else {
                 FailedLogin(userExist);
-                response.put("code", "1");
-                response.put("message", FailedLogin);
-                createtypeAccess(2, user.getIdUser(), ip);
-                return response;
+                String message =  loginBloqueado(user);
+
+                if(message.equals("")){
+                    response.put("code", "1");
+                    response.put("message", FailedLogin);
+                    createtypeAccess(2, user.getIdUser(), ip);
+                    return response;
+                }else{
+                    response.put("code", "1");
+                    response.put("message", message);
+                    createtypeAccess(2, user.getIdUser(), ip);
+                    return response;
+                }
+
             }
         } else {
             response.put("code", "1");
@@ -149,6 +160,20 @@ public class AuthenticationService {
         }
 
         userRepository.save(user);
+    }
+
+
+    private String loginBloqueado(User user){
+
+        User userFind = userRepository.findByIdUser(user.getIdUser());
+        int intentos= userFind.getAccessAttempts();
+        Company company = companyRepository.findByIdCompany(1L);
+
+        if(intentos>=company.getPasswordAmountAttemptsBeforeBlocking()){
+            return message;
+        }
+
+        return "";
     }
 
     private void createtypeAccess(int status, String user, String ip) {
