@@ -48,6 +48,7 @@ public class CreateUpdateDeleteServicePhase2 {
     String delete = "El registro fue eliminado exitosamente";
     String deleteE = "El registro tiene mas dependencias no puede ser borrado";
     String sesionFail = "Sesion no valida";
+    Integer calendaryDay = 20;
     HashMap<String, String> response = new HashMap<>();
     @Autowired
     private BankRepository bankRepository;
@@ -78,7 +79,7 @@ public class CreateUpdateDeleteServicePhase2 {
                         long days = difMilis / (24*60*60*1000);
 
                         Employee employee = employeeRepository.findByIdEmployee(absence.getIdEmployee());
-                        Double daySalary = employee.getBaseSalaryIncome() / 20;
+                        Double daySalary = employee.getBaseSalaryIncome() / calendaryDay;
                         employee.setNoShowDiscount(employee.getNoShowDiscount() + (daySalary * days));
 
                         absenceRepository.save(absence);
