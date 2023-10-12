@@ -173,9 +173,9 @@ public class PayrollService {
         if (num < IsrExonerante) {
             return 0.00;
         } else if (num <= limiteMedio) {
-            num = ((num - IsrExonerante) * isrMinimo) / 12;
+            num = ((num - IsrExonerante) * isrMinimo) / anio;
         } else if (num >= limiteMayor) {
-            num = ((num - IsrExonerante) * isrMaximo + valorFijo) / 12;
+            num = ((num - IsrExonerante) * isrMaximo + valorFijo) / anio;
         }
         return num;
     }
