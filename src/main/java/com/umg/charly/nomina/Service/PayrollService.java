@@ -203,7 +203,10 @@ public class PayrollService {
 
         ParyollPeriodoCreate(yearN, monthN, user);
         for (Employee employee : employeeRepository.findAll()) {
-            PayrollDetails(employee, yearN, monthN, user);
+
+            if(employee.getIdStatusEmployee() == 1){
+                PayrollDetails(employee, yearN, monthN, user);
+            }
         }
         return payrollDetailsRepository.findAll();
     }
