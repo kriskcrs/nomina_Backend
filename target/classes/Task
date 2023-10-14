@@ -1,0 +1,83 @@
+Task
+
+1 -DI- Pantalla de Login
+	- Validación de credenciales -> Restricción de campos
+	- Conteo de reintentos
+	- Bloqueo por reintentos
+	- Validación de caducidad
+	- manejo de sesiones
+	- validación de primer login
+    - validar politicas de contraseña a ingresar en reset-password
+    - validar que la sesion se cumpla para cambiar el password
+    - validación de roles
+    - validación de menus
+    - Validación de opciones
+    - home screen
+    - menu lateral
+
+  2 -DI- Pantalla de primer login
+  	- cambio de contraseña
+  	- validación de caracteres (para nueva contraseña)
+  	- ingreso de preguntas de seguridad
+
+	#Pendientes DI
+	- mtt asignacion de roles y opciones
+
+
+3 -CC- Pantalla de Reinicio de contraseña
+	- Preguntas de seguridad //ya
+	- validación de caracteres (para nueva contraseña) // ya valida caracteres
+	- Configuracion de preguntas en primer login
+    - hacer logout
+6 -CC- mtto de reglas de negocio y roles
+	- modificación de reglas -> Insert de EMPRESA con sus reglas default //ya acepta y valida longitud minima
+	- creación de roles
+	- creación de sucursales
+	- modificacion de sucursales
+	- mtt optiones
+
+
+4 -RC- Bitacora
+	- Registro de acceso (Todo tipo de login)
+
+7 -RC- mtto de usuario
+	- Ingreso de campos
+	- Creación de usuario
+	- Envio de credenciales por email
+
+    #Pendiente RC
+    - asignación de roles usuario
+
+###5 -PR- Pantalla de bienvenida
+
+8 -PR- servidor images
+	- almacenamiento de fotografias
+	- visualización de fotografias
+	- mtto modulos
+
+	#Pendientes
+	- mtto usuario
+	- mtt menu
+
+//SEGUNDA FASE
+
+PR -> 3
+    TIPO_DOCUMENTO
+    DEPARTAMENTO
+    PERIODO_PLANILLA
+DI -> 4
+    STATUS_EMPLEADO
+    FLUJO_STATUS_EMPLEADO
+    CUENTA_BANCARIA_EMPLEADO
+    BANCO
+RC -> 4
+    PUESTO
+    PLANILLA_DETALLE
+    PERSONA
+    INASISTENCIA
+CC -> 4
+    PLANILLA_CABECERA
+    ESTADO_CIVIL -> ya
+    EMPLEADO -> ya
+    DOCUMENTO_PERSONA  -> no se que espera ahi
+
