@@ -588,7 +588,7 @@ public class CreateUpdateDeleteService {
 
         if (roleOptionAlreadyExist) {
             response.put("code", "1");
-            response.put("message", failsC);
+            response.put("message", "Ya existe la opción asignada a este rol");
             return response;
         } else {
             roleOptionCreate.setCreationDate(new Date());
