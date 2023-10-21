@@ -206,31 +206,7 @@ public class PayrollService {
         response.put("message", delete);
         return response;
     }
-    @GetMapping(path = "/llenaEmployee")
-    private void llenaEmpleado() {
-        int y = 49800;
-        Employee employee = new Employee();
-        for (int x = 0; x < y; x++) {
-            long id = employeeRepository.findAll().size();
-            id++;
-            employee.setIdEmployee(id);
-            employee.setIdPerson(1L);
-            employee.setIdLocation(1L);
-            employee.setIdPosition(1L);
-            employee.setIdStatusEmployee(1L);
-            employee.setBaseSalaryIncome(25000.00);
-            employee.setBonusIncomeDecree(250.00);
-            employee.setIgss(Igss(25000));
-            employee.setIsr(Isr(25000));
-            employee.setIncomeOther(500.00);
-            employee.setNoShowDiscount(0.00);
-            employee.setCreationDate(new Date());
-            employee.setDateOfHire(new Date());
-            employee.setUserCreation("cristian");
-            employeeRepository.save(employee);
-        }
 
-    }
     //metodos
 
     private void PayrollDetails(Employee employee, long year, long month, String user) {
@@ -369,5 +345,55 @@ public class PayrollService {
     private Double TotalIngresos(double ingreso, double egreso) {
         return total = ingreso - egreso;
     }
+
+
+    @GetMapping(path = "/llenaEmployee")
+    private void llenaEmpleado() {
+        int y = 49800;
+        Employee employee = new Employee();
+        for (int x = 0; x < y; x++) {
+            long id = employeeRepository.findAll().size();
+            id++;
+            employee.setIdEmployee(id);
+            employee.setIdPerson(1L);
+            employee.setIdLocation(1L);
+            employee.setIdPosition(1L);
+            employee.setIdStatusEmployee(1L);
+            employee.setBaseSalaryIncome(25000.00);
+            employee.setBonusIncomeDecree(250.00);
+            employee.setIgss(Igss(25000));
+            employee.setIsr(Isr(25000));
+            employee.setIncomeOther(500.00);
+            employee.setNoShowDiscount(0.00);
+            employee.setCreationDate(new Date());
+            employee.setDateOfHire(new Date());
+            employee.setUserCreation("cristian");
+            employeeRepository.save(employee);
+        }
+
+    }
+
+    @GetMapping(path="/actualizaEmployee")
+    private void actualiza(){
+        Employee employee = new Employee();
+        List<Employee> employeeList = employeeRepository.findAll();
+
+        Double salario = 0.0;
+        Double igss = 0.0;
+        Double isr = 0.0;
+
+        for (Employee employeeNew:employeeList
+             ) {
+        salario = employeeNew.getBaseSalaryIncome();
+        igss = new PayrollService().Igss(salario);
+        isr = new PayrollService().Isr(salario);
+        employeeNew.setIgss(igss);
+        employeeNew.setIsr(isr);
+        employeeRepository.save(employeeNew);
+        }
+
+    }
+
+
 
 }
